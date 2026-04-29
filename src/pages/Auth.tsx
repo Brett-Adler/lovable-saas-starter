@@ -30,7 +30,11 @@ const Auth = ({ mode = "login" }: { mode?: "login" | "signup" }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const from = (location.state as { from?: { pathname: string } } | null)?.from?.pathname ?? "/dashboard";
+  const nextParam = new URLSearchParams(location.search).get("next");
+  const from =
+    nextParam ??
+    (location.state as { from?: { pathname: string } } | null)?.from?.pathname ??
+    "/dashboard";
 
   useEffect(() => {
     if (user) navigate(from, { replace: true });

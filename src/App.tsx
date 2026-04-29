@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
+import { OrganizationProvider } from "@/hooks/useOrganization";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 import Index from "./pages/Index";
@@ -18,6 +19,14 @@ import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
+import NewOrganization from "./pages/dashboard/NewOrganization";
+import OrganizationSettings from "./pages/dashboard/OrganizationSettings";
+import Members from "./pages/dashboard/Members";
+import Invitations from "./pages/dashboard/Invitations";
+import Billing from "./pages/dashboard/Billing";
+import Settings from "./pages/dashboard/Settings";
+import AcceptInvite from "./pages/AcceptInvite";
+import AdminIndex from "./pages/admin/AdminIndex";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,37 +38,98 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            {/* Marketing */}
-            <Route path="/" element={<Index />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/newsletter" element={<Newsletter />} />
-            <Route path="/demo" element={<Demo />} />
-            <Route path="/waitlist" element={<Waitlist />} />
-            <Route path="/privacy" element={<Legal title="Privacy Policy" kind="privacy" />} />
-            <Route path="/terms" element={<Legal title="Terms of Service" kind="terms" />} />
+          <OrganizationProvider>
+            <Routes>
+              {/* Marketing */}
+              <Route path="/" element={<Index />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/newsletter" element={<Newsletter />} />
+              <Route path="/demo" element={<Demo />} />
+              <Route path="/waitlist" element={<Waitlist />} />
+              <Route path="/privacy" element={<Legal title="Privacy Policy" kind="privacy" />} />
+              <Route path="/terms" element={<Legal title="Terms of Service" kind="terms" />} />
 
-            {/* Auth */}
-            <Route path="/login" element={<Auth mode="login" />} />
-            <Route path="/signup" element={<Auth mode="signup" />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+              {/* Auth */}
+              <Route path="/login" element={<Auth mode="login" />} />
+              <Route path="/signup" element={<Auth mode="signup" />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/invite/:token" element={<AcceptInvite />} />
 
-            {/* App */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
+              {/* App */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/organization/new"
+                element={
+                  <ProtectedRoute>
+                    <NewOrganization />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/organization"
+                element={
+                  <ProtectedRoute>
+                    <OrganizationSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/members"
+                element={
+                  <ProtectedRoute>
+                    <Members />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/invitations"
+                element={
+                  <ProtectedRoute>
+                    <Invitations />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/billing"
+                element={
+                  <ProtectedRoute>
+                    <Billing />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              {/* Admin */}
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminIndex />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </OrganizationProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
