@@ -27,6 +27,12 @@ const groups = [
       { to: "/terms", label: "Terms" },
     ],
   },
+  {
+    title: "Resources",
+    links: [
+      { to: "/readme", label: "Setup guide" },
+    ],
+  },
 ];
 
 export const MarketingFooter = () => {
