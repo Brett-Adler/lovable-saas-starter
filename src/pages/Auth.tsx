@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { GoogleButton } from "@/components/auth/GoogleButton";
+import { AppleButton } from "@/components/auth/AppleButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
@@ -103,7 +104,10 @@ const Auth = ({ mode = "login" }: { mode?: "login" | "signup" }) => {
         )
       }
     >
-      <GoogleButton />
+      <div className="space-y-3">
+        <GoogleButton />
+        <AppleButton />
+      </div>
 
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
