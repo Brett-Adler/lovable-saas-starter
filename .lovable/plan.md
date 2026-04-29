@@ -175,4 +175,12 @@ Super-admin only (role check via `has_role(user, 'super_admin')`):
 - Third-party product analytics (PostHog etc.)
 - A/B testing framework
 
+## Open TODOs
+
+- [ ] Replace placeholder Privacy Policy (`/privacy`) with real SaaS-grade wording — covering data collected, cookies, third-party processors (Supabase, Stripe, Resend, Twilio, analytics), retention, GDPR/CCPA rights, contact for requests.
+- [ ] Replace placeholder Terms of Service (`/terms`) with real SaaS-grade wording — account terms, acceptable use, subscription/billing, refund policy, IP ownership, warranty disclaimer, limitation of liability, governing law, termination.
+- [ ] Update the "Last updated" date on both legal pages once finalized.
+- [ ] Free generators to start from: [iubenda](https://www.iubenda.com/), [TermsFeed](https://www.termsfeed.com/), [PrivacyPolicies.com](https://www.privacypolicies.com/).
+
 After approval I'll enable Cloud, payments, email, Twilio, Resend in sequence, then build the schema and UI.
+
