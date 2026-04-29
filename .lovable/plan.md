@@ -1,186 +1,50 @@
+# Pre-Phase-5 housekeeping
 
-# SaaS Starter Template
+## 1. First user becomes admin (DB migration)
 
-A batteries-included starter for SaaS apps on Lovable. Friendly & colorful design, light + dark mode, fully wired backend.
-
-## 1. Branding & Asset Scaffolding
-
-A clearly organized `public/` folder with placeholder files the user just swaps:
+Update `handle_new_user()` so when there are zero admins in `user_roles`, the new signup is granted both `user` and `admin`. Backfill: grant admin to the existing first user (`brett@voicept.com`) so it applies retroactively.
 
 ```text
-public/
-├── favicon.ico
-├── favicon.svg
-├── favicon-16x16.png
-├── favicon-32x32.png
-├── apple-touch-icon.png         (180x180)
-├── android-chrome-192x192.png
-├── android-chrome-512x512.png
-├── safari-pinned-tab.svg
-├── mstile-150x150.png
-├── og-image.png                 (1200x630)
-├── twitter-image.png            (1200x600)
-├── logo.svg, logo-mark.svg, logo-dark.svg
-├── site.webmanifest             (PWA + shortcuts)
-└── browserconfig.xml
+INSERT user role 'user'  (always)
+IF no admin exists yet:
+   INSERT user role 'admin'
 ```
 
-`index.html` pre-wired: full favicon set, apple-touch-icon, manifest, theme-color, Open Graph + Twitter card tags, canonical URL, description. `public/BRANDING.md` lists each file's purpose and exact dimensions for easy swapping.
+Idempotent — once an admin exists, all later signups stay as plain `user`. After it runs, you'll see the "Admin" link in the sidebar on next page load.
 
-## 2. Marketing Site (public)
+## 2. Open TODOs added to `.lovable/plan.md`
 
-- **Landing** (`/`) — sticky nav, hero + CTA, logo cloud, feature grid, "how it works", testimonials, pricing preview, FAQ, footer
-- **Pricing** (`/pricing`) — Free / Pro / Team cards, monthly-yearly toggle, comparison table
-- **About**, **Contact** (with email confirmation), **Blog** stub
-- **Legal** — `/privacy`, `/terms`
-- **Newsletter widgets** in hero + footer (and a dedicated `/newsletter` page) feeding the marketing list
-- Shared marketing header + footer
+Already written into the plan this turn:
 
-## 3. Authentication
+- Replace placeholder Privacy Policy with real SaaS wording (data collected, processors, GDPR/CCPA, retention, contact)
+- Replace placeholder Terms of Service with real wording (account terms, billing, IP, liability, governing law)
+- Update "Last updated" dates once finalized
+- Free generators noted: iubenda, TermsFeed, PrivacyPolicies.com
 
-- Email + password (signup, login, forgot/reset password with `/reset-password` page)
-- Google OAuth, Apple OAuth
-- Phone (SMS OTP) sign-in via Twilio
-- Pages: `/login`, `/signup`, `/forgot-password`, `/reset-password`, `/verify-email`
-- Session persistence + auto-refresh, protected route wrapper
+## 3. New in-app `/readme` page
 
-## 4. App Shell (authed)
+A public route, styled to match the marketing site (uses `MarketingLayout` like `/privacy` and `/terms`).
 
-- Top nav: logo, primary nav, search, notifications bell, org switcher, user avatar dropdown
-- Collapsible sidebar; mobile drawer
-- Light/dark mode toggle
-- `/dashboard` with example widgets (signups, revenue, active users)
+**Sections:**
 
-## 5. Account / Settings
+- **Quickstart** — sign up at `/signup`, first account is auto-promoted to admin, create an org, invite teammates from `/dashboard/members`
+- **What's included** — table of every public route, every authed route, every admin route, and every backend table
+- **Customizing the app**
+  - Branding & assets — `public/` files, reference `public/BRANDING.md` for dimensions
+  - Colors & design system — HSL tokens in `src/index.css`, `tailwind.config.ts`; never hard-code colors
+  - Marketing copy — file locations for landing, pricing, about, contact
+  - Promoting more admins — ask Lovable to "make user@x.com an admin" or insert into `user_roles`
+  - OAuth providers — Google + Apple work out of the box; configurable in Lovable backend settings
+- **⚠️ Privacy & Terms placeholder warning** — exact wording matching the screenshot, prominent callout card, with links to **iubenda**, **TermsFeed**, **PrivacyPolicies.com** + reminder to disclose all data processors (Lovable Cloud, Stripe, Resend, Twilio, built-in analytics)
+- **Roadmap** — phases 1–4 done, phases 5–9 upcoming
+- **Tech stack** — React 18, Vite 5, TS 5, Tailwind v3, shadcn/ui, Lovable Cloud
 
-`/settings` with tabs:
-- **Profile** — name, avatar, bio, timezone
-- **Account** — email change (verification), password, phone (SMS verify), connected OAuth providers
-- **Notifications** — per-channel (in-app / email / SMS) toggles per category, plus marketing email opt-in/out
-- **Billing** — current plan, upgrade/downgrade, invoices, payment method, Stripe customer portal
-- **Team** — org name, members, invite by email, roles (Owner/Admin/Member), pending invites, leave org
-- **Security** — active sessions, sign out everywhere, delete account
-- **API keys** — generate/revoke personal API keys
+**Wiring:**
 
-## 6. Teams / Organizations
+- New file `src/pages/Readme.tsx`
+- Route `/readme` added to `src/App.tsx` (public, above the `*` catch-all)
+- Footer link added in `src/components/marketing/MarketingFooter.tsx` so users can find it
 
-- Users belong to one+ orgs; org switcher in header
-- Invite flow: invite email → accept link → join org
-- Roles enforced via separate `user_roles` table + `has_role()` security definer
+## Out of scope here
 
-## 7. Payments — Stripe (Lovable built-in)
-
-**End-user side:**
-- Pricing page → Stripe checkout
-- Subscription per organization
-- Customer portal for payment method, invoices, cancellation
-- Plan-gating helper (`requirePlan('pro')`)
-- Sample products: Free, Pro $19/mo, Team $49/mo
-- Webhook handler updating subscription status
-
-**Super-admin side (`/admin/billing`):**
-- View all customers + subscriptions, search/filter
-- Change plan, comp/free account, cancel subscription, issue refund
-- View invoice history per customer
-- MRR, churn, active subscription counts at top
-
-## 8. Auth + Transactional Email (Lovable built-in)
-
-- Branded auth emails (verification, magic link, password reset, email change, invite)
-- Transactional templates: welcome, contact confirmation, team invite, subscription receipt, plan-change, password-changed, lead-capture confirmation
-- Styled to match brand colors
-
-## 9. Marketing Email — Resend (separate subdomain)
-
-- Resend connector on a different subdomain (e.g. `mail.example.com`) so it doesn't conflict with Lovable's `notify.` subdomain for auth/transactional
-- **Subscribers DB**: `marketing_subscribers` (email, source, status, tags, subscribed_at, unsubscribed_at)
-- **Newsletter signup widgets** (hero, footer, dedicated page) write to subscribers
-- **Admin composer (`/admin/marketing`)**:
-  - List subscribers with search, filters by tag/status, CSV export, manual add/import
-  - Segments (by tag, plan, signup date)
-  - Campaign composer: subject, from name, rich-text body, preview, send test, schedule or send now
-  - Campaign history with open/click counts (from Resend webhooks)
-  - One-click unsubscribe link in every email; unsubscribe page in app
-- Hard separation: marketing sends never go through the transactional pipeline
-
-## 10. Lead Capture Forms
-
-- **Contact form** (`/contact`) — sends transactional confirmation, lands in admin inbox
-- **Demo request form** (`/demo`)
-- **Waitlist form** (`/waitlist`)
-- All submissions stored in `lead_submissions` (type, payload JSON, status, assigned_to)
-- Admin inbox (`/admin/leads`) — list, filter by type/status, view detail, mark contacted, export CSV
-- Each form: client + server-side Zod validation, honeypot + rate limit
-
-## 11. SMS / Phone (Twilio connector)
-
-- Phone OTP login
-- SMS notifications for opted-in users (critical alerts only)
-- Phone verification in account settings
-- `send-sms` edge function
-
-## 12. In-app Notifications
-
-- `notifications` table + bell dropdown, unread badge
-- Per-channel preferences (in-app / email / SMS) per category
-- Toast feedback (sonner)
-
-## 13. Analytics — Built-in (self-hosted)
-
-- **Event tracking**: `analytics_events` table (event_name, user_id, org_id, properties JSON, timestamp); lightweight `track()` helper auto-fires on signup, login, page_view, checkout_started, subscription_created, plan_changed, churned, lead_submitted, newsletter_subscribed
-- **Admin dashboard (`/admin/analytics`)**:
-  - **Acquisition**: new signups (day/week/month), signup source breakdown, newsletter growth
-  - **Activation**: % verified, % completed onboarding, time-to-first-action
-  - **Engagement**: DAU / WAU / MAU, page views, top pages
-  - **Revenue**: MRR, ARR, MRR change, new vs expansion vs churn, ARPU, LTV estimate
-  - **Retention**: cohort table, churn rate, cancellation reasons
-  - **Marketing**: campaign opens/clicks, newsletter unsubscribe rate
-- All charts via recharts; date-range picker; CSV export
-- **Per-user dashboard** (`/dashboard`) shows the user's own activity slice
-
-## 14. Admin Area (`/admin`)
-
-Super-admin only (role check via `has_role(user, 'super_admin')`):
-- `/admin` — overview (key metrics)
-- `/admin/users` — list, search, impersonate, suspend, change role, delete
-- `/admin/orgs` — list, view members, change plan
-- `/admin/billing` — see section 7
-- `/admin/leads` — see section 10
-- `/admin/marketing` — see section 9
-- `/admin/analytics` — see section 13
-- `/admin/feature-flags` — simple table-driven flags
-
-## 15. Design System
-
-- Friendly & colorful: warm coral/orange primary, playful secondary accent, generous rounded corners, soft shadows
-- Full HSL token system in `index.css` (primary, accent, success, warning, etc.)
-- Light + dark mode
-- Tailwind extended with brand tokens, gradients, shadows
-- Inter font
-- All shadcn components themed consistently
-
-## Technical Setup
-
-- Lovable Cloud enabled (auth, DB, storage, edge functions)
-- Tables: `profiles`, `user_roles`, `organizations`, `org_members`, `invites`, `subscriptions`, `notifications`, `notification_preferences`, `contact_submissions`, `lead_submissions`, `marketing_subscribers`, `marketing_campaigns`, `marketing_sends`, `analytics_events`, `api_keys`, `feature_flags`
-- All tables RLS-enabled; roles via `has_role()` security definer
-- Stripe enabled via `enable_stripe_payments`; sample products via `batch_create_product`
-- Email infra via `setup_email_infra` + auth + transactional template scaffolding
-- Twilio + Resend connectors
-- `README.md` walking through: replacing branding assets, configuring Stripe products, OAuth providers, Resend setup, customizing emails, granting super-admin role
-
-## Out of Scope
-
-- Actual product features (this is a shell)
-- Third-party product analytics (PostHog etc.)
-- A/B testing framework
-
-## Open TODOs
-
-- [ ] Replace placeholder Privacy Policy (`/privacy`) with real SaaS-grade wording — covering data collected, cookies, third-party processors (Supabase, Stripe, Resend, Twilio, analytics), retention, GDPR/CCPA rights, contact for requests.
-- [ ] Replace placeholder Terms of Service (`/terms`) with real SaaS-grade wording — account terms, acceptable use, subscription/billing, refund policy, IP ownership, warranty disclaimer, limitation of liability, governing law, termination.
-- [ ] Update the "Last updated" date on both legal pages once finalized.
-- [ ] Free generators to start from: [iubenda](https://www.iubenda.com/), [TermsFeed](https://www.termsfeed.com/), [PrivacyPolicies.com](https://www.privacypolicies.com/).
-
-After approval I'll enable Cloud, payments, email, Twilio, Resend in sequence, then build the schema and UI.
-
+No other UI changes. No `README.md` file. After approval I'll run the migration, build the `/readme` page + footer link, then we move on to **Phase 5: Stripe billing**.
