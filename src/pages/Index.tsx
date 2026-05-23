@@ -50,7 +50,7 @@ const Index = () => {
         <div className="absolute inset-0 gradient-mesh opacity-80" aria-hidden />
         <div className="container relative pt-20 pb-24 md:pt-28 md:pb-32">
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
-            <Badge variant="secondary" className="mb-6 gap-1.5 bg-card/90 text-foreground backdrop-blur border border-border/60">
+            <Badge variant="outline" className="mb-6 gap-1.5 bg-card/90 text-foreground backdrop-blur border-border/60 hover:bg-card">
               <Sparkles className="h-3 w-3 text-primary" />
               The complete SaaS starter
             </Badge>
