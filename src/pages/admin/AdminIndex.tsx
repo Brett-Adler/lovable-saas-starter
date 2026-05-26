@@ -61,6 +61,7 @@ const AdminIndex = () => {
             { title: "Users", desc: "Browse, search, and grant admin", to: "/admin/users" },
             { title: "Organizations", desc: "Every workspace and its members", to: "/admin/organizations" },
             { title: "Subscriptions", desc: "All Stripe customers and plans", to: "/admin/subscriptions" },
+            { title: "Analytics", desc: "Signups, MRR, churn, and events", to: "/admin/analytics" },
             { title: "Leads", desc: "Contact, demo, and waitlist submissions", to: "/admin/leads" },
             { title: "Subscribers", desc: "Newsletter list & confirmation status", to: "/admin/subscribers" },
             { title: "Broadcasts", desc: "Compose & send the monthly newsletter", to: "/admin/broadcasts" },
@@ -74,21 +75,6 @@ const AdminIndex = () => {
               <CardContent>
                 <Button asChild variant="outline" size="sm" className="w-full">
                   <Link to={item.to}>Open</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-          {[
-            { title: "Analytics", desc: "Self-hosted event analytics" },
-          ].map((item) => (
-            <Card key={item.title} className="border-dashed">
-              <CardHeader>
-                <CardTitle className="text-base">{item.title}</CardTitle>
-                <CardDescription>{item.desc}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="outline" size="sm" disabled className="w-full">
-                  Coming next phase
                 </Button>
               </CardContent>
             </Card>

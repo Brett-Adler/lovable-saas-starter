@@ -36,6 +36,7 @@ import AdminBroadcasts from "./pages/admin/Broadcasts";
 import AdminUsers from "./pages/admin/Users";
 import AdminOrganizations from "./pages/admin/Organizations";
 import AdminSubscriptions from "./pages/admin/Subscriptions";
+import AdminAnalytics from "./pages/admin/Analytics";
 import Unsubscribe from "./pages/Unsubscribe";
 import NewsletterConfirm from "./pages/NewsletterConfirm";
 import Accessibility from "./pages/Accessibility";
@@ -198,6 +199,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <AdminSubscriptions />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/analytics"
+                element={
+                  <ProtectedRoute>
+                    <AdminAnalytics />
                   </ProtectedRoute>
                 }
               />

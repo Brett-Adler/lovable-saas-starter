@@ -1,72 +1,68 @@
-# Plan: Real Settings page + Admin management views
+# Plan: `/admin/analytics` — core SaaS metrics
 
-## 1. `/dashboard/settings` — real page
+Replace the dashed "Analytics" tile on `AdminIndex` with a real page. Phase 1 focuses on the standard metrics every SaaS dashboard starts with, all derivable from existing tables (`auth.users`, `profiles`, `subscriptions`, `organizations`, `leads`, `marketing_subscribers`, `analytics_events`). No new tables.
 
-Replace the placeholder with three tabbed sections inside `DashboardShell`:
+## Page layout — `src/pages/admin/Analytics.tsx`
 
-**Profile** — edit `display_name`, `avatar_url`, `phone`, `timezone`, `locale` on `public.profiles`.
+Inside `AdminShell`-style header. Date-range selector (Last 7 / 30 / 90 days, default 30) — drives every query.
 
-**Security** — change password (re-auth with current password via `signInWithPassword`, then `auth.updateUser({ password })`); change email (`auth.updateUser({ email })` → existing auth-email-hook); "Sign out everywhere" (`signOut({ scope: 'global' })`).
+### 1. KPI strip (6 cards)
+- **MRR** — sum of active subscription prices × interval normalization (monthly). Pulled from `subscriptions` where `status IN ('active','trialing')` and `environment = 'live'`. Show absolute + delta vs previous period.
+- **Active subscriptions** — count of same filter. Delta vs previous period.
+- **New signups** — `auth.users.created_at` in range (via edge function, same service-role pattern as `admin-list-users`).
+- **New paying customers** — distinct `user_id` in `subscriptions` with first active sub in range.
+- **Churn count** — subs that moved to `canceled` or `current_period_end` passed in range without renewal.
+- **Newsletter subscribers** — `marketing_subscribers` where `status='subscribed'`, delta vs prev period.
 
-**Notifications** — switches bound to `notification_preferences`: `email_marketing`, `email_product`, `email_security` (locked on), `sms_enabled`, `push_enabled`, `in_app_enabled`. Link to `/unsubscribe` for the marketing newsletter.
+### 2. Charts (Recharts, already in deps)
+- **Signups over time** — daily line, range-bucketed.
+- **MRR over time** — daily line, computed from subscription state at each day's end.
+- **Active subscriptions by plan** — stacked bar by `product_name`.
+- **Leads by source** — horizontal bar grouped by `source`/`kind` from `leads`.
 
-All forms: react-hook-form + zod, accessible labels, toasts, loading states.
+### 3. Tables
+- **Top events** (last 30d) — group `analytics_events.event_name`, count, unique users. Sorted desc, top 20.
+- **Recent signups** — last 10 from edge function (email, created_at, provider).
 
-## 2. Admin views — replace the three "Coming next phase" cards
+## Data layer
 
-### `/admin/users` — `src/pages/admin/Users.tsx`
-- Table: avatar, display_name, email, roles (badges), provider, last sign-in, created_at, org count.
-- Search by email/name; pagination 50/page.
-- Row actions: **Grant/Revoke admin** (insert/delete in `user_roles`), **View details** drawer with org memberships + active subscription.
-- Data: `profiles` + `user_roles` + `organization_members` joins (admin RLS already allows), plus auth metadata via new edge function below.
+Two new edge functions (service-role, admin-gated like `admin-list-users`):
 
-### `/admin/organizations` — `src/pages/admin/Organizations.tsx`
-- Table: name, slug, plan, member count, owner email, created_at.
-- Search; drawer with members + roles + org subscription. Read-only.
+### `admin-analytics-overview`
+Returns the KPI strip + chart series for a given range. One round-trip. Computes:
+- signups daily series via `auth.admin.listUsers` filtered by `created_at` (pagination), or a `count_signups_by_day` RPC. **Choose RPC**: simpler, faster — add `public.count_signups_by_day(start, end)` security-definer that reads `auth.users`.
+- MRR snapshot + daily series via SQL over `subscriptions`.
+- churn count via SQL.
+- newsletter counts via SQL.
 
-### `/admin/subscriptions` — `src/pages/admin/Subscriptions.tsx`
-- Table: customer (user email or org name), product_name, status badge, price_id, current_period_end, cancel_at_period_end.
-- Filters: status, environment (sandbox/live).
-- Link to Stripe dashboard customer URL.
-- Read-only.
+### `admin-analytics-events`
+Returns top-events table from `analytics_events` for a range (admin already has SELECT via RLS — could be done client-side; keep client-side and skip this function).
 
-### AdminIndex
-Promote Users/Organizations/Subscriptions tiles from dashed to live; Analytics stays as "coming next phase".
+### New RPCs (one migration)
+- `public.admin_signups_daily(_start timestamptz, _end timestamptz)` → `(day date, count int)` — reads `auth.users`, security definer, gated by `has_role(auth.uid(),'admin')`.
+- `public.admin_signups_count(_start, _end)` → int.
+- `public.admin_mrr_snapshot(_env text)` → numeric — sums monthly-normalized prices over active subs (price comes from `subscriptions.metadata->>'unit_amount'` and `metadata->>'interval'`, set by the webhook today; if missing, fall back to counting subs).
+- `public.admin_subs_by_plan(_env)` → `(product_name text, count int)`.
 
-### Routes
-Add `/admin/users`, `/admin/organizations`, `/admin/subscriptions` to `src/App.tsx`, admin-gated like existing admin routes.
+All RPCs `SECURITY DEFINER`, raise if caller isn't admin.
 
-## 3. New edge function: `admin-list-users`
-
-Service-role function that returns auth metadata not exposed via the Data API.
-
-- Verifies caller JWT, then checks `has_role(uid, 'admin')`; 403 if not.
-- Calls `supabase.auth.admin.listUsers({ page, perPage })`.
-- Returns `[{ id, email, last_sign_in_at, created_at, providers: identities[].provider, email_confirmed_at }]`.
-- Used by `/admin/users` to enrich profile rows; merged on `id`.
-
-Config: `verify_jwt = false` in `supabase/config.toml` (we validate in code). CORS via `npm:@supabase/supabase-js@2/cors`.
-
-## 4. Technical notes
-
-- No DB migration needed.
-- No new npm dependencies.
-- All UI uses existing shadcn primitives (Table, Tabs, Switch, Sheet, Badge, Dialog).
+## AdminIndex + routes
+- Move "Analytics" out of "Coming next phase" into the live grid.
+- Add `/admin/analytics` route in `src/App.tsx`, admin-gated.
 
 ## Files
 
 **Created**
-- `src/pages/admin/Users.tsx`
-- `src/pages/admin/Organizations.tsx`
-- `src/pages/admin/Subscriptions.tsx`
-- `src/pages/dashboard/settings/ProfileTab.tsx`
-- `src/pages/dashboard/settings/SecurityTab.tsx`
-- `src/pages/dashboard/settings/NotificationsTab.tsx`
-- `supabase/functions/admin-list-users/index.ts`
-- `supabase/functions/admin-list-users/deno.json`
+- `src/pages/admin/Analytics.tsx`
+- `src/components/admin/analytics/KpiCard.tsx`
+- `src/components/admin/analytics/RangePicker.tsx`
+- `supabase/functions/admin-analytics-overview/index.ts` + `deno.json`
+- `supabase/migrations/<ts>_admin_analytics_rpcs.sql`
 
 **Edited**
-- `src/pages/dashboard/Settings.tsx`
-- `src/pages/admin/AdminIndex.tsx`
-- `src/App.tsx`
-- `supabase/config.toml` (function entry)
+- `src/pages/admin/AdminIndex.tsx` — promote tile
+- `src/App.tsx` — add route
+- `supabase/config.toml` — register function
+
+## Out of scope (phase 2)
+Cohort retention, LTV, ARPU, funnel/conversion, geographic breakdown, custom date ranges, CSV export, scheduled email digests. Confirm if any of these should move into phase 1.
