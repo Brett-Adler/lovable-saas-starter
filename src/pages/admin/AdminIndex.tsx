@@ -59,7 +59,9 @@ const AdminIndex = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
             { title: "Leads", desc: "Contact, demo, and waitlist submissions", to: "/admin/leads" },
-            { title: "Site settings", desc: "Public contact email and social links", to: "/admin/site-settings" },
+            { title: "Subscribers", desc: "Newsletter list & confirmation status", to: "/admin/subscribers" },
+            { title: "Broadcasts", desc: "Compose & send the monthly newsletter", to: "/admin/broadcasts" },
+            { title: "Site settings", desc: "Contact email, social links, mailing address", to: "/admin/site-settings" },
           ].map((item) => (
             <Card key={item.title}>
               <CardHeader>
@@ -77,7 +79,6 @@ const AdminIndex = () => {
             { title: "Users", desc: "Browse and manage every account" },
             { title: "Organizations", desc: "Inspect every workspace" },
             { title: "Subscriptions", desc: "All Stripe customers and plans" },
-            { title: "Marketing", desc: "Campaigns, segments, and subscribers" },
             { title: "Analytics", desc: "Self-hosted event analytics" },
           ].map((item) => (
             <Card key={item.title} className="border-dashed">

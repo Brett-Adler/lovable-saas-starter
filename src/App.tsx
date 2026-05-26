@@ -31,7 +31,10 @@ import AcceptInvite from "./pages/AcceptInvite";
 import AdminIndex from "./pages/admin/AdminIndex";
 import AdminLeads from "./pages/admin/Leads";
 import AdminSiteSettings from "./pages/admin/SiteSettings";
+import AdminSubscribers from "./pages/admin/Subscribers";
+import AdminBroadcasts from "./pages/admin/Broadcasts";
 import Unsubscribe from "./pages/Unsubscribe";
+import NewsletterConfirm from "./pages/NewsletterConfirm";
 import Accessibility from "./pages/Accessibility";
 import SitemapPage from "./pages/Sitemap";
 import NotFound from "./pages/NotFound";
@@ -63,6 +66,7 @@ const App = () => (
               <Route path="/readme" element={<Readme />} />
               <Route path="/checkout/return" element={<CheckoutReturn />} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
+              <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
 
               {/* Auth */}
               <Route path="/login" element={<Auth mode="login" />} />
@@ -151,6 +155,22 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <AdminSiteSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/subscribers"
+                element={
+                  <ProtectedRoute>
+                    <AdminSubscribers />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/broadcasts"
+                element={
+                  <ProtectedRoute>
+                    <AdminBroadcasts />
                   </ProtectedRoute>
                 }
               />
