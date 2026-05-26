@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   ArrowRight, CheckCircle2, Zap, Shield, CreditCard, Mail, Users, BarChart3,
   Smartphone, Sparkles, MessageSquare, Lock, Star,

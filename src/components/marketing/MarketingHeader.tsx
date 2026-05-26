@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 const links = [
   { to: "/", label: "Home" },
+  { to: "/#features", label: "Features" },
   { to: "/pricing", label: "Pricing" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
@@ -31,7 +32,7 @@ export const MarketingHeader = () => {
                 className={({ isActive }) =>
                   cn(
                     "px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                    isActive
+                    isActive && !l.to.includes("#")
                       ? "text-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent/40"
                   )
