@@ -35,14 +35,15 @@ const SiteSettingsPage = () => {
   useEffect(() => {
     if (settings) {
       const next: Record<string, string> = {};
-      for (const f of fields) next[f.key] = (settings as Record<string, string | null>)[f.key] ?? "";
+      const s = settings as unknown as Record<string, string | null>;
+      for (const f of fields) next[f.key] = s[f.key] ?? "";
       setForm(next);
     }
   }, [settings]);
 
   const save = async () => {
     setSaving(true);
-    const payload: Record<string, string | null> = { id: 1 };
+    const payload: Record<string, string | number | null> = { id: 1 };
     for (const f of fields) payload[f.key] = form[f.key]?.trim() || null;
     const { error } = await supabase.from("site_settings").upsert(payload as never, { onConflict: "id" });
     setSaving(false);
