@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   ArrowRight, CheckCircle2, Zap, Shield, CreditCard, Mail, Users, BarChart3,
   Smartphone, Sparkles, MessageSquare, Lock, Star,
@@ -43,6 +44,14 @@ const faqs = [
 ];
 
 const Index = () => {
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [hash]);
+
   return (
     <MarketingLayout>
       {/* Hero */}
@@ -110,7 +119,7 @@ const Index = () => {
       </section>
 
       {/* Features */}
-      <section className="container py-24">
+      <section id="features" className="container py-24 scroll-mt-20">
         <div className="max-w-2xl mx-auto text-center mb-16">
           <Badge variant="outline" className="mb-4">Features</Badge>
           <h2 className="text-3xl md:text-5xl font-bold">Everything a SaaS needs</h2>
