@@ -36,7 +36,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "saas-starter-suite"
+const SITE_NAME = "SaaS Starter"
 const SENDER_DOMAIN = "notify.voicept.com"
 const ROOT_DOMAIN = "voicept.com"
 const FROM_DOMAIN = "notify.voicept.com" // Domain shown in From address (may be root or sender subdomain)
