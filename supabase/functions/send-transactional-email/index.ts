@@ -124,6 +124,82 @@ Deno.serve(async (req) => {
   // Create Supabase client with service role (bypasses RLS)
   const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
+  // ============ Authorization ============
+  // Determine caller identity. The gateway already enforces a valid JWT
+  // (verify_jwt = true), but anon JWTs are publicly known, so we MUST
+  // restrict who can send what to whom in-function.
+  const authHeader = req.headers.get('Authorization') || ''
+  const callerToken = authHeader.replace(/^Bearer\s+/i, '')
+  const serviceKey = supabaseServiceKey
+
+  let isServiceRole = false
+  let callerEmail: string | null = null
+  let callerUserId: string | null = null
+
+  if (callerToken && callerToken === serviceKey) {
+    isServiceRole = true
+  } else if (callerToken) {
+    const userClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
+      global: { headers: { Authorization: `Bearer ${callerToken}` } },
+    })
+    const { data: claimsData } = await userClient.auth.getClaims(callerToken)
+    const claims = claimsData?.claims as { sub?: string; email?: string; role?: string } | undefined
+    if (claims?.role === 'service_role') {
+      isServiceRole = true
+    } else if (claims?.sub) {
+      callerUserId = claims.sub
+      callerEmail = (claims.email ?? '').toLowerCase() || null
+    }
+  }
+
+  if (!isServiceRole) {
+    if (!callerUserId) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+    const rule = USER_TRIGGERABLE[templateName]
+    if (!rule) {
+      console.warn('Template not user-triggerable', { templateName, callerUserId })
+      return new Response(JSON.stringify({ error: 'Forbidden' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+    const recipientLower = effectiveRecipient.toLowerCase()
+    if (rule === 'self') {
+      if (!callerEmail || callerEmail !== recipientLower) {
+        return new Response(JSON.stringify({ error: 'Forbidden: recipient must be self' }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
+      }
+    } else if (rule === 'own_invite') {
+      // Confirm a pending invite from this caller to this recipient exists.
+      // The invite row insert was already gated by org-admin RLS, so finding
+      // a matching invite created by the caller proves authorization.
+      const { data: invite, error: inviteErr } = await supabase
+        .from('organization_invites')
+        .select('id')
+        .eq('email', recipientLower)
+        .eq('invited_by', callerUserId)
+        .is('accepted_at', null)
+        .gt('expires_at', new Date().toISOString())
+        .limit(1)
+        .maybeSingle()
+      if (inviteErr || !invite) {
+        return new Response(JSON.stringify({ error: 'Forbidden: no matching invite' }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
+      }
+    }
+  }
+  // ============ end authorization ============
+
+
+
   // 2. Check suppression list (fail-closed: if we can't verify, don't send)
   const { data: suppressed, error: suppressionError } = await supabase
     .from('suppressed_emails')
