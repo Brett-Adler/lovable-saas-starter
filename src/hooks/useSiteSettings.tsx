@@ -10,6 +10,11 @@ export interface SiteSettings {
   social_facebook: string | null;
   social_tiktok: string | null;
   contact_email: string | null;
+  mailing_address: string | null;
+  company_legal_name: string | null;
+  from_name: string | null;
+  from_email: string | null;
+  reply_to: string | null;
 }
 
 export const useSiteSettings = () => {
@@ -20,12 +25,12 @@ export const useSiteSettings = () => {
       const { data, error } = await supabase
         .from("site_settings")
         .select(
-          "social_twitter, social_github, social_linkedin, social_instagram, social_youtube, social_facebook, social_tiktok, contact_email",
+          "social_twitter, social_github, social_linkedin, social_instagram, social_youtube, social_facebook, social_tiktok, contact_email, mailing_address, company_legal_name, from_name, from_email, reply_to",
         )
         .eq("id", 1)
         .maybeSingle();
       if (error) throw error;
-      return data;
+      return data as SiteSettings | null;
     },
   });
 };

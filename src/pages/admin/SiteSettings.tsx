@@ -15,6 +15,11 @@ import { toast } from "sonner";
 
 const fields = [
   { key: "contact_email", label: "Public contact email", placeholder: "hello@yourdomain.com", type: "email" },
+  { key: "company_legal_name", label: "Company legal name (CAN-SPAM footer)", placeholder: "Blues Brothers Holdings, LLC", type: "text" },
+  { key: "mailing_address", label: "Mailing address (CAN-SPAM footer)", placeholder: "1060 W Addison St, Chicago, IL 60613, USA", type: "text" },
+  { key: "from_name", label: "Default newsletter From name", placeholder: "Jake & Elwood", type: "text" },
+  { key: "from_email", label: "Default newsletter From email", placeholder: "newsletter@notify.yourdomain.com", type: "email" },
+  { key: "reply_to", label: "Default newsletter Reply-to", placeholder: "hello@yourdomain.com", type: "email" },
   { key: "social_twitter", label: "Twitter / X URL", placeholder: "https://twitter.com/...", type: "url" },
   { key: "social_github", label: "GitHub URL", placeholder: "https://github.com/...", type: "url" },
   { key: "social_linkedin", label: "LinkedIn URL", placeholder: "https://linkedin.com/company/...", type: "url" },

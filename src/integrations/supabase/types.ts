@@ -191,6 +191,57 @@ export type Database = {
         }
         Relationships: []
       }
+      marketing_campaign_recipients: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          email: string
+          error: string | null
+          id: string
+          provider_message_id: string | null
+          sent_at: string | null
+          status: string
+          subscriber_id: string | null
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          email: string
+          error?: string | null
+          id?: string
+          provider_message_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subscriber_id?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          email?: string
+          error?: string | null
+          id?: string
+          provider_message_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subscriber_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_campaign_recipients_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketing_campaign_recipients_subscriber_id_fkey"
+            columns: ["subscriber_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_subscribers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketing_campaigns: {
         Row: {
           body_html: string | null
@@ -291,6 +342,11 @@ export type Database = {
       }
       marketing_subscribers: {
         Row: {
+          confirmation_token: string | null
+          confirmed_at: string | null
+          consent_ip: unknown
+          consent_text: string | null
+          consent_user_agent: string | null
           created_at: string
           email: string
           id: string
@@ -305,6 +361,11 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          confirmation_token?: string | null
+          confirmed_at?: string | null
+          consent_ip?: unknown
+          consent_text?: string | null
+          consent_user_agent?: string | null
           created_at?: string
           email: string
           id?: string
@@ -319,6 +380,11 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          confirmation_token?: string | null
+          confirmed_at?: string | null
+          consent_ip?: unknown
+          consent_text?: string | null
+          consent_user_agent?: string | null
           created_at?: string
           email?: string
           id?: string
@@ -556,8 +622,13 @@ export type Database = {
       }
       site_settings: {
         Row: {
+          company_legal_name: string | null
           contact_email: string | null
+          from_email: string | null
+          from_name: string | null
           id: number
+          mailing_address: string | null
+          reply_to: string | null
           social_facebook: string | null
           social_github: string | null
           social_instagram: string | null
@@ -568,8 +639,13 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          company_legal_name?: string | null
           contact_email?: string | null
+          from_email?: string | null
+          from_name?: string | null
           id?: number
+          mailing_address?: string | null
+          reply_to?: string | null
           social_facebook?: string | null
           social_github?: string | null
           social_instagram?: string | null
@@ -580,8 +656,13 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          company_legal_name?: string | null
           contact_email?: string | null
+          from_email?: string | null
+          from_name?: string | null
           id?: number
+          mailing_address?: string | null
+          reply_to?: string | null
           social_facebook?: string | null
           social_github?: string | null
           social_instagram?: string | null
@@ -745,6 +826,14 @@ export type Database = {
       is_org_member: {
         Args: { _org_id: string; _user_id: string }
         Returns: boolean
+      }
+      list_confirmed_subscriber_emails: {
+        Args: never
+        Returns: {
+          email: string
+          id: string
+          name: string
+        }[]
       }
       move_to_dlq: {
         Args: {
