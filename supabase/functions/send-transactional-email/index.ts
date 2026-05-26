@@ -21,6 +21,9 @@ const USER_TRIGGERABLE: Record<string, AuthRule> = {
   'welcome': 'self',
   'password-changed': 'self',
   'invite-teammate': 'own_invite',
+  // Newsletter confirmation: anyone may request a confirmation email for
+  // their own address. Welcome is service-role only (sent from confirm fn).
+  'newsletter-confirm': 'self',
 }
 
 // Generate a cryptographically random 32-byte hex token
