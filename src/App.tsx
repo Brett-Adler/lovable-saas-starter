@@ -16,6 +16,7 @@ import Demo from "./pages/Demo";
 import Waitlist from "./pages/Waitlist";
 import Legal from "./pages/Legal";
 import Readme from "./pages/Readme";
+import CheckoutReturn from "./pages/CheckoutReturn";
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -52,6 +53,7 @@ const App = () => (
               <Route path="/privacy" element={<Legal title="Privacy Policy" kind="privacy" />} />
               <Route path="/terms" element={<Legal title="Terms of Service" kind="terms" />} />
               <Route path="/readme" element={<Readme />} />
+              <Route path="/checkout/return" element={<CheckoutReturn />} />
 
               {/* Auth */}
               <Route path="/login" element={<Auth mode="login" />} />
