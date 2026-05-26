@@ -1,5 +1,14 @@
+import { Link } from "react-router-dom";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+
+const bullets = [
+  "Auth, billing, teams, and email — production-ready from day one.",
+  "A polished design system with light + dark themes.",
+  "A super-admin panel and built-in analytics for the boring metrics.",
+];
 
 const About = () => (
   <MarketingLayout>
@@ -17,6 +26,27 @@ const About = () => (
           <p>
             This template is for indie hackers, agencies, and teams who care about quality but don't want to reinvent the wheel.
           </p>
+        </div>
+
+        <div className="mt-12 rounded-xl border border-border bg-muted/30 p-6">
+          <h2 className="font-semibold mb-4">What's in the box</h2>
+          <ul className="space-y-3">
+            {bullets.map((b) => (
+              <li key={b} className="flex gap-3 text-sm">
+                <CheckCircle2 className="h-5 w-5 text-success shrink-0 mt-0.5" />
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-10 flex flex-col sm:flex-row gap-3">
+          <Button asChild>
+            <Link to="/pricing">See pricing <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/contact">Talk to us</Link>
+          </Button>
         </div>
       </div>
     </section>

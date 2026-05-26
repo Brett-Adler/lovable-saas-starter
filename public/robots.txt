@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://example.com/sitemap.xml
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /checkout
+Disallow: /invite
+
+Sitemap: https://saas-starter-suite.lovable.app/sitemap.xml
