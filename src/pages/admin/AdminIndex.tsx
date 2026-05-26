@@ -58,6 +58,9 @@ const AdminIndex = () => {
         </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
+            { title: "Users", desc: "Browse, search, and grant admin", to: "/admin/users" },
+            { title: "Organizations", desc: "Every workspace and its members", to: "/admin/organizations" },
+            { title: "Subscriptions", desc: "All Stripe customers and plans", to: "/admin/subscriptions" },
             { title: "Leads", desc: "Contact, demo, and waitlist submissions", to: "/admin/leads" },
             { title: "Subscribers", desc: "Newsletter list & confirmation status", to: "/admin/subscribers" },
             { title: "Broadcasts", desc: "Compose & send the monthly newsletter", to: "/admin/broadcasts" },
@@ -76,9 +79,6 @@ const AdminIndex = () => {
             </Card>
           ))}
           {[
-            { title: "Users", desc: "Browse and manage every account" },
-            { title: "Organizations", desc: "Inspect every workspace" },
-            { title: "Subscriptions", desc: "All Stripe customers and plans" },
             { title: "Analytics", desc: "Self-hosted event analytics" },
           ].map((item) => (
             <Card key={item.title} className="border-dashed">
