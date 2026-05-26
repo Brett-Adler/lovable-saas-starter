@@ -1,3 +1,4 @@
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
 
@@ -41,10 +42,40 @@ Deno.serve(async (req) => {
     });
   }
   try {
-    const { priceId, quantity, customerEmail, userId, returnUrl, environment } = await req.json();
+    // Require authenticated user — prevents anonymous callers from attaching a
+    // checkout to an arbitrary userId / email.
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } },
+    );
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsErr } = await supabase.auth.getClaims(token);
+    if (claimsErr || !claimsData?.claims?.sub) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const authedUserId = claimsData.claims.sub as string;
+    const authedEmail = (claimsData.claims.email as string | undefined)?.toLowerCase();
+
+    const { priceId, quantity, returnUrl, environment } = await req.json();
     if (!priceId || !/^[a-zA-Z0-9_-]+$/.test(priceId)) throw new Error("Invalid priceId");
     if (!returnUrl) throw new Error("Missing returnUrl");
     if (environment !== "sandbox" && environment !== "live") throw new Error("Invalid environment");
+
+    // Always derive identity from the authenticated session — never trust
+    // client-supplied userId/customerEmail.
+    const userId = authedUserId;
+    const customerEmail = authedEmail;
 
     const env = environment as StripeEnv;
     const stripe = createStripeClient(env);
@@ -54,9 +85,7 @@ Deno.serve(async (req) => {
     const stripePrice = prices.data[0];
     const isRecurring = stripePrice.type === "recurring";
 
-    const customerId = (customerEmail || userId)
-      ? await resolveOrCreateCustomer(stripe, { email: customerEmail, userId })
-      : undefined;
+    const customerId = await resolveOrCreateCustomer(stripe, { email: customerEmail, userId });
 
     let productDescription: string | undefined;
     if (!isRecurring) {
@@ -71,12 +100,10 @@ Deno.serve(async (req) => {
       ui_mode: "embedded_page",
       return_url: returnUrl,
       managed_payments: { enabled: true },
-      ...(customerId && { customer: customerId }),
+      customer: customerId,
       ...(!isRecurring && { payment_intent_data: { description: productDescription } }),
-      ...(userId && {
-        metadata: { userId },
-        ...(isRecurring && { subscription_data: { metadata: { userId } } }),
-      }),
+      metadata: { userId },
+      ...(isRecurring && { subscription_data: { metadata: { userId } } }),
     });
 
     return new Response(JSON.stringify({ clientSecret: session.client_secret }), {
