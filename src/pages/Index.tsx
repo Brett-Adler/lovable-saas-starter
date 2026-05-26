@@ -44,6 +44,14 @@ const faqs = [
 ];
 
 const Index = () => {
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [hash]);
+
   return (
     <MarketingLayout>
       {/* Hero */}
