@@ -1,14 +1,31 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
+import { useStripeCheckout } from "@/hooks/useStripeCheckout";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
-const tiers = [
+type Tier = {
+  name: string;
+  description: string;
+  monthly: number;
+  yearly: number;
+  cta: string;
+  highlight?: boolean;
+  priceMonthly?: string;
+  priceYearly?: string;
+  features: string[];
+  missing: string[];
+};
+
+const tiers: Tier[] = [
   {
     name: "Free",
     description: "For side projects and trying things out.",
@@ -23,8 +40,10 @@ const tiers = [
     description: "For growing teams ready to ship.",
     monthly: 19,
     yearly: 15,
-    cta: "Start 14-day trial",
+    cta: "Subscribe to Pro",
     highlight: true,
+    priceMonthly: "pro_monthly",
+    priceYearly: "pro_yearly",
     features: ["Unlimited projects", "Up to 10 team members", "Priority email support", "Advanced analytics", "Custom domain", "Marketing emails"],
     missing: ["SSO / SAML"],
   },
@@ -33,7 +52,9 @@ const tiers = [
     description: "For organizations with serious needs.",
     monthly: 49,
     yearly: 39,
-    cta: "Start 14-day trial",
+    cta: "Subscribe to Team",
+    priceMonthly: "team_monthly",
+    priceYearly: "team_yearly",
     features: ["Everything in Pro", "Unlimited team members", "SSO / SAML", "Dedicated success manager", "99.9% SLA", "Audit logs"],
     missing: [],
   },
@@ -41,9 +62,30 @@ const tiers = [
 
 const Pricing = () => {
   const [yearly, setYearly] = useState(true);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { openCheckout, closeCheckout, isOpen, checkoutElement } = useStripeCheckout();
+
+  const handleSubscribe = (tier: Tier) => {
+    const priceId = yearly ? tier.priceYearly : tier.priceMonthly;
+    if (!priceId) {
+      navigate("/signup");
+      return;
+    }
+    if (!user) {
+      navigate(`/signup?next=${encodeURIComponent("/pricing")}`);
+      return;
+    }
+    openCheckout({
+      priceId,
+      customerEmail: user.email ?? undefined,
+      userId: user.id,
+    });
+  };
 
   return (
     <MarketingLayout>
+      <PaymentTestModeBanner />
       <section className="container py-20 md:py-28">
         <div className="max-w-2xl mx-auto text-center">
           <Badge variant="outline" className="mb-4">Pricing</Badge>
@@ -83,13 +125,19 @@ const Pricing = () => {
               {yearly && t.monthly > 0 && (
                 <p className="text-xs text-muted-foreground mt-1">Billed annually</p>
               )}
-              <Button
-                asChild
-                className={cn("w-full mt-6", t.highlight && "shadow-glow")}
-                variant={t.highlight ? "default" : "outline"}
-              >
-                <Link to="/signup">{t.cta}</Link>
-              </Button>
+              {t.priceMonthly ? (
+                <Button
+                  onClick={() => handleSubscribe(t)}
+                  className={cn("w-full mt-6", t.highlight && "shadow-glow")}
+                  variant={t.highlight ? "default" : "outline"}
+                >
+                  {t.cta}
+                </Button>
+              ) : (
+                <Button asChild className="w-full mt-6" variant="outline">
+                  <Link to="/signup">{t.cta}</Link>
+                </Button>
+              )}
               <ul className="mt-8 space-y-3">
                 {t.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm">
@@ -112,6 +160,15 @@ const Pricing = () => {
           Need something custom? <Link to="/contact" className="text-primary font-medium">Talk to sales</Link>
         </p>
       </section>
+
+      <Dialog open={isOpen} onOpenChange={(v) => !v && closeCheckout()}>
+        <DialogContent className="max-w-2xl p-0 overflow-hidden">
+          <DialogHeader className="px-6 pt-6">
+            <DialogTitle>Complete your subscription</DialogTitle>
+          </DialogHeader>
+          <div className="max-h-[80vh] overflow-y-auto">{checkoutElement}</div>
+        </DialogContent>
+      </Dialog>
     </MarketingLayout>
   );
 };
