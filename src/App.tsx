@@ -29,7 +29,11 @@ import Billing from "./pages/dashboard/Billing";
 import Settings from "./pages/dashboard/Settings";
 import AcceptInvite from "./pages/AcceptInvite";
 import AdminIndex from "./pages/admin/AdminIndex";
+import AdminLeads from "./pages/admin/Leads";
+import AdminSiteSettings from "./pages/admin/SiteSettings";
 import Unsubscribe from "./pages/Unsubscribe";
+import Accessibility from "./pages/Accessibility";
+import SitemapPage from "./pages/Sitemap";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -53,6 +57,9 @@ const App = () => (
               <Route path="/waitlist" element={<Waitlist />} />
               <Route path="/privacy" element={<Legal title="Privacy Policy" kind="privacy" />} />
               <Route path="/terms" element={<Legal title="Terms of Service" kind="terms" />} />
+              <Route path="/cookies" element={<Legal title="Cookie Policy" kind="cookies" />} />
+              <Route path="/accessibility" element={<Accessibility />} />
+              <Route path="/sitemap" element={<SitemapPage />} />
               <Route path="/readme" element={<Readme />} />
               <Route path="/checkout/return" element={<CheckoutReturn />} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
@@ -128,6 +135,22 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <AdminIndex />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/leads"
+                element={
+                  <ProtectedRoute>
+                    <AdminLeads />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/site-settings"
+                element={
+                  <ProtectedRoute>
+                    <AdminSiteSettings />
                   </ProtectedRoute>
                 }
               />
