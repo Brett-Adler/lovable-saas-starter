@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Name required").max(100),
@@ -23,6 +24,8 @@ const schema = z.object({
 const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  const { data: settings } = useSiteSettings();
+  const contactEmail = settings?.contact_email ?? "hello@example.com";
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,11 +44,14 @@ const Contact = () => {
     }
     setLoading(true);
     try {
-      // TODO: persist to lead_submissions once schema exists; transactional confirmation email after email infra is set up
-      const { error } = await supabase
-        .from("lead_submissions" as never)
-        .insert({ type: "contact", payload: parsed.data, status: "new" } as never);
-      if (error && !error.message.includes("does not exist")) throw error;
+      const { error } = await supabase.from("leads").insert({
+        kind: "contact",
+        name: parsed.data.name,
+        email: parsed.data.email,
+        source: parsed.data.subject,
+        message: parsed.data.message,
+      });
+      if (error) throw error;
       setDone(true);
       toast.success("Message sent — we'll get back to you soon.");
     } catch (err: unknown) {
@@ -72,7 +78,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="font-semibold">Email</p>
-                  <p className="text-sm text-muted-foreground">hello@example.com</p>
+                  <a href={`mailto:${contactEmail}`} className="text-sm text-muted-foreground hover:text-foreground">{contactEmail}</a>
                 </div>
               </div>
               <div className="flex gap-4">

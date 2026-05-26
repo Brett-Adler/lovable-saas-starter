@@ -1,0 +1,55 @@
+// Single source of truth for public site navigation.
+// Used by the footer, the human sitemap page, and the home explore strip.
+
+export interface PublicRoute {
+  to: string;
+  label: string;
+}
+
+export interface PublicGroup {
+  title: string;
+  links: PublicRoute[];
+}
+
+export const publicNavGroups: PublicGroup[] = [
+  {
+    title: "Product",
+    links: [
+      { to: "/#features", label: "Features" },
+      { to: "/pricing", label: "Pricing" },
+      { to: "/demo", label: "Request demo" },
+      { to: "/waitlist", label: "Join waitlist" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { to: "/about", label: "About" },
+      { to: "/contact", label: "Contact" },
+      { to: "/newsletter", label: "Newsletter" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { to: "/privacy", label: "Privacy Policy" },
+      { to: "/terms", label: "Terms of Service" },
+      { to: "/cookies", label: "Cookie Policy" },
+      { to: "/accessibility", label: "Accessibility" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { to: "/readme", label: "Setup guide" },
+      { to: "/sitemap", label: "Sitemap" },
+    ],
+  },
+  {
+    title: "Account",
+    links: [
+      { to: "/login", label: "Log in" },
+      { to: "/signup", label: "Sign up" },
+    ],
+  },
+];

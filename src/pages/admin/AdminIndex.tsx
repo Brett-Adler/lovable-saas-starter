@@ -58,10 +58,25 @@ const AdminIndex = () => {
         </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
+            { title: "Leads", desc: "Contact, demo, and waitlist submissions", to: "/admin/leads" },
+            { title: "Site settings", desc: "Public contact email and social links", to: "/admin/site-settings" },
+          ].map((item) => (
+            <Card key={item.title}>
+              <CardHeader>
+                <CardTitle className="text-base">{item.title}</CardTitle>
+                <CardDescription>{item.desc}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button asChild variant="outline" size="sm" className="w-full">
+                  <Link to={item.to}>Open</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+          {[
             { title: "Users", desc: "Browse and manage every account" },
             { title: "Organizations", desc: "Inspect every workspace" },
             { title: "Subscriptions", desc: "All Stripe customers and plans" },
-            { title: "Leads", desc: "Contact, demo, and waitlist submissions" },
             { title: "Marketing", desc: "Campaigns, segments, and subscribers" },
             { title: "Analytics", desc: "Self-hosted event analytics" },
           ].map((item) => (
