@@ -1,28 +1,24 @@
-import { Link } from "react-router-dom";
-import { Construction } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { ProfileTab } from "@/pages/dashboard/settings/ProfileTab";
+import { SecurityTab } from "@/pages/dashboard/settings/SecurityTab";
+import { NotificationsTab } from "@/pages/dashboard/settings/NotificationsTab";
 
 const Settings = () => (
   <DashboardShell>
     <div className="p-6 lg:p-10 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-2">Settings</h1>
-      <p className="text-muted-foreground mb-6">Account preferences and notifications.</p>
-      <Card className="border-dashed">
-        <CardHeader>
-          <Construction className="h-6 w-6 text-muted-foreground mb-2" />
-          <CardTitle>Coming in a later phase</CardTitle>
-          <CardDescription>
-            Profile editing, password change, and notification preferences.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button asChild variant="outline">
-            <Link to="/dashboard">Back to dashboard</Link>
-          </Button>
-        </CardContent>
-      </Card>
+      <h1 className="text-2xl font-bold mb-1">Settings</h1>
+      <p className="text-muted-foreground mb-6">Profile, security, and notification preferences.</p>
+      <Tabs defaultValue="profile" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
+        </TabsList>
+        <TabsContent value="profile"><ProfileTab /></TabsContent>
+        <TabsContent value="security"><SecurityTab /></TabsContent>
+        <TabsContent value="notifications"><NotificationsTab /></TabsContent>
+      </Tabs>
     </div>
   </DashboardShell>
 );

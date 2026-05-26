@@ -33,6 +33,9 @@ import AdminLeads from "./pages/admin/Leads";
 import AdminSiteSettings from "./pages/admin/SiteSettings";
 import AdminSubscribers from "./pages/admin/Subscribers";
 import AdminBroadcasts from "./pages/admin/Broadcasts";
+import AdminUsers from "./pages/admin/Users";
+import AdminOrganizations from "./pages/admin/Organizations";
+import AdminSubscriptions from "./pages/admin/Subscriptions";
 import Unsubscribe from "./pages/Unsubscribe";
 import NewsletterConfirm from "./pages/NewsletterConfirm";
 import Accessibility from "./pages/Accessibility";
@@ -171,6 +174,30 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <AdminBroadcasts />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/users"
+                element={
+                  <ProtectedRoute>
+                    <AdminUsers />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/organizations"
+                element={
+                  <ProtectedRoute>
+                    <AdminOrganizations />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/subscriptions"
+                element={
+                  <ProtectedRoute>
+                    <AdminSubscriptions />
                   </ProtectedRoute>
                 }
               />
