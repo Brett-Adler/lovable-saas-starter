@@ -87,6 +87,15 @@ const Pricing = () => {
   return (
     <MarketingLayout>
       <PaymentTestModeBanner />
+      <div className="container pt-8">
+        <Alert className="max-w-3xl mx-auto">
+          <Info className="h-4 w-4" />
+          <AlertTitle>This is a free template</AlertTitle>
+          <AlertDescription>
+            SaaS Starter Suite is an open Lovable template. The pricing below is example content to demonstrate a subscription flow — you are not being charged to use the template. Remix it and replace these tiers with your own.
+          </AlertDescription>
+        </Alert>
+      </div>
       <section className="container py-20 md:py-28">
         <div className="max-w-2xl mx-auto text-center">
           <Badge variant="outline" className="mb-4">Pricing</Badge>
