@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { NewsletterForm } from "@/components/marketing/NewsletterForm";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { publicNavGroups } from "@/lib/public-routes";
 
 const features = [
   { icon: Lock, title: "Auth, batteries included", desc: "Email/password, Google, Apple, and SMS — wired and ready." },
@@ -295,6 +296,32 @@ const Index = () => {
               </AccordionItem>
             ))}
           </Accordion>
+        </div>
+      </section>
+
+      {/* Explore everything */}
+      <section className="container py-16 border-t border-border/40">
+        <div className="max-w-4xl mx-auto text-center mb-8">
+          <Badge variant="outline" className="mb-4">Explore</Badge>
+          <h2 className="text-2xl md:text-3xl font-bold">Every page on this site</h2>
+        </div>
+        <div className="max-w-4xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          {publicNavGroups.map((g) => (
+            <div key={g.title}>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">{g.title}</h3>
+              <ul className="space-y-1.5">
+                {g.links.map((l) => (
+                  <li key={l.to}>
+                    {l.to.startsWith("/#") ? (
+                      <a href={l.to} className="text-sm hover:text-primary">{l.label}</a>
+                    ) : (
+                      <Link to={l.to} className="text-sm hover:text-primary">{l.label}</Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </section>
 
