@@ -1,64 +1,61 @@
-## Plan — public pages, footer, contact, admin
+## What's there today
 
-### 1. New public pages
-- **`/accessibility`** — `src/pages/Accessibility.tsx`: WCAG 2.1 AA statement, contact email for accessibility issues, last-updated date.
-- **`/sitemap`** — `src/pages/Sitemap.tsx`: human-readable index of every public route, grouped (Product / Company / Legal / Resources / Account).
-- Register both in `src/App.tsx`.
-- Update `src/pages/Legal.tsx` to add a third `kind: "cookies"` variant and register `/cookies` (Cookie Policy placeholder, same style as Privacy/Terms).
-- Replace the lorem-ipsum body in `Legal.tsx` with a more realistic placeholder template (sections: data collected, purposes, third parties, retention, your rights, contact) so users can edit rather than rewrite.
+`NewsletterForm` already inserts into `public.marketing_subscribers` (table exists with `email`, `status`, `source`, `unsubscribe_token`, RLS allowing anonymous insert, admin read/update). The insert technically works, but the form swallows errors and there is **no confirmation email, no unsubscribe flow, no admin view, and no way to actually send a broadcast**. Also: `marketing_campaigns` and `marketing_segments` tables already exist — we'll reuse `marketing_campaigns` for broadcasts.
 
-### 2. XML sitemap + robots
-- Create `scripts/generate-sitemap.ts` listing every public route. Wire `predev` + `prebuild` in `package.json` to run it.
-- Ensure `public/robots.txt` exists and references `Sitemap: https://saas-starter-suite.lovable.app/sitemap.xml`.
+## Stack decisions (confirmed)
 
-### 3. Footer — site-wide + social links + admin-managed
-- New table `public.site_settings` (singleton, id=1) with columns: `social_twitter`, `social_github`, `social_linkedin`, `social_instagram`, `social_youtube`, `social_facebook`, `social_tiktok`, `contact_email`, `updated_at`.
-  - Grants: `SELECT` to `anon` + `authenticated` (public site reads it); `ALL` to `service_role`; admin-only `UPDATE`/`INSERT` via RLS using `has_role(auth.uid(),'admin')`.
-- New hook `src/hooks/useSiteSettings.tsx` fetches the row once (React Query).
-- Rewrite `MarketingFooter.tsx`:
-  - Columns: **Product** (Features, Pricing, Demo, Waitlist), **Company** (About, Contact, Newsletter), **Legal** (Privacy, Terms, Cookies, Accessibility), **Resources** (Setup guide, Sitemap).
-  - Social icon row (lucide icons: Twitter, Github, Linkedin, Instagram, Youtube, Facebook + a TikTok SVG) — only render icons whose URL is set in `site_settings`.
-  - Keep newsletter + copyright.
+- **Broadcast ESP**: Resend (via the connector gateway). Lovable's built-in email pipeline stays for auth + transactional only.
+- **Double opt-in**: required. New subscribers land as `pending` until they click the confirmation link.
+- **Compliance**: CAN-SPAM physical address (Wrigley Field — 1060 W Addison St, Chicago, IL 60613), GDPR consent text, one-click unsubscribe, `List-Unsubscribe` + `List-Unsubscribe-Post` headers, suppression honored.
+- **Voice**: sample/preview names from *The Blues Brothers* (Jake, Elwood, Mrs. Murphy, Curtis, Cab Calloway, etc.).
 
-### 4. Home page — links to everything
-- In `src/pages/Index.tsx`, add a compact "Explore" link strip above the final CTA listing all public pages (uses same data source as footer). Footer remains the canonical site map.
+## Plan
 
-### 5. Contact form persistence + admin viewer
-- Update `src/pages/Contact.tsx` to insert into existing `public.leads` table with `kind='contact'`, mapping `subject`→`source`, full text→`message`, `name`, `email`. Remove the dead `lead_submissions` insert. Keep honeypot + zod validation.
-- Confirmation toast unchanged. No email sending yet (existing email pipeline isn't wired to leads; out of scope unless asked).
-- Build **`src/pages/admin/Leads.tsx`**: paginated table of `leads` (filter by `kind`, `status`), row detail drawer with full message, status dropdown (`new`/`contacted`/`qualified`/`archived` — use whatever the existing `lead_status` enum exposes), notes textarea. Uses existing admin RLS.
-- Build **`src/pages/admin/SiteSettings.tsx`**: form to edit social URLs + contact email. Save via `upsert` on id=1.
-- Update `src/pages/admin/AdminIndex.tsx`: replace the "Leads" and "Marketing" placeholder cards with real links; add a new "Site settings" card. Register the two new routes in `App.tsx` (admin-only via `ProtectedRoute` + in-page `isAdmin` check, matching `AdminIndex`).
+### 1. Database migration
+- Add to `marketing_subscribers`: `confirmed_at TIMESTAMPTZ`, `confirmation_token TEXT UNIQUE` (default random hex), `consent_ip INET`, `consent_user_agent TEXT`, `consent_text TEXT`. Default `status` changes to `pending` for new rows.
+- Add to `site_settings`: `mailing_address TEXT`, `company_legal_name TEXT`, `from_name TEXT`, `from_email TEXT`, `reply_to TEXT`.
+- Seed `site_settings` with Wrigley Field address + "Blues Brothers Newsletter" defaults.
+- New `marketing_campaign_recipients` table to track per-recipient send status for each broadcast (campaign_id, email, status: `queued|sent|failed|skipped`, error, sent_at). Admin-only RLS.
+- Security-definer RPC `list_confirmed_subscribers()` so the broadcast edge function can fetch the list via service role only.
+- GRANTs + RLS on all new tables/columns.
 
-### 6. Light copy refresh
-- **Pricing** — keep existing template-disclaimer alert. Add a short comparison-table teaser sentence under the tiers ("Need a full feature comparison? See [Features](/#features).").
-- **Features** — no new section needed; the home `#features` grid covers it. Add anchor links from the home features grid items to relevant docs in `/readme` where applicable (light touch).
-- **About** — extend with a 3-bullet "What's in the box" list and a CTA row linking to `/contact` and `/pricing`.
-- **Contact** — replace the placeholder `hello@example.com` with `{siteSettings.contact_email ?? "hello@example.com"}` so admins control it.
+### 2. Transactional templates (Lovable Emails — `_shared/transactional-email-templates/`)
+- `newsletter-confirm.tsx` — "Confirm you want updates from {site}" with branded button → `/newsletter/confirm?token=...`. Preview data uses *"Jake Blues"*.
+- `newsletter-welcome.tsx` — sent once on successful confirmation.
+- Register both in `registry.ts` and add to `USER_TRIGGERABLE` with rule `'self'` so anyone can request a confirm email for their own address.
+- Both templates use existing `_styles.ts` tokens, white body bg, brand orange button, semantic markup, mailing address in footer.
 
-### Technical notes
-- `site_settings` migration:
-  ```sql
-  CREATE TABLE public.site_settings (
-    id smallint PRIMARY KEY DEFAULT 1 CHECK (id = 1),
-    social_twitter text, social_github text, social_linkedin text,
-    social_instagram text, social_youtube text, social_facebook text, social_tiktok text,
-    contact_email text,
-    updated_at timestamptz NOT NULL DEFAULT now()
-  );
-  GRANT SELECT ON public.site_settings TO anon, authenticated;
-  GRANT ALL ON public.site_settings TO service_role;
-  ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "Public can read site settings" ON public.site_settings FOR SELECT USING (true);
-  CREATE POLICY "Admins manage site settings" ON public.site_settings FOR ALL
-    USING (public.has_role(auth.uid(),'admin')) WITH CHECK (public.has_role(auth.uid(),'admin'));
-  INSERT INTO public.site_settings (id) VALUES (1) ON CONFLICT DO NOTHING;
-  ```
-- Contact insert uses existing `leads` RLS policy (`Anyone can submit a lead`) — no schema change needed; `kind='contact'` already valid.
-- Admin pages use `useUserRoles().isAdmin` gate identical to `AdminIndex.tsx`.
-- All new files use semantic tokens only.
+### 3. New Lovable edge functions
+- `confirm-newsletter-subscription` (`verify_jwt = false`): validates token, marks `status='subscribed'`, sets `confirmed_at`, triggers `send-transactional-email` welcome.
+- `send-marketing-broadcast` (`verify_jwt = true`, in-function admin check via `has_role`): loads `marketing_campaigns` row, fetches confirmed subscribers, sends through Resend gateway in batches of 50 with 250 ms spacing, per-recipient unsubscribe URL, `List-Unsubscribe` headers, honors `suppressed_emails`. Writes per-recipient rows to `marketing_campaign_recipients`, updates campaign `stats` + `status`.
+- Update `handle-email-unsubscribe`: after marking the token used, also `UPDATE marketing_subscribers SET status='unsubscribed', unsubscribed_at=now()` for that email so they're removed from future broadcasts.
 
-### Out of scope (ask later if you want them)
-- Sending a confirmation email to the contact submitter (would hook into the existing email pipeline).
-- A full feature-comparison table.
-- Migrating the marketing campaigns admin UI.
+### 4. Resend connector + secret
+- Call `standard_connectors--connect` for Resend so `RESEND_API_KEY` + `LOVABLE_API_KEY` are available to the broadcast function.
+- Verify Resend domain (notify.voicept.com or chosen subdomain) handled by the user inside Resend — surfaced as a checklist on the admin Broadcasts page if `verify_credentials` reports failure.
+
+### 5. Public pages
+- **Rewrite `NewsletterForm.tsx`**: zod validation, captures `consent_text` + UA, calls `supabase.from('marketing_subscribers').upsert(...)`, then `supabase.functions.invoke('send-transactional-email', { template: 'newsletter-confirm', ... })`. Real error handling, success state "Check your inbox to confirm — even Elwood had to click the link." Inline GDPR consent text + link to Privacy.
+- **New `/newsletter/confirm` page**: reads `?token=`, calls confirm edge function, accessible status messaging with `role="status"` / `aria-live="polite"`.
+- **Update `/unsubscribe`**: copy now mentions both transactional + newsletter unsubscribe.
+- **`/legal` privacy section**: add subscriber-data paragraph (what we store, retention, how to delete, controller info pointing to Wrigley Field address).
+- **`Newsletter.tsx` page**: add accessibility note + sample-issue link.
+
+### 6. Admin (`/admin`)
+- **`Subscribers.tsx`**: paginated table (email, status badge, source, subscribed_at, confirmed_at), filter by status, search, CSV export, manual unsubscribe / delete, copy email button. Counts header ("Curtis is tracking 124 confirmed, 12 pending").
+- **`Broadcasts.tsx`**: list of `marketing_campaigns` + composer (subject, preheader, markdown body, from_name/reply_to defaults from site_settings). Live HTML preview with mailing address + unsubscribe footer auto-appended. Buttons: *Send test to me*, *Send to all confirmed* (confirmation dialog with recipient count + "type SEND to confirm").
+- Update `SiteSettings.tsx` with new fields (mailing address, legal name, from/reply-to).
+- Wire cards on `AdminIndex.tsx`.
+
+### 7. Compliance & accessibility polish
+- All forms: labeled inputs, focus rings via semantic tokens, error text linked via `aria-describedby`, status announcements via `aria-live`.
+- All marketing emails: physical address + one-click unsubscribe + `List-Unsubscribe` + `List-Unsubscribe-Post: List-Unsubscribe=One-Click` (Gmail/Apple Mail requirement) + plain-text alternative.
+- Suppression list checked before every Resend send; bounced/complained addresses auto-suppressed by existing `handle-email-suppression`.
+- Resubscribe flow: re-submitting flips status back to `pending` and re-sends confirmation (no duplicates).
+
+## Technical notes
+- Idempotency keys: `newsletter-confirm-{subscriber.id}`, `newsletter-welcome-{subscriber.id}`, `broadcast-{campaign.id}-{recipient.id}`.
+- Per-recipient unsubscribe URL: `${SITE_URL}/unsubscribe?token=...` reusing existing `email_unsubscribe_tokens` infra.
+- Broadcast send loop is best-effort with retries on 429 (respect Resend `Retry-After`); per-recipient errors don't abort the batch.
+- Resend connector key naming: `RESEND_API_KEY` (gateway URL `https://connector-gateway.lovable.dev/resend`).
+- Sample/test recipient defaults to admin email; `from_name` default "Jake & Elwood @ {site}".
