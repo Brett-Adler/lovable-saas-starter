@@ -38,8 +38,25 @@ const ResetPassword = () => {
         return;
       }
       setLoading(true);
-      const { error } = await supabase.auth.updateUser({ password: validated });
+      const { data: updated, error } = await supabase.auth.updateUser({ password: validated });
       if (error) throw error;
+      // Fire-and-forget security notice.
+      if (updated?.user?.email) {
+        const email = updated.user.email;
+        supabase.functions
+          .invoke("send-transactional-email", {
+            body: {
+              templateName: "password-changed",
+              recipientEmail: email,
+              idempotencyKey: `pwd-changed-${updated.user.id}-${Date.now()}`,
+              templateData: {
+                name: updated.user.user_metadata?.display_name,
+                changedAt: new Date().toLocaleString(),
+              },
+            },
+          })
+          .catch((e) => console.warn("password-changed email failed", e));
+      }
       toast({ title: "Password updated", description: "You can now use your new password." });
       navigate("/dashboard", { replace: true });
     } catch (err) {
