@@ -4,7 +4,7 @@ project_id = "bwsfwmutmdbczgwgatxn"
   [functions.auth-email-hook]
     verify_jwt = false
   [functions.create-checkout]
-    verify_jwt = false
+    verify_jwt = true
   [functions.create-portal-session]
     verify_jwt = false
   [functions.payments-webhook]
