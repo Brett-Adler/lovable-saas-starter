@@ -107,14 +107,34 @@ const Members = () => {
     try {
       const validated = emailSchema.parse(inviteEmail);
       setInviting(true);
-      const { error } = await supabase.from("organization_invites").insert({
-        organization_id: currentOrg.id,
-        email: validated.toLowerCase(),
-        role: inviteRole,
-        invited_by: user!.id,
-      });
+      const { data: invite, error } = await supabase
+        .from("organization_invites")
+        .insert({
+          organization_id: currentOrg.id,
+          email: validated.toLowerCase(),
+          role: inviteRole,
+          invited_by: user!.id,
+        })
+        .select("id, token")
+        .single();
       if (error) throw error;
-      toast({ title: "Invite created", description: `Sent to ${validated}` });
+      // Fire-and-forget invite email — non-blocking.
+      supabase.functions
+        .invoke("send-transactional-email", {
+          body: {
+            templateName: "invite-teammate",
+            recipientEmail: validated,
+            idempotencyKey: `invite-${invite.id}`,
+            templateData: {
+              inviterName: user?.user_metadata?.display_name || user?.email,
+              organizationName: currentOrg.name,
+              role: inviteRole,
+              acceptUrl: `${window.location.origin}/invite/${invite.token}`,
+            },
+          },
+        })
+        .catch((e) => console.warn("invite email failed", e));
+      toast({ title: "Invite sent", description: `Emailed ${validated}` });
       setInviteEmail("");
       setInviteRole("member");
       load();

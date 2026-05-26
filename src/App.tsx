@@ -29,6 +29,7 @@ import Billing from "./pages/dashboard/Billing";
 import Settings from "./pages/dashboard/Settings";
 import AcceptInvite from "./pages/AcceptInvite";
 import AdminIndex from "./pages/admin/AdminIndex";
+import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/terms" element={<Legal title="Terms of Service" kind="terms" />} />
               <Route path="/readme" element={<Readme />} />
               <Route path="/checkout/return" element={<CheckoutReturn />} />
+              <Route path="/unsubscribe" element={<Unsubscribe />} />
 
               {/* Auth */}
               <Route path="/login" element={<Auth mode="login" />} />

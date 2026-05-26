@@ -67,6 +67,17 @@ const Auth = ({ mode = "login" }: { mode?: "login" | "signup" }) => {
           },
         });
         if (error) throw error;
+        // Fire-and-forget welcome email — non-blocking, safe if it fails.
+        supabase.functions
+          .invoke("send-transactional-email", {
+            body: {
+              templateName: "welcome",
+              recipientEmail: validatedEmail,
+              idempotencyKey: `welcome-${validatedEmail}`,
+              templateData: { name: validatedName },
+            },
+          })
+          .catch((e) => console.warn("welcome email failed", e));
         toast({
           title: "Account created",
           description: "You're all set — welcome aboard!",

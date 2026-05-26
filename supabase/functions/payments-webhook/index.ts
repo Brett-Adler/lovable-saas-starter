@@ -12,6 +12,35 @@ function getSupabase() {
   return _supabase;
 }
 
+async function sendReceipt(opts: {
+  email: string;
+  subscriptionId: string;
+  planName: string;
+  amount?: string;
+  interval?: string;
+  renewalDate?: string;
+  env: StripeEnv;
+}) {
+  try {
+    await getSupabase().functions.invoke("send-transactional-email", {
+      body: {
+        templateName: "subscription-receipt",
+        recipientEmail: opts.email,
+        idempotencyKey: `receipt-${opts.subscriptionId}`,
+        templateData: {
+          planName: opts.planName,
+          amount: opts.amount,
+          interval: opts.interval,
+          renewalDate: opts.renewalDate,
+          environment: opts.env,
+        },
+      },
+    });
+  } catch (e) {
+    console.warn("receipt email failed", e);
+  }
+}
+
 async function handleSubscriptionCreated(subscription: any, env: StripeEnv) {
   const userId = subscription.metadata?.userId;
   if (!userId) {
@@ -44,6 +73,36 @@ async function handleSubscriptionCreated(subscription: any, env: StripeEnv) {
     },
     { onConflict: "stripe_subscription_id" },
   );
+
+  // Send branded receipt — best-effort, non-blocking failure.
+  const { data: profile } = await getSupabase()
+    .from("profiles")
+    .select("email")
+    .eq("id", userId)
+    .maybeSingle();
+  const recipient = (profile?.email as string | undefined) ||
+    (typeof subscription.customer === "object" ? subscription.customer?.email : undefined);
+  if (recipient) {
+    const planName = item?.price?.nickname || item?.price?.lookup_key || "Pro";
+    const amountCents = item?.price?.unit_amount;
+    const currency = (item?.price?.currency || "usd").toUpperCase();
+    const amount = typeof amountCents === "number"
+      ? `${currency} ${(amountCents / 100).toFixed(2)}`
+      : undefined;
+    const interval = item?.price?.recurring?.interval || "month";
+    const renewalDate = periodEnd
+      ? new Date(periodEnd * 1000).toLocaleDateString("en-US", { dateStyle: "long" })
+      : undefined;
+    await sendReceipt({
+      email: recipient,
+      subscriptionId: subscription.id,
+      planName,
+      amount,
+      interval,
+      renewalDate,
+      env,
+    });
+  }
 }
 
 async function handleSubscriptionUpdated(subscription: any, env: StripeEnv) {
