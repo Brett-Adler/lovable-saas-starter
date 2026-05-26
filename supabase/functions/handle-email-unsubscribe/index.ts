@@ -119,6 +119,24 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: 'Failed to process unsubscribe' }, 500)
   }
 
+  // Also flip any newsletter subscriber to "unsubscribed" so they're excluded
+  // from future broadcasts. Best-effort: a failure here shouldn't undo the
+  // primary suppression action above.
+  const { error: subUpdateError } = await supabase
+    .from('marketing_subscribers')
+    .update({
+      status: 'unsubscribed',
+      unsubscribed_at: new Date().toISOString(),
+    })
+    .eq('email', tokenRecord.email.toLowerCase())
+
+  if (subUpdateError) {
+    console.warn('Failed to mark newsletter subscriber unsubscribed', {
+      error: subUpdateError,
+      email: tokenRecord.email,
+    })
+  }
+
   console.log('Email unsubscribed', { email: tokenRecord.email })
 
   return jsonResponse({ success: true })

@@ -19,3 +19,9 @@ project_id = "bwsfwmutmdbczgwgatxn"
     verify_jwt = false
   [functions.handle-email-suppression]
     verify_jwt = false
+  [functions.subscribe-newsletter]
+    verify_jwt = false
+  [functions.confirm-newsletter-subscription]
+    verify_jwt = false
+  [functions.send-marketing-broadcast]
+    verify_jwt = true
