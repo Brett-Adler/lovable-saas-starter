@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowUp, ArrowDown, Loader2 } from "lucide-react";
+import { ArrowUp, ArrowDown, Loader2 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import {
   ResponsiveContainer,
@@ -14,15 +13,13 @@ import {
   Bar,
   CartesianGrid,
 } from "recharts";
-import { Logo } from "@/components/Logo";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 type Range = 7 | 30 | 90;
 
@@ -75,8 +72,7 @@ function Kpi({ label, value, sub, delta }: { label: string; value: React.ReactNo
 }
 
 const Analytics = () => {
-  const { isAdmin, loading: rolesLoading } = useUserRoles();
-  const { signOut } = useAuth();
+  const { isAdmin } = useUserRoles();
   const [range, setRange] = useState<Range>(30);
 
   const sinceISO = useMemo(() => new Date(Date.now() - range * 86400000).toISOString(), [range]);
