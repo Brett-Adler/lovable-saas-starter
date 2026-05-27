@@ -47,6 +47,17 @@ import Unsubscribe from "./pages/Unsubscribe";
 import NewsletterConfirm from "./pages/NewsletterConfirm";
 import Accessibility from "./pages/Accessibility";
 import SitemapPage from "./pages/Sitemap";
+import Roadmap from "./pages/Roadmap";
+import StatusPage from "./pages/Status";
+import Integrations from "./pages/Integrations";
+import SecurityPage from "./pages/Security";
+import Compare from "./pages/Compare";
+import Customers from "./pages/Customers";
+import Blog from "./pages/Blog";
+import DashboardSecurity from "./pages/dashboard/settings/Security";
+import DashboardApiKeys from "./pages/dashboard/settings/ApiKeys";
+import DashboardWebhooks from "./pages/dashboard/settings/Webhooks";
+import DashboardData from "./pages/dashboard/settings/Data";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
