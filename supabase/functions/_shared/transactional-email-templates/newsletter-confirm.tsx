@@ -6,7 +6,7 @@ import {
 import type { TemplateEntry } from './registry.ts'
 import { brand, button, container, footer, h1, main, text } from '../email-templates/_styles.ts'
 
-const SITE_NAME = 'SaaS Starter'
+const SITE_NAME = Deno.env.get('PUBLIC_SITE_NAME') ?? 'Your App'
 
 interface NewsletterConfirmProps {
   name?: string
@@ -17,7 +17,7 @@ interface NewsletterConfirmProps {
 const NewsletterConfirmEmail = ({
   name,
   confirmUrl = 'https://example.com/newsletter/confirm',
-  mailingAddress = '1060 W Addison St, Chicago, IL 60613, USA',
+  mailingAddress = '',
 }: NewsletterConfirmProps) => (
   <Html lang="en" dir="ltr">
     <Head />
@@ -45,8 +45,7 @@ const NewsletterConfirmEmail = ({
           You're receiving this one-time confirmation because someone (hopefully you)
           asked to subscribe to the {SITE_NAME} newsletter. If that wasn't you, just
           ignore this email — we won't add you to the list.
-          <br /><br />
-          {mailingAddress}
+          {mailingAddress ? <><br /><br />{mailingAddress}</> : null}
         </Text>
       </Container>
     </Body>
@@ -58,8 +57,8 @@ export const template = {
   subject: `Confirm your ${SITE_NAME} newsletter subscription`,
   displayName: 'Newsletter — confirm subscription',
   previewData: {
-    name: 'Jake Blues',
+    name: 'Sam',
     confirmUrl: 'https://example.com/newsletter/confirm?token=demo',
-    mailingAddress: '1060 W Addison St, Chicago, IL 60613, USA',
+    mailingAddress: '',
   },
 } satisfies TemplateEntry

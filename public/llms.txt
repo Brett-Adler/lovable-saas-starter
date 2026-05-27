@@ -1,6 +1,4 @@
-# SaaS Starter
-
-> A complete SaaS starter template with auth, payments, emails, teams, and analytics. Replace the branding and ship.
+# Your App
 
 ## Pages
 

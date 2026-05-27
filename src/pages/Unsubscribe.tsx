@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteSeo } from "@/hooks/useSiteSeo";
 
 type State =
   | { kind: "loading" }
@@ -22,6 +23,8 @@ export default function Unsubscribe() {
   const [params] = useSearchParams();
   const token = params.get("token");
   const [state, setState] = useState<State>({ kind: "loading" });
+  const { data: seo } = useSiteSeo();
+  const siteName = seo?.site_name || "us";
 
   useEffect(() => {
     if (!token) {
@@ -77,7 +80,7 @@ export default function Unsubscribe() {
             <>
               <h1 className="text-2xl font-bold mb-3">Unsubscribe from emails?</h1>
               <p className="text-muted-foreground mb-6">
-                You'll stop receiving non-essential emails from SaaS Starter. You'll still
+                You'll stop receiving non-essential emails from {siteName}. You'll still
                 get critical account and security messages.
               </p>
               <Button onClick={confirm} size="lg">Confirm unsubscribe</Button>

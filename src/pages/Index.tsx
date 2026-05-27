@@ -136,7 +136,7 @@ const Index = () => {
                 <span className="h-3 w-3 rounded-full bg-destructive/70" />
                 <span className="h-3 w-3 rounded-full bg-warning/70" />
                 <span className="h-3 w-3 rounded-full bg-success/70" />
-                <div className="mx-auto text-xs text-muted-foreground font-mono">app.saas-starter.com/dashboard</div>
+                <div className="mx-auto text-xs text-muted-foreground font-mono">app.yourdomain.com/dashboard</div>
               </div>
               <video
                 className="w-full aspect-[16/9] object-cover bg-muted"

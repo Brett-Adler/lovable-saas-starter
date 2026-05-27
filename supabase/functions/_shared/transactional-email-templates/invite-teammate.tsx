@@ -6,7 +6,8 @@ import {
 import type { TemplateEntry } from './registry.ts'
 import { brand, button, container, footer, h1, main, text } from '../email-templates/_styles.ts'
 
-const SITE_NAME = 'SaaS Starter'
+const SITE_NAME = Deno.env.get('PUBLIC_SITE_NAME') ?? 'Your App'
+const SITE_URL = (Deno.env.get('PUBLIC_SITE_URL') ?? '').replace(/\/$/, '')
 
 interface InviteProps {
   inviterName?: string
@@ -20,7 +21,7 @@ const InviteTeammateEmail = ({
 }: InviteProps) => {
   const org = organizationName || 'a team'
   const inviter = inviterName || 'Someone'
-  const url = acceptUrl || 'https://saas-starter.lovable.app/login'
+  const url = acceptUrl || `${SITE_URL}/login`
   return (
     <Html lang="en" dir="ltr">
       <Head />
@@ -55,6 +56,6 @@ export const template = {
     inviterName: 'Alex Chen',
     organizationName: 'Acme Inc',
     role: 'member',
-    acceptUrl: 'https://saas-starter.lovable.app/invite/sample-token',
+    acceptUrl: `${SITE_URL}/invite/sample-token`,
   },
 } satisfies TemplateEntry

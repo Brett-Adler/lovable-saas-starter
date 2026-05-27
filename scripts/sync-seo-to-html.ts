@@ -10,12 +10,11 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { resolve } from "path";
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL || "https://bwsfwmutmdbczgwgatxn.supabase.co";
-const SUPABASE_ANON_KEY =
-  process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3c2Z3bXV0bWRiY3pnd2dhdHhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDI1MjAsImV4cCI6MjA5Mjk3ODUyMH0.fkQuWNNsbf2fOftAxlK4_2YyOhxq-2FhlHv3yP1UM1c";
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL || "";
+const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "";
 
-const FALLBACK_BASE = "https://saas-starter-suite.lovable.app";
+// When unset, emit relative URLs so crawlers resolve against the live host.
+const FALLBACK_BASE = (process.env.PUBLIC_SITE_URL ?? process.env.VITE_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
 
 // Static public-route allow-list. Keep in sync with src/App.tsx public routes.
 const PUBLIC_ROUTES: Array<{
@@ -204,12 +203,11 @@ async function main() {
   const pagesRows = (await fetchJson<SeoPage[]>("seo_pages?select=path,title,description,noindex,updated_at")) ?? [];
 
   const seo: SiteSeo = (seoRows && seoRows[0]) || {
-    site_name: "SaaS Starter",
-    default_title: "SaaS Starter — Build your SaaS in days, not months",
-    default_description:
-      "A complete SaaS starter template with auth, payments, emails, teams, and analytics. Replace the branding and ship.",
+    site_name: "Your App",
+    default_title: "Your App",
+    default_description: "",
     default_og_image_url: `${FALLBACK_BASE}/og-image.png`,
-    twitter_handle: "@yourbrand",
+    twitter_handle: "",
     theme_color: "#FF5C2A",
     base_url: FALLBACK_BASE,
     organization_json_ld: null,

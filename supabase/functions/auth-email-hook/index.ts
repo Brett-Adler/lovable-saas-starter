@@ -35,18 +35,19 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
   reauthentication: ReauthenticationEmail,
 }
 
-// Configuration
-const SITE_NAME = "SaaS Starter"
-const SENDER_DOMAIN = "notify.voicept.com"
-const ROOT_DOMAIN = "voicept.com"
-const FROM_DOMAIN = "notify.voicept.com" // Domain shown in From address (may be root or sender subdomain)
+// Configuration — set these in edge function secrets:
+//   PUBLIC_SITE_NAME  — brand name shown in subject + body (e.g. "Acme")
+//   PUBLIC_SITE_URL   — fully-qualified site URL (e.g. "https://app.example.com")
+//   SENDER_DOMAIN     — verified Resend sender domain (e.g. "mail.example.com")
+//   ROOT_DOMAIN       — registrable root used for List-Unsubscribe (e.g. "example.com")
+//   FROM_DOMAIN       — domain shown in From address (defaults to SENDER_DOMAIN)
+const SITE_NAME = Deno.env.get('PUBLIC_SITE_NAME') ?? 'Your App'
+const SENDER_DOMAIN = Deno.env.get('SENDER_DOMAIN') ?? 'mail.example.com'
+const ROOT_DOMAIN = Deno.env.get('ROOT_DOMAIN') ?? 'example.com'
+const FROM_DOMAIN = Deno.env.get('FROM_DOMAIN') ?? SENDER_DOMAIN
 
 // Sample data for preview mode ONLY (not used in actual email sending).
-// URLs are baked in at scaffold time from the project's real data.
-// The sample email uses a fixed placeholder (RFC 6761 .test TLD) so the Go backend
-// can always find-and-replace it with the actual recipient when sending test emails,
-// even if the project's domain has changed since the template was scaffolded.
-const SAMPLE_PROJECT_URL = "https://saas-starter-suite.lovable.app"
+const SAMPLE_PROJECT_URL = (Deno.env.get('PUBLIC_SITE_URL') ?? 'https://example.com').replace(/\/$/, '')
 const SAMPLE_EMAIL = "user@example.test"
 const SAMPLE_DATA: Record<string, object> = {
   signup: {

@@ -6,8 +6,8 @@ import {
 import type { TemplateEntry } from './registry.ts'
 import { brand, button, container, footer, h1, main, text } from '../email-templates/_styles.ts'
 
-const SITE_NAME = 'SaaS Starter'
-const SITE_URL = 'https://saas-starter.lovable.app'
+const SITE_NAME = Deno.env.get('PUBLIC_SITE_NAME') ?? 'Your App'
+const SITE_URL = (Deno.env.get('PUBLIC_SITE_URL') ?? '').replace(/\/$/, '')
 
 interface WelcomeProps {
   name?: string

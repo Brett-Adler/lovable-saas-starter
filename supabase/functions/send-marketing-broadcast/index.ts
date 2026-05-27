@@ -14,7 +14,9 @@ const BodySchema = z.object({
 const RESEND_GATEWAY = 'https://connector-gateway.lovable.dev/resend'
 const BATCH_SIZE = 50
 const BATCH_DELAY_MS = 250
-const SITE_URL = (Deno.env.get('PUBLIC_SITE_URL') ?? 'https://saas-starter-suite.lovable.app').replace(/\/$/, '')
+const SITE_URL = (Deno.env.get('PUBLIC_SITE_URL') ?? '').replace(/\/$/, '')
+const FALLBACK_FROM_EMAIL = Deno.env.get('NEWSLETTER_FROM_EMAIL')
+  ?? `newsletter@${Deno.env.get('SENDER_DOMAIN') ?? 'mail.example.com'}`
 
 function json(data: Record<string, unknown>, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -167,9 +169,9 @@ Deno.serve(async (req) => {
     .maybeSingle()
 
   const fromName = campaign.from_name ?? settings?.from_name ?? 'Newsletter'
-  const fromEmail = campaign.from_email ?? settings?.from_email ?? 'newsletter@notify.voicept.com'
+  const fromEmail = campaign.from_email ?? settings?.from_email ?? FALLBACK_FROM_EMAIL
   const replyTo = campaign.reply_to ?? settings?.reply_to ?? null
-  const mailingAddress = settings?.mailing_address ?? '1060 W Addison St, Chicago, IL 60613, USA'
+  const mailingAddress = settings?.mailing_address ?? ''
   const companyName = settings?.company_legal_name ?? 'The Newsletter Team'
 
   // Render body (HTML + text). campaign.body_html wins if set; else markdown from body_text.

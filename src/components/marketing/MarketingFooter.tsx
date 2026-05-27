@@ -4,6 +4,7 @@ import { Logo } from "@/components/Logo";
 import { NewsletterForm } from "@/components/marketing/NewsletterForm";
 import { publicNavGroups } from "@/lib/public-routes";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useSiteSeo } from "@/hooks/useSiteSeo";
 
 const TikTokIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
@@ -23,6 +24,8 @@ const socialLinks = (s: ReturnType<typeof useSiteSettings>["data"]) => [
 
 export const MarketingFooter = () => {
   const { data: settings } = useSiteSettings();
+  const { data: seo } = useSiteSeo();
+  const siteName = seo?.site_name || settings?.company_legal_name || "Your App";
   const socials = socialLinks(settings).filter((s) => s.url);
 
   return (
@@ -83,7 +86,7 @@ export const MarketingFooter = () => {
         </div>
         <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} SaaS Starter. All rights reserved.
+            © {new Date().getFullYear()} {siteName}. All rights reserved.
           </p>
           <p className="text-xs text-muted-foreground">
             Built with <span className="text-gradient font-semibold">Lovable</span>

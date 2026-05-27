@@ -6,4 +6,5 @@ Disallow: /dashboard
 Disallow: /checkout
 Disallow: /invite
 
-Sitemap: https://saas-starter-suite.lovable.app/sitemap.xml
+# Add a Sitemap: line below once you've set a custom domain (e.g. https://yourdomain.com/sitemap.xml).
+# Crawlers also auto-discover /sitemap.xml at the well-known path.

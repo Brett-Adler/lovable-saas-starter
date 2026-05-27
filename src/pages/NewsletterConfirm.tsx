@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteSeo } from "@/hooks/useSiteSeo";
 
 type State =
   | { kind: "loading" }
@@ -22,9 +23,11 @@ export default function NewsletterConfirm() {
   const [params] = useSearchParams();
   const token = params.get("token");
   const [state, setState] = useState<State>({ kind: "loading" });
+  const { data: seo } = useSiteSeo();
+  const siteName = seo?.site_name || "our newsletter";
 
   useEffect(() => {
-    document.title = "Confirm newsletter — SaaS Starter";
+    document.title = `Confirm newsletter — ${siteName}`;
     if (!token) {
       setState({ kind: "invalid" });
       return;
@@ -82,7 +85,7 @@ export default function NewsletterConfirm() {
                 Confirm your subscription
               </h1>
               <p className="text-muted-foreground mb-6">
-                Tap below to confirm you want monthly updates from SaaS Starter. One email a month,
+                Tap below to confirm you want monthly updates from {siteName}. One email a month,
                 unsubscribe anytime.
               </p>
               <Button onClick={confirm} size="lg">

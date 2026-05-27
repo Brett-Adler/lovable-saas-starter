@@ -38,17 +38,9 @@ export const ReadmeContent = () => (
                 <Sparkles className="h-4 w-4 text-primary" />
                 <h3 className="font-semibold text-foreground">Remix on Lovable</h3>
               </div>
-              <p className="text-sm mb-3">
-                One click forks the live project into your own Lovable workspace with Cloud preconfigured. Best for non-developers.
+              <p className="text-sm">
+                One click forks this project into your own Lovable workspace with Cloud preconfigured. Best for non-developers.
               </p>
-              <a
-                href="https://lovable.dev/projects/65731117-aac8-4723-ab30-aec22d01517c?remix=1"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-              >
-                Remix this project →
-              </a>
             </Card>
             <Card className="p-5">
               <div className="flex items-center gap-2 mb-2">
@@ -76,22 +68,8 @@ export const ReadmeContent = () => (
                 <Sparkles className="h-4 w-4 text-primary" /> 1. Remix on Lovable
               </h3>
               <ol className="list-decimal list-inside space-y-1">
-                <li>
-                  Open the{" "}
-                  <a href="https://lovable-saas-starter.lovable.app" target="_blank" rel="noreferrer" className="text-primary hover:underline">
-                    live demo
-                  </a>
-                  {" "}or the{" "}
-                  <a
-                    href="https://lovable.dev/projects/65731117-aac8-4723-ab30-aec22d01517c"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    Lovable project page
-                  </a>.
-                </li>
-                <li>Click <strong className="text-foreground">Remix</strong> in the top bar (or use the direct link in the card above).</li>
+                <li>Open this project in Lovable.</li>
+                <li>Click <strong className="text-foreground">Remix</strong> in the top bar.</li>
                 <li>Sign in. Lovable copies the code and provisions a fresh Lovable Cloud backend for you automatically.</li>
                 <li>Open the new project and start prompting — your remix is fully isolated from the original.</li>
               </ol>
@@ -371,7 +349,7 @@ npm run dev        # http://localhost:8080`}
               <h3 className="font-semibold text-foreground mb-1">Third-party services (swap-ready)</h3>
               <ul className="space-y-1">
                 <li>Stripe — checkout, customer portal, webhooks (sandbox keys wired)</li>
-                <li>Resend — transactional + marketing email delivery (notify.voicept.com)</li>
+                <li>Resend — transactional + marketing email delivery (configure your own verified sender domain)</li>
                 <li>Twilio — SMS / OTP delivery (edge function stub ready)</li>
                 <li>Web Push / VAPID — browser push notifications (service worker shipped)</li>
                 <li>SAML 2.0 IdPs — Okta, Azure AD, Google Workspace (per-org config table ready)</li>
