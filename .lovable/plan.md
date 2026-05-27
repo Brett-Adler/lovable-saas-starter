@@ -1,88 +1,77 @@
-## Goal
+# Page sync & accuracy pass
 
-No such page exists today. Add an admin "Brand kit" page where the user uploads one square logo (PNG/SVG, ideally ≥ 512×512) and the app generates and publishes every common web/PWA/social variant. Generated assets are stored in a new public Supabase storage bucket and wired up through the existing `site_seo` / `Logo` / `PageSeo` pipeline.
+Goal: every page tells the truth about what's working, what's a stub, and what the user still needs to do. Coming-soon is fine — being vague about it isn't.
 
-Today `public/*.png` are static placeholders documented in `public/BRANDING.md` and pointed at by `index.html`. We keep those as the first-paint fallback and override them at runtime once a brand kit is published.
+## Convention to introduce
 
-## What gets generated from one logo
+A small shared `<StatusBadge />` component with three variants:
 
-Everything happens client-side in a single `<canvas>` pass. The source logo is rendered into each target size, padded for safe area, and exported as PNG (or kept as SVG when the upload is SVG).
+- `shipped` — green, "Live"
+- `setup` — amber, "Needs setup" (with tooltip naming the secret/config)
+- `soon` — muted, "Coming soon"
 
-**Icons & favicons** (square, transparent PNG):
-- `favicon-16.png`, `favicon-32.png`, `favicon-48.png`
-- `apple-touch-icon-180.png` (white background, iOS strips alpha anyway)
-- `android-chrome-192.png`, `android-chrome-512.png`
-- `maskable-512.png` (192px safe area inside 512 canvas, themed background)
-- `mstile-150.png` (Windows tile, themed background)
-- `favicon.ico` (multi-size 16/32/48) — built with `to-ico` (pure JS)
+Used inline next to feature names on Index, Pricing, About, Contact, and the dashboard's onboarding checklist so the same vocabulary appears everywhere.
 
-**Logos for UI**:
-- `logo.png` (max width 320, transparent) — replaces `/logo.svg` in the navbar/footer via the `Logo` component
-- `logo-mark.png` (64×64 transparent)
-- If the upload is SVG, also store the SVG verbatim and prefer it for the navbar.
+## Per-page changes
 
-**Social cards** (themed background + centered logo):
-- `og-image.png` (1200×630) — used for Facebook, LinkedIn, Slack, iMessage previews
-- `twitter-image.png` (1200×600)
-- `og-square.png` (1200×1200) — used by some messaging apps that prefer square
+### `src/pages/Index.tsx` (landing)
+- Auth feature card: split into "Email/password, Google, Apple — Live" and "SMS OTP — Needs Twilio" badges. No more lumping stubs with shipped.
+- FAQ entries on Twilio, VAPID, SAML: keep, but link each to the Readme section that lists the exact secrets/steps.
+- Logo cloud (Acme/Globex/…): wrap in a dismissible "Template placeholders — replace in `src/pages/Index.tsx`" dev-only ribbon (only visible on the preview/lovable.app host, hidden on custom domains).
+- Testimonials: same dev-only ribbon. No content rewrite — user owns that.
 
-**PWA & misc**:
-- `splash-light-1024.png`, `splash-dark-1024.png` — centered mark on theme background / inverted
-- `site.webmanifest` regenerated with the right icon URLs, `theme_color`, `background_color`, app name (pulled from `site_seo.site_name`)
-- `browserconfig.xml` regenerated with the new mstile URL and tile color
+### `src/pages/Pricing.tsx`
+- Keep the existing "free template" banner.
+- Under Team plan's "SSO / SAML" line, add the small `setup` badge + helper text: "Form is live; final activation requires manual provisioning."
+- Add a one-line note near the CTA: "Checkout requires Stripe `lookup_keys` (pro_monthly, pro_yearly, team_monthly, team_yearly). See Readme → Stripe."
 
-All generated files are uploaded to a new public bucket `brand-assets/` under a versioned folder (`v{epoch}/`) so cached URLs invalidate cleanly.
+### `src/pages/About.tsx`
+- Add the dev-only "Template copy — personalize before launch" ribbon at the top.
+- Fix the "production-ready" sentence to "Auth, billing, teams, and transactional email are wired. SMS and Web Push ship as stubs you can enable."
 
-## Wiring (so the new assets actually take effect)
+### `src/pages/Demo.tsx`
+- Reconcile duration: pick "30 minutes" everywhere (hero + SEO description).
+- Success state: remove "Check your inbox for a calendar link" (no email is sent). Replace with "Thanks — we'll be in touch. You can also reach us at {contact_email}."
+- Toast: drop the "within 24h" SLA promise; say "Got it — we'll be in touch."
+- Switch the insert target from `lead_submissions` to `leads` (the table that actually exists and is used by Contact). Drop the `as never` cast and silent error swallow.
 
-1. **DB**: extend `site_seo` with one jsonb column `brand_assets` (URL map) plus `theme_color` (already exists) and `background_color` (new text). Migration also creates the public `brand-assets` storage bucket with public-read RLS and admin-only write.
+### `src/pages/Waitlist.tsx`
+- Same fix: insert into `leads` with a `source: "waitlist"` field instead of the missing `lead_submissions` table. Surface real errors with a toast.
+- Soften copy from "We'll email you the moment access opens" to "We'll be in touch when access opens" until an email trigger exists.
 
-2. **Logo component** (`src/components/Logo.tsx`): if `site_seo.brand_assets.logo` exists, use it; otherwise fall back to the static `/logo.svg`. Keep the same dimensions API.
+### `src/pages/Contact.tsx`
+- "Live chat — Mon–Fri, 9am–5pm UTC" block: replace with an honest "Email is the fastest way to reach us — we reply within 1 business day" line. (No chat widget shipped; don't promise one.)
+- When `contact_email` is unset, render a visible amber inline notice on the page (admin-only via `useUserRole`) linking to `/admin/site-settings`. Public visitors still see whatever fallback is configured.
 
-3. **PageSeo** (`src/components/seo/PageSeo.tsx`): when `brand_assets` is present, inject `<link rel="icon">`, `<link rel="apple-touch-icon">`, `<link rel="manifest">` (pointing at the regenerated manifest URL), and `<meta name="theme-color">` via Helmet so every route picks up the runtime brand. OG and Twitter image already flow through `default_og_image_url`; the brand kit writes its generated `og-image.png` into that field automatically.
+### `src/pages/Accessibility.tsx` and `src/pages/Legal.tsx`
+- Replace hardcoded "Last updated: January 1, 2026" with a `lastUpdated` constant per page so the user has one obvious place to bump it.
+- Legal pages: keep the placeholder warning (already good). Also add the same dev-only ribbon so it's impossible to miss before launch.
 
-4. **`AdminShell`** sidebar: add a new "Brand kit" item under the Configure group.
+### `src/pages/dashboard/OrgSso.tsx`
+- Replace hardcoded `support@example.com` with `{contact_email}` from `useSiteSettings`, falling back to a generic "your admin" string.
 
-## Admin "Brand kit" page (`src/pages/admin/Brand.tsx`)
+### `src/pages/dashboard/Dashboard.tsx` (onboarding checklist)
+- Add new checklist items so the user sees the remaining template-owner tasks in one place:
+  - "Set your contact email" → `/admin/site-settings` (done when `contact_email` differs from the default placeholder)
+  - "Replace placeholder logos & testimonials on the landing page" (manual check-off, persisted in localStorage)
+  - "Replace Legal / Privacy / Terms placeholders" (manual check-off)
+  - "Configure Stripe `lookup_keys`" (manual check-off, with Readme link)
+  - "Optional: enable SMS (Twilio), Web Push (VAPID)" (manual check-off, collapsed under "Optional integrations")
 
-Single page, three sections:
+### `src/pages/Readme.tsx`
+- Add a new top section: **"What works out of the box vs what needs your input"** — a compact two-column table built from the same source of truth used by the new badges, so Readme and landing stay in sync.
 
-1. **Upload**: drag-and-drop a PNG/SVG/JPG up to 4 MB. Show a preview, dimensions, warn if smaller than 512×512 on the longer side or non-square.
-
-2. **Style**: two color pickers for `theme_color` and `background_color` (defaults read from existing `site_seo` and from the dominant color of the upload when first chosen), text input for "App name" (mirrors `site_seo.site_name`), and a "padding" slider for icon safe area (10–25%).
-
-3. **Generate & publish**: a single button that:
-   - renders every variant in a worker-friendly canvas loop with a progress bar (`Generating apple-touch-icon-180… 12/22`),
-   - uploads each to `brand-assets/v{epoch}/<filename>` via `supabase.storage`,
-   - writes the URL map into `site_seo.brand_assets` and updates `default_og_image_url`, `theme_color`, manifest URL,
-   - shows a results grid with thumbnail + filename + size + "Download" + "Copy URL" for every generated file, plus a "Download all (.zip)" button (built client-side with `jszip` — already in tree? if not, add).
-
-A second tab "Preview" mocks browser tab favicon, iOS home-screen icon, Android home-screen icon, OG card (Slack/Facebook style), Twitter card, and the in-app navbar so the admin can visually confirm before publishing.
-
-## Libraries to add
-
-- `to-ico` (pure JS, ~5 kB) for multi-size `.ico`
-- `jszip` (for "Download all") — already a common dep; install if missing
-
-No backend code beyond the storage bucket creation. No edge functions.
+### `src/data/changelog.ts`
+- One new entry summarizing this accuracy pass.
 
 ## Out of scope
+- Writing real Legal/Privacy/Terms text (user's lawyer).
+- Wiring Twilio, VAPID, or a real chat widget.
+- Redesigning any page — copy and small inline badges only.
+- Rewriting About / testimonials with real content.
 
-- Rewriting `index.html` at build time (we override via Helmet at runtime).
-- Per-tenant brand kits — this is site-wide brand for the marketing site/app shell, not per-organization theming.
-- Email-template logo URL (already separately editable; can be wired in a follow-up).
-- Generating animated splash screens or full iOS launch images (sizes per device).
-
-## Files
-
-- New: `src/pages/admin/Brand.tsx`
-- New: `src/lib/brand/generate.ts` (pure functions: `renderIcon`, `renderOg`, `renderManifest`, `renderBrowserconfig`, `buildIco`)
-- New: `src/lib/brand/upload.ts` (upload + URL-map writer)
-- New: `src/components/admin/BrandPreview.tsx` (mock cards)
-- Edit: `src/components/Logo.tsx` (runtime override via `useSiteSeo`)
-- Edit: `src/components/seo/PageSeo.tsx` (inject favicon/manifest/theme-color links from `brand_assets`)
-- Edit: `src/hooks/useSiteSeo.ts` (include `brand_assets`, `background_color`)
-- Edit: `src/components/admin/AdminShell.tsx` (add Brand kit nav item)
-- Edit: `src/App.tsx` (route `/admin/brand`)
-- New migration: add `brand_assets jsonb`, `background_color text` to `site_seo`; create `brand-assets` public storage bucket with admin-write / public-read policies
-- Append to `src/data/changelog.ts`
+## Technical notes
+- New file: `src/components/marketing/StatusBadge.tsx` — small wrapper around `Badge` with the three variants + optional tooltip.
+- New file: `src/components/marketing/TemplatePlaceholderRibbon.tsx` — renders only when `window.location.hostname` ends with `lovable.app` or is `localhost`, so it disappears on custom domains automatically.
+- New file: `src/data/featureStatus.ts` — single source of truth (`{ id, label, status, note }[]`) consumed by Index feature cards, Pricing footnotes, Readme table, and the onboarding checklist.
+- No DB migrations. No new edge functions.
