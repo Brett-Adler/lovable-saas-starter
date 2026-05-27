@@ -92,25 +92,25 @@
     --popover: 240 18% 11%;
     --popover-foreground: 30 30% 96%;
 
-    --primary: 14 95% 62%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 28 100% 70%;
+    --primary: 14 85% 52%;
+    --primary-foreground: 240 20% 12%;
+    --primary-glow: 28 95% 56%;
     --primary-soft: 14 60% 18%;
 
     --secondary: 262 83% 70%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary-foreground: 240 20% 12%;
 
     --accent: 43 96% 62%;
     --accent-foreground: 240 20% 12%;
 
     --success: 152 65% 48%;
-    --success-foreground: 0 0% 100%;
+    --success-foreground: 240 20% 12%;
     --warning: 38 95% 60%;
     --warning-foreground: 240 20% 12%;
     --info: 210 90% 62%;
     --info-foreground: 0 0% 100%;
-    --destructive: 0 75% 58%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 240 20% 12%;
 
     --muted: 240 15% 16%;
     --muted-foreground: 240 10% 65%;
