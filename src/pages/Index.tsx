@@ -102,7 +102,7 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Mock product preview */}
+          {/* Explainer video */}
           <div className="mt-16 max-w-5xl mx-auto animate-fade-in-up [animation-delay:200ms]">
             <Card className="overflow-hidden border-border/60 shadow-2xl">
               {/* Faux window chrome */}
@@ -112,90 +112,17 @@ const Index = () => {
                 <span className="h-3 w-3 rounded-full bg-success/70" />
                 <div className="mx-auto text-xs text-muted-foreground font-mono">app.saas-starter.com/dashboard</div>
               </div>
-
-              <div className="aspect-[16/9] bg-gradient-to-br from-primary/5 via-background to-accent/5 grid grid-cols-[180px_1fr] text-left">
-                {/* Sidebar */}
-                <aside className="border-r border-border/60 bg-background/60 p-4 hidden sm:flex flex-col gap-1.5">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="h-7 w-7 rounded-lg gradient-primary grid place-items-center">
-                      <Zap className="h-4 w-4 text-primary-foreground" />
-                    </div>
-                    <span className="text-sm font-semibold">Acme</span>
-                  </div>
-                  {[
-                    { icon: BarChart3, label: "Overview", active: true },
-                    { icon: Users, label: "Customers" },
-                    { icon: CreditCard, label: "Billing" },
-                    { icon: Mail, label: "Campaigns" },
-                    { icon: MessageSquare, label: "Inbox" },
-                    { icon: Shield, label: "Settings" },
-                  ].map((item) => (
-                    <div
-                      key={item.label}
-                      className={`flex items-center gap-2 rounded-md px-2.5 py-1.5 text-xs ${
-                        item.active ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground"
-                      }`}
-                    >
-                      <item.icon className="h-3.5 w-3.5" />
-                      {item.label}
-                    </div>
-                  ))}
-                </aside>
-
-                {/* Main area */}
-                <div className="p-5 flex flex-col gap-4 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm font-semibold">Good morning, Alex</div>
-                      <div className="text-xs text-muted-foreground">Here's what's happening today</div>
-                    </div>
-                    <Badge variant="secondary" className="hidden sm:inline-flex">
-                      <Sparkles className="h-3 w-3 mr-1" /> Pro plan
-                    </Badge>
-                  </div>
-
-                  {/* Stat cards */}
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      { label: "MRR", value: "$24.8k", delta: "+12.4%" },
-                      { label: "Customers", value: "1,284", delta: "+86" },
-                      { label: "Churn", value: "1.9%", delta: "-0.3%" },
-                    ].map((s) => (
-                      <div key={s.label} className="rounded-lg border border-border/60 bg-background/80 p-3">
-                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{s.label}</div>
-                        <div className="text-base font-semibold mt-0.5">{s.value}</div>
-                        <div className="text-[10px] text-success mt-0.5">{s.delta}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Chart */}
-                  <div className="flex-1 rounded-lg border border-border/60 bg-background/80 p-3 min-h-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="text-xs font-medium">Revenue</div>
-                      <div className="text-[10px] text-muted-foreground">Last 30 days</div>
-                    </div>
-                    <svg viewBox="0 0 300 90" className="w-full h-full" preserveAspectRatio="none">
-                      <defs>
-                        <linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1">
-                          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.4" />
-                          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        d="M0,70 L25,60 L50,65 L75,50 L100,55 L125,40 L150,45 L175,30 L200,35 L225,22 L250,28 L275,15 L300,20 L300,90 L0,90 Z"
-                        fill="url(#chartFill)"
-                      />
-                      <path
-                        d="M0,70 L25,60 L50,65 L75,50 L100,55 L125,40 L150,45 L175,30 L200,35 L225,22 L250,28 L275,15 L300,20"
-                        fill="none"
-                        stroke="hsl(var(--primary))"
-                        strokeWidth="2"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
+              <video
+                className="w-full aspect-[16/9] object-cover bg-muted"
+                src="/explainer.mp4"
+                poster="/explainer-poster.jpg"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="SaaS Starter explainer — build your SaaS in days, not months"
+              />
             </Card>
           </div>
         </div>
