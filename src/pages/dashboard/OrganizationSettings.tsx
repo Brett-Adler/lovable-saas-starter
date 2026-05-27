@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
-import { Loader2, Save, Trash2 } from "lucide-react";
+import { Loader2, Save, Trash2, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -118,6 +118,26 @@ const OrganizationSettings = () => {
             </form>
           </CardContent>
         </Card>
+
+        {isOwner && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <KeyRound className="h-4 w-4" /> Single Sign-On
+              </CardTitle>
+              <CardDescription>
+                Connect your SAML identity provider so your team signs in with corporate credentials.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild variant="outline">
+                <Link to="/dashboard/organization/sso">Configure SSO</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+
 
         {isOwner && (
           <Card className="border-destructive/40">

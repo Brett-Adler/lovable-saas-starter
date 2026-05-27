@@ -23,6 +23,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import NewOrganization from "./pages/dashboard/NewOrganization";
 import OrganizationSettings from "./pages/dashboard/OrganizationSettings";
+import OrgSso from "./pages/dashboard/OrgSso";
 import Members from "./pages/dashboard/Members";
 import Invitations from "./pages/dashboard/Invitations";
 import Billing from "./pages/dashboard/Billing";
@@ -102,6 +103,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <OrganizationSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/organization/sso"
+                element={
+                  <ProtectedRoute>
+                    <OrgSso />
                   </ProtectedRoute>
                 }
               />
