@@ -120,6 +120,26 @@ const OrganizationSettings = () => {
         </Card>
 
         {isOwner && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <KeyRound className="h-4 w-4" /> Single Sign-On
+              </CardTitle>
+              <CardDescription>
+                Connect your SAML identity provider so your team signs in with corporate credentials.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild variant="outline">
+                <Link to="/dashboard/organization/sso">Configure SSO</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+
+
+        {isOwner && (
           <Card className="border-destructive/40">
             <CardHeader>
               <CardTitle className="text-destructive">Danger zone</CardTitle>
