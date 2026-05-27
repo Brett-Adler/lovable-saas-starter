@@ -48,8 +48,8 @@ const testimonials = [
 ];
 
 const faqs = [
-  { q: "What's included?", a: "Authentication (email, Google, Apple, SMS OTP), Stripe payments with a 14-day trial, transactional and marketing email, in-app notifications, audit logs, teams and roles, full settings UI, super-admin dashboard, and built-in analytics. Plus scaffolding for SAML SSO, SMS via Twilio, and Web Push." },
-  { q: "Are SMS, push, and SSO live out of the box?", a: "The UI, database, and edge functions are wired up. SMS waits for Twilio credentials, Web Push waits for VAPID keys, and SAML SSO waits for your identity provider — each is a credential swap, not a rewrite. See README.md for the pre-launch checklist." },
+  { q: "What's included?", a: "Authentication (email, Google, Apple), Stripe subscriptions, transactional and marketing email, in-app notifications, audit logs, teams and roles, full settings UI, super-admin dashboard, brand-kit generator, and built-in analytics. SMS OTP, Web Push, and SAML SSO ship as wired stubs you enable with credentials." },
+  { q: "Are SMS, push, and SSO live out of the box?", a: "The UI, database, and edge functions are wired up but ship as stubs. SMS waits for Twilio credentials, Web Push waits for VAPID keys, and SAML SSO accepts your IdP config through a form and is then provisioned manually — each is a credential or config swap, not a rewrite. See the Readme for the pre-launch checklist." },
   { q: "Can I use this commercially?", a: "Yes. This is a starter template — once you've built your product on top, it's yours." },
   { q: "How do I add my logo?", a: "Drop your files into /public using the names listed in BRANDING.md. The app picks them up automatically." },
   { q: "Does it support dark mode?", a: "Yes — every component is themed via semantic tokens. Toggle in the header." },
