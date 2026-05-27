@@ -40,6 +40,8 @@ export const publicNavGroups: PublicGroup[] = [
       { to: "/roadmap", label: "Roadmap" },
       { to: "/changelog", label: "Changelog" },
       { to: "/readme", label: "Setup guide" },
+      { to: "/use-template/lovable", label: "Use on Lovable" },
+      { to: "/use-template/github", label: "Use on GitHub" },
       { to: "/status", label: "System status" },
       { to: "/security", label: "Security" },
       { to: "/sitemap", label: "Sitemap" },

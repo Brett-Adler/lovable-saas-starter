@@ -27,6 +27,14 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-27",
+    title: "Use-this-template guides",
+    changes: [
+      { type: "added", text: "Dedicated walkthroughs at /use-template/lovable (remix flow) and /use-template/github (clone-and-sync flow) for new users adopting the starter." },
+      { type: "added", text: "Resource footer and the Readme page now link directly to both guides; the Launch checklist points new users at them first." },
+    ],
+  },
+  {
+    date: "2026-05-27",
     title: "Template hardening: realtime + site settings",
     changes: [
       { type: "security", text: "Realtime channels now require subscribers' topic name to include their own user ID — users can no longer listen in on other users' notification or subscription streams." },

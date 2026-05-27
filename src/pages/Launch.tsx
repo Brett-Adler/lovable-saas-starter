@@ -122,6 +122,13 @@ const Launch = () => (
           work; <strong className="text-foreground">Needs setup</strong> means add a credential or replace placeholder
           copy.
         </p>
+        <p className="mt-4 text-sm text-muted-foreground">
+          Just remixed? Start with the{" "}
+          <Link to="/use-template/lovable" className="text-primary hover:underline">Lovable setup guide</Link>
+          {" "}or the{" "}
+          <Link to="/use-template/github" className="text-primary hover:underline">GitHub setup guide</Link>
+          {" "}first.
+        </p>
 
         <div className="mt-10 space-y-4">
           {items.map((item, i) => (
