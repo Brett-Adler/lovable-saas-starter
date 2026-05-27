@@ -145,7 +145,7 @@ const Index = () => {
             id="index-logo-cloud"
             className="max-w-md mx-auto mb-6"
             message="Placeholder logos — replace in src/pages/Index.tsx"
-            hint="This ribbon is only shown on Lovable preview hosts, not on your custom domain."
+            hint="Visible only on Lovable preview hosts — never shown on your custom domain."
           />
           <p className="text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-6">
             Trusted by teams shipping faster
@@ -212,6 +212,7 @@ const Index = () => {
           id="index-testimonials"
           className="max-w-md mx-auto mb-8"
           message="Placeholder testimonials — replace in src/pages/Index.tsx"
+          hint="Visible only on Lovable preview hosts — never shown on your custom domain."
         />
         <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((t) => (
