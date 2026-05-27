@@ -186,7 +186,6 @@ export default function AdminSubscribers() {
             )}
           </CardContent>
         </Card>
-      </main>
-    </div>
+    </AdminShell>
   );
 }
