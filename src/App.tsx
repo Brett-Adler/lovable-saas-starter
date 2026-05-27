@@ -47,6 +47,17 @@ import Unsubscribe from "./pages/Unsubscribe";
 import NewsletterConfirm from "./pages/NewsletterConfirm";
 import Accessibility from "./pages/Accessibility";
 import SitemapPage from "./pages/Sitemap";
+import Roadmap from "./pages/Roadmap";
+import StatusPage from "./pages/Status";
+import Integrations from "./pages/Integrations";
+import SecurityPage from "./pages/Security";
+import Compare from "./pages/Compare";
+import Customers from "./pages/Customers";
+import Blog from "./pages/Blog";
+import DashboardSecurity from "./pages/dashboard/settings/Security";
+import DashboardApiKeys from "./pages/dashboard/settings/ApiKeys";
+import DashboardWebhooks from "./pages/dashboard/settings/Webhooks";
+import DashboardData from "./pages/dashboard/settings/Data";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -76,6 +87,13 @@ const App = () => (
               <Route path="/sitemap" element={<SitemapPage />} />
               <Route path="/readme" element={<Readme />} />
               <Route path="/changelog" element={<Changelog />} />
+              <Route path="/roadmap" element={<Roadmap />} />
+              <Route path="/status" element={<StatusPage />} />
+              <Route path="/integrations" element={<Integrations />} />
+              <Route path="/security" element={<SecurityPage />} />
+              <Route path="/compare" element={<Compare />} />
+              <Route path="/customers" element={<Customers />} />
+              <Route path="/blog" element={<Blog />} />
               <Route path="/checkout/return" element={<CheckoutReturn />} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
@@ -151,6 +169,22 @@ const App = () => (
                     <Settings />
                   </ProtectedRoute>
                 }
+              />
+              <Route
+                path="/dashboard/settings/security"
+                element={<ProtectedRoute><DashboardSecurity /></ProtectedRoute>}
+              />
+              <Route
+                path="/dashboard/settings/api-keys"
+                element={<ProtectedRoute><DashboardApiKeys /></ProtectedRoute>}
+              />
+              <Route
+                path="/dashboard/settings/webhooks"
+                element={<ProtectedRoute><DashboardWebhooks /></ProtectedRoute>}
+              />
+              <Route
+                path="/dashboard/settings/data"
+                element={<ProtectedRoute><DashboardData /></ProtectedRoute>}
               />
 
               {/* Admin */}

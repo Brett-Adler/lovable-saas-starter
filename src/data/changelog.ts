@@ -27,6 +27,19 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-27",
+    title: "Roadmap, integrations directory, and coming-soon pages for every gap",
+    changes: [
+      { type: "added", text: "Public Roadmap page (/roadmap) grouping every feature by category and status — Live, Needs setup, Coming soon, or Planned." },
+      { type: "added", text: "Integrations directory (/integrations) listing Stripe, Google, Apple, Resend, Twilio, Web Push, SAML, plus upcoming Slack, Zapier, webhooks." },
+      { type: "added", text: "Security & trust page (/security) summarising RLS, audit log, JWT rotation, and what's still on the roadmap." },
+      { type: "added", text: "Static system status page (/status) and competitor compare page (/compare), both marked as placeholders on preview hosts." },
+      { type: "added", text: "Coming-soon Customer stories (/customers) and Blog (/blog) pages with notify-me email capture." },
+      { type: "added", text: "Dashboard → Settings → Advanced tab with stub pages for 2FA, API keys, webhooks, plus a working JSON data export and an account-deletion request flow." },
+      { type: "added", text: "Roadmap, Integrations, Status, Security, Customers, Blog, and Compare links surfaced in the marketing header and footer." },
+    ],
+  },
+  {
+    date: "2026-05-27",
     title: "Honest status across every page",
     changes: [
       { type: "added", text: "New Live / Needs setup / Coming soon badges on the landing feature cards so it's clear which features ship working and which need credentials." },
