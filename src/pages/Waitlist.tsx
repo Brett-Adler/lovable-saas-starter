@@ -37,7 +37,7 @@ const Waitlist = () => {
       });
       if (error) throw error;
       setDone(true);
-      toast.success("You're on the list!");
+      toast.success("You're in 🎉");
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally { setLoading(false); }

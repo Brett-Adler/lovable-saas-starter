@@ -36,7 +36,8 @@ const Demo = () => {
         kind: "demo",
         name: parsed.data.name,
         email: parsed.data.email,
-        source: `demo:${parsed.data.company} (${parsed.data.size})`,
+        company: parsed.data.company,
+        source: `demo:size=${parsed.data.size}`,
         message: parsed.data.notes || null,
       });
       if (error) throw error;
