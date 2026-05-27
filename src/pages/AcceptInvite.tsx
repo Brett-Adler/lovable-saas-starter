@@ -51,7 +51,7 @@ const AcceptInvite = () => {
   }, [token, user, authLoading, navigate, refresh, setCurrentOrgId]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
+    <div className="min-h-dvh bg-background flex flex-col items-center justify-center p-6">
       <div className="mb-6">
         <Logo />
       </div>

@@ -12,7 +12,7 @@ interface AuthShellProps {
 export const AuthShell = ({ title, subtitle, footer, children }: AuthShellProps) => (
   <>
     <NoIndex />
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-dvh flex flex-col">
       <header className="container py-6">
         <Logo />
       </header>
