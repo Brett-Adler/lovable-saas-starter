@@ -29,7 +29,7 @@ const fields = [
 
 const SiteSettingsPage = () => {
   const { isAdmin } = useUserRoles();
-  const { data: settings } = useSiteSettings();
+  const { data: settings } = useAdminSiteSettings();
   const qc = useQueryClient();
   const [form, setForm] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
