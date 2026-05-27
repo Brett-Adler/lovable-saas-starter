@@ -153,7 +153,7 @@ const OrgSso = () => {
                     <Label>ACS / Reply URL</Label>
                     <div className="flex gap-2">
                       <Input value={ACS_URL} readOnly className="font-mono text-xs" />
-                      <Button variant="outline" size="icon" onClick={() => copy(ACS_URL, "ACS URL")}>
+                      <Button variant="outline" size="icon" aria-label="Copy ACS URL" onClick={() => copy(ACS_URL, "ACS URL")}>
                         <Copy className="h-4 w-4" />
                       </Button>
                     </div>
@@ -162,7 +162,7 @@ const OrgSso = () => {
                     <Label>Entity ID / Audience URI</Label>
                     <div className="flex gap-2">
                       <Input value={ENTITY_ID} readOnly className="font-mono text-xs" />
-                      <Button variant="outline" size="icon" onClick={() => copy(ENTITY_ID, "Entity ID")}>
+                      <Button variant="outline" size="icon" aria-label="Copy Entity ID" onClick={() => copy(ENTITY_ID, "Entity ID")}>
                         <Copy className="h-4 w-4" />
                       </Button>
                     </div>
