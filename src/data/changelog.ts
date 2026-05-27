@@ -27,6 +27,13 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-27",
+    title: "Docs hub",
+    changes: [
+      { type: "added", text: "New /docs page surfacing the setup guide alongside quick links to Roadmap, Changelog, Status, and Security. Added Docs to the marketing header and footer." },
+    ],
+  },
+  {
+    date: "2026-05-27",
     title: "Roadmap, integrations directory, and coming-soon pages for every gap",
     changes: [
       { type: "added", text: "Public Roadmap page (/roadmap) grouping every feature by category and status — Live, Needs setup, Coming soon, or Planned." },

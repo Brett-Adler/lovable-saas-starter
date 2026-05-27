@@ -17,6 +17,7 @@ import Demo from "./pages/Demo";
 import Waitlist from "./pages/Waitlist";
 import Legal from "./pages/Legal";
 import Readme from "./pages/Readme";
+import Docs from "./pages/Docs";
 import Changelog from "./pages/Changelog";
 import CheckoutReturn from "./pages/CheckoutReturn";
 import Auth from "./pages/Auth";
@@ -86,6 +87,7 @@ const App = () => (
               <Route path="/accessibility" element={<Accessibility />} />
               <Route path="/sitemap" element={<SitemapPage />} />
               <Route path="/readme" element={<Readme />} />
+              <Route path="/docs" element={<Docs />} />
               <Route path="/changelog" element={<Changelog />} />
               <Route path="/roadmap" element={<Roadmap />} />
               <Route path="/status" element={<StatusPage />} />
