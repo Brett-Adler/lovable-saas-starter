@@ -4,9 +4,11 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { TemplatePlaceholderRibbon } from "@/components/marketing/TemplatePlaceholderRibbon";
 
 const bullets = [
-  "Auth, billing, teams, and email — production-ready from day one.",
+  "Auth, billing, teams, and transactional email — wired and ready.",
+  "SMS OTP, Web Push, and SAML SSO ship as stubs you can enable with credentials.",
   "A polished design system with light + dark themes.",
   "A super-admin panel and built-in analytics for the boring metrics.",
 ];
