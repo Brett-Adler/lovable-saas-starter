@@ -1220,7 +1220,51 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_site_settings: {
+        Row: {
+          company_legal_name: string | null
+          contact_email: string | null
+          id: number | null
+          mailing_address: string | null
+          social_facebook: string | null
+          social_github: string | null
+          social_instagram: string | null
+          social_linkedin: string | null
+          social_tiktok: string | null
+          social_twitter: string | null
+          social_youtube: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_legal_name?: string | null
+          contact_email?: string | null
+          id?: number | null
+          mailing_address?: string | null
+          social_facebook?: string | null
+          social_github?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_tiktok?: string | null
+          social_twitter?: string | null
+          social_youtube?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          company_legal_name?: string | null
+          contact_email?: string | null
+          id?: number | null
+          mailing_address?: string | null
+          social_facebook?: string | null
+          social_github?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_tiktok?: string | null
+          social_twitter?: string | null
+          social_youtube?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_organization_invite: { Args: { _token: string }; Returns: string }
