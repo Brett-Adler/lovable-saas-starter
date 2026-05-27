@@ -27,6 +27,13 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-27",
+    title: "SEO and accessibility cleanup",
+    changes: [
+      { type: "fixed", text: "Search metadata, social previews, schema URLs, sitemap coverage, homepage loading hints, and theme contrast now pass the latest SEO cleanup pass." },
+    ],
+  },
+  {
+    date: "2026-05-27",
     title: "Use-this-template guides",
     changes: [
       { type: "added", text: "Dedicated walkthroughs at /use-template/lovable (remix flow) and /use-template/github (clone-and-sync flow) for new users adopting the starter." },
