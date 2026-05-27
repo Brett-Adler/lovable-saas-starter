@@ -10,6 +10,7 @@ import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { RequirePlan } from "@/components/billing/RequirePlan";
 import { useOrganization } from "@/hooks/useOrganization";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { toast } from "sonner";
 
 const PROJECT_ID = import.meta.env.VITE_SUPABASE_PROJECT_ID;
