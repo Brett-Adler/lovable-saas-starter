@@ -168,10 +168,13 @@ const Index = () => {
           </p>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {features.map((f, i) => (
+          {features.map((f) => (
             <Card key={f.title} className="p-6 border-border/60 shadow-card hover:shadow-md transition-shadow group">
-              <div className="h-11 w-11 rounded-xl bg-primary-soft flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <f.icon className="h-5 w-5 text-primary" />
+              <div className="flex items-start justify-between mb-4">
+                <div className="h-11 w-11 rounded-xl bg-primary-soft flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <f.icon className="h-5 w-5 text-primary" />
+                </div>
+                <StatusBadge status={f.status} tooltip={f.tooltip} />
               </div>
               <h3 className="font-semibold mb-1">{f.title}</h3>
               <p className="text-sm text-muted-foreground">{f.desc}</p>
