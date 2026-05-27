@@ -18,6 +18,11 @@ const About = () => (
       <PageSeo path="/about" title="About" description="The story behind the SaaS Starter and the team building it." />
     <section className="container py-20 md:py-28">
       <div className="max-w-3xl mx-auto">
+        <TemplatePlaceholderRibbon
+          id="about-copy"
+          className="mb-6"
+          message="Template copy — personalize this About page before launch."
+        />
         <Badge variant="outline" className="mb-4">About</Badge>
         <h1 className="text-4xl md:text-6xl font-bold">We build the boring stuff so you don't have to.</h1>
         <div className="prose prose-lg mt-10 max-w-none text-muted-foreground space-y-6">
