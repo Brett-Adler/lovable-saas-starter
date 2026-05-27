@@ -37,6 +37,7 @@ import AdminUsers from "./pages/admin/Users";
 import AdminOrganizations from "./pages/admin/Organizations";
 import AdminSubscriptions from "./pages/admin/Subscriptions";
 import AdminAnalytics from "./pages/admin/Analytics";
+import AdminAudit from "./pages/admin/Audit";
 import Unsubscribe from "./pages/Unsubscribe";
 import NewsletterConfirm from "./pages/NewsletterConfirm";
 import Accessibility from "./pages/Accessibility";
