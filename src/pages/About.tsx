@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -12,6 +13,7 @@ const bullets = [
 
 const About = () => (
   <MarketingLayout>
+      <PageSeo path="/about" title="About" description="The story behind the SaaS Starter and the team building it." />
     <section className="container py-20 md:py-28">
       <div className="max-w-3xl mx-auto">
         <Badge variant="outline" className="mb-4">About</Badge>

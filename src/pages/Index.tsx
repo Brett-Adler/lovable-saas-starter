@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { NewsletterForm } from "@/components/marketing/NewsletterForm";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { publicNavGroups } from "@/lib/public-routes";
@@ -56,6 +57,7 @@ const Index = () => {
 
   return (
     <MarketingLayout>
+      <PageSeo path="/" />
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 gradient-mesh opacity-80" aria-hidden />

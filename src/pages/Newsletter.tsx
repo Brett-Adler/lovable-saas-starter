@@ -1,4 +1,5 @@
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { Badge } from "@/components/ui/badge";
 import { NewsletterForm } from "@/components/marketing/NewsletterForm";
 import { Mail } from "lucide-react";
@@ -6,6 +7,7 @@ import { Card } from "@/components/ui/card";
 
 const Newsletter = () => (
   <MarketingLayout>
+      <PageSeo path="/newsletter" title="Newsletter" description="Product updates, engineering notes, and tips — straight to your inbox." />
     <section className="container py-20 md:py-28">
       <div className="max-w-2xl mx-auto text-center">
         <div className="h-16 w-16 mx-auto rounded-2xl gradient-primary flex items-center justify-center shadow-glow mb-6">
