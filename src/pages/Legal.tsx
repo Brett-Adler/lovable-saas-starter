@@ -2,6 +2,10 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
 import { Badge } from "@/components/ui/badge";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { TemplatePlaceholderRibbon } from "@/components/marketing/TemplatePlaceholderRibbon";
+
+// Bump this when policy text changes.
+const LAST_UPDATED = "May 27, 2026";
 
 interface LegalProps {
   title: string;
