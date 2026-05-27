@@ -170,6 +170,22 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/dashboard/settings/security"
+                element={<ProtectedRoute><DashboardSecurity /></ProtectedRoute>}
+              />
+              <Route
+                path="/dashboard/settings/api-keys"
+                element={<ProtectedRoute><DashboardApiKeys /></ProtectedRoute>}
+              />
+              <Route
+                path="/dashboard/settings/webhooks"
+                element={<ProtectedRoute><DashboardWebhooks /></ProtectedRoute>}
+              />
+              <Route
+                path="/dashboard/settings/data"
+                element={<ProtectedRoute><DashboardData /></ProtectedRoute>}
+              />
 
               {/* Admin */}
               <Route
