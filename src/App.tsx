@@ -87,6 +87,13 @@ const App = () => (
               <Route path="/sitemap" element={<SitemapPage />} />
               <Route path="/readme" element={<Readme />} />
               <Route path="/changelog" element={<Changelog />} />
+              <Route path="/roadmap" element={<Roadmap />} />
+              <Route path="/status" element={<StatusPage />} />
+              <Route path="/integrations" element={<Integrations />} />
+              <Route path="/security" element={<SecurityPage />} />
+              <Route path="/compare" element={<Compare />} />
+              <Route path="/customers" element={<Customers />} />
+              <Route path="/blog" element={<Blog />} />
               <Route path="/checkout/return" element={<CheckoutReturn />} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
