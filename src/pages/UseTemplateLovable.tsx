@@ -240,7 +240,9 @@ const UseTemplateLovable = () => {
         </p>
       </div>
     </section>
-  </MarketingLayout>
-);
+    </MarketingLayout>
+  );
+};
 
 export default UseTemplateLovable;
+
