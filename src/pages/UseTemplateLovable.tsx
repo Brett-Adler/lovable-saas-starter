@@ -197,6 +197,121 @@ const UseTemplateLovable = () => {
           ))}
         </div>
 
+        <h2 id="listing-preview" className="mt-16 text-2xl font-bold">Template listing preview</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          A mock of how this project would appear in the Lovable template gallery, plus the assets and copy
+          you'll want ready before you publish. Hit copy on any field to grab the suggested text.
+        </p>
+
+        {/* Mock listing card */}
+        <Card className="mt-6 overflow-hidden">
+          <div className="p-5 border-b border-border flex items-start gap-4">
+            <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary/30 to-primary/10 border border-border flex items-center justify-center shrink-0">
+              <Rocket className="h-7 w-7 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs text-muted-foreground">{listing.category}</div>
+              <h3 className="mt-1 text-lg font-semibold text-foreground truncate">{listing.title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{listing.tagline}</p>
+            </div>
+            <div className="hidden sm:flex flex-col items-end gap-2 shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground">
+                  Visit <ExternalLink className="h-3 w-3" />
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs font-medium">
+                  Share <Share2 className="h-3 w-3" />
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1.5 text-xs">
+                  <Heart className="h-3 w-3" /> 0
+                </span>
+              </div>
+              <span className="text-xs text-muted-foreground">Preview only</span>
+            </div>
+          </div>
+
+          <div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-muted/30">
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="aspect-video rounded-md border border-dashed border-border bg-background flex flex-col items-center justify-center text-xs text-muted-foreground gap-1"
+              >
+                <ImageIcon className="h-4 w-4" />
+                Screenshot {i}
+              </div>
+            ))}
+          </div>
+
+          <div className="p-5">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-semibold">About</h4>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={() => copy("about", listing.about)}
+              >
+                {copied === "about" ? (
+                  <><Check className="h-3 w-3 mr-1" /> Copied</>
+                ) : (
+                  <><Copy className="h-3 w-3 mr-1" /> Copy</>
+                )}
+              </Button>
+            </div>
+            <div className="mt-2 text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
+              {listing.about}
+            </div>
+          </div>
+        </Card>
+
+        {/* Field-by-field copy helpers */}
+        <div className="mt-6 grid sm:grid-cols-2 gap-3">
+          {[
+            { key: "title", label: "Title", value: listing.title },
+            { key: "tagline", label: "Tagline", value: listing.tagline },
+            { key: "category", label: "Category", value: listing.category },
+          ].map((f) => (
+            <Card key={f.key} className="p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  {f.label}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  onClick={() => copy(f.key, f.value)}
+                >
+                  {copied === f.key ? (
+                    <><Check className="h-3 w-3 mr-1" /> Copied</>
+                  ) : (
+                    <><Copy className="h-3 w-3 mr-1" /> Copy</>
+                  )}
+                </Button>
+              </div>
+              <p className="mt-1 text-sm text-foreground">{f.value}</p>
+            </Card>
+          ))}
+        </div>
+
+        {/* Asset checklist */}
+        <h3 className="mt-10 text-lg font-semibold">What to prepare before publishing</h3>
+        <Card className="mt-3 p-5">
+          <ul className="divide-y divide-border">
+            {checklist.map((c) => (
+              <li key={c.label} className="py-3 flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
+                <span className="text-sm font-medium text-foreground sm:w-56 shrink-0">{c.label}</span>
+                <span className="text-sm text-muted-foreground">{c.detail}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 text-xs text-muted-foreground">
+            Tip: open <Link to="/admin/brand" className="text-primary hover:underline">Brand kit</Link> to export
+            every icon size in one click, and the <Link to="/" className="text-primary hover:underline">landing page</Link>{" "}
+            already has a polished hero you can screenshot for the cover image.
+          </p>
+        </Card>
+
         <h2 id="prompts" className="mt-16 text-2xl font-bold">Ready-made rebrand prompts</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Each prompt is one self-contained message. Paste into Lovable chat after remixing.
