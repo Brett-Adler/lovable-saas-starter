@@ -13,8 +13,12 @@ import { resolve } from "path";
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || "";
 const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "";
 
-// When unset, emit relative URLs so crawlers resolve against the live host.
-const FALLBACK_BASE = (process.env.PUBLIC_SITE_URL ?? process.env.VITE_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+// When unset, fall back to the project's published Lovable URL so sitemap <loc> entries are absolute.
+const FALLBACK_BASE = (
+  process.env.PUBLIC_SITE_URL ??
+  process.env.VITE_PUBLIC_SITE_URL ??
+  "https://lovable-saas-starter.lovable.app"
+).replace(/\/$/, "");
 
 // Static public-route allow-list. Keep in sync with src/App.tsx public routes.
 const PUBLIC_ROUTES: Array<{
@@ -31,7 +35,18 @@ const PUBLIC_ROUTES: Array<{
   { path: "/demo", changefreq: "monthly", priority: "0.6", llmsLabel: "Demo", llmsDesc: "Book a demo." },
   { path: "/waitlist", changefreq: "monthly", priority: "0.6", llmsLabel: "Waitlist", llmsDesc: "Join the waitlist." },
   { path: "/newsletter", changefreq: "monthly", priority: "0.6", llmsLabel: "Newsletter", llmsDesc: "Subscribe to updates." },
+  { path: "/docs", changefreq: "monthly", priority: "0.7", llmsLabel: "Docs", llmsDesc: "Setup and customization guide." },
   { path: "/readme", changefreq: "monthly", priority: "0.5", llmsLabel: "Readme", llmsDesc: "Project overview and roadmap." },
+  { path: "/launch", changefreq: "monthly", priority: "0.6", llmsLabel: "Launch checklist", llmsDesc: "Pre-launch credential checklist." },
+  { path: "/roadmap", changefreq: "monthly", priority: "0.5", llmsLabel: "Roadmap", llmsDesc: "Upcoming features." },
+  { path: "/integrations", changefreq: "monthly", priority: "0.6", llmsLabel: "Integrations", llmsDesc: "Available integrations." },
+  { path: "/compare", changefreq: "monthly", priority: "0.6", llmsLabel: "Compare", llmsDesc: "Compare with alternatives." },
+  { path: "/customers", changefreq: "monthly", priority: "0.6", llmsLabel: "Customers", llmsDesc: "Customer stories." },
+  { path: "/blog", changefreq: "weekly", priority: "0.7", llmsLabel: "Blog", llmsDesc: "Engineering and product notes." },
+  { path: "/security", changefreq: "monthly", priority: "0.5", llmsLabel: "Security", llmsDesc: "Security posture and controls." },
+  { path: "/status", changefreq: "weekly", priority: "0.4", llmsLabel: "Status", llmsDesc: "System health and incidents." },
+  { path: "/use-template/lovable", changefreq: "monthly", priority: "0.6", llmsLabel: "Use on Lovable", llmsDesc: "Step-by-step remix guide." },
+  { path: "/use-template/github", changefreq: "monthly", priority: "0.6", llmsLabel: "Use on GitHub", llmsDesc: "Local clone-and-sync guide." },
   { path: "/changelog", changefreq: "weekly", priority: "0.6", llmsLabel: "Changelog", llmsDesc: "Recent product updates." },
   { path: "/sitemap", changefreq: "monthly", priority: "0.3" },
   { path: "/privacy", changefreq: "yearly", priority: "0.3", llmsLabel: "Privacy Policy", llmsDesc: "Privacy practices." },
@@ -112,7 +127,8 @@ function rewriteIndexHtml(seo: SiteSeo, base: string) {
     `<meta name="title" content="${escape(title)}" />`,
     `<meta name="description" content="${escape(description)}" />`,
     `<meta name="theme-color" content="${escape(themeColor)}" />`,
-    `<link rel="canonical" href="${base}/" />`,
+    // Canonical is emitted per-route via react-helmet-async (see src/components/seo/PageSeo.tsx)
+    // to avoid duplicate <link rel="canonical"> tags when Helmet appends a route-specific one.
     `<meta property="og:type" content="website" />`,
     `<meta property="og:url" content="${base}/" />`,
     `<meta property="og:title" content="${escape(title)}" />`,

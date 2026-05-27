@@ -42,12 +42,32 @@ const BlogPost = () => {
     },
   });
 
+  const articleSchema = post
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: post.title,
+        description: post.excerpt ?? undefined,
+        image: post.cover_image_url ?? undefined,
+        datePublished: post.published_at ?? undefined,
+        author: post.author_name
+          ? { "@type": "Person", name: post.author_name }
+          : undefined,
+        mainEntityOfPage: {
+          "@type": "WebPage",
+          "@id": `https://lovable-saas-starter.lovable.app/blog/${slug}`,
+        },
+      }
+    : undefined;
+
   return (
     <MarketingLayout>
       <PageSeo
         path={`/blog/${slug}`}
         title={post?.title ?? "Blog post"}
         description={post?.excerpt ?? "Read on the blog."}
+        ogImage={post?.cover_image_url ?? undefined}
+        jsonLd={articleSchema}
       />
       <article className="container max-w-3xl py-12 md:py-16">
         <Button asChild variant="ghost" size="sm" className="mb-6 -ml-3">

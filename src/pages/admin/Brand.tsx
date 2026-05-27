@@ -173,7 +173,7 @@ const AdminBrandPage = () => {
                     {source ? (
                       <div className="flex flex-col items-center gap-3">
                         <div className="h-32 w-32 rounded-md border bg-[conic-gradient(at_top_left,_#f5f5f5_25%,_#ffffff_25%_50%,_#f5f5f5_50%_75%,_#ffffff_75%)] bg-[length:16px_16px] flex items-center justify-center overflow-hidden">
-                          <img src={source.previewUrl} alt="logo preview" className="max-h-28 max-w-28 object-contain" />
+                          <img src={source.previewUrl} alt="Generated logo preview" className="max-h-28 max-w-28 object-contain" />
                         </div>
                         <div className="text-xs text-muted-foreground">
                           {source.file.name} · {source.image.naturalWidth || "?"}×{source.image.naturalHeight || "?"}
@@ -325,7 +325,7 @@ const AdminBrandPage = () => {
                       <div key={a.filename} className="border rounded-md overflow-hidden bg-card">
                         <div className="aspect-square bg-[conic-gradient(at_top_left,_#f5f5f5_25%,_#ffffff_25%_50%,_#f5f5f5_50%_75%,_#ffffff_75%)] bg-[length:12px_12px] flex items-center justify-center p-2">
                           {a.contentType.startsWith("image/") ? (
-                            <img src={assetUrls[a.filename]} alt={a.filename} className="max-h-full max-w-full object-contain" />
+                            <img src={assetUrls[a.filename]} alt={`Brand asset: ${a.filename}`} className="max-h-full max-w-full object-contain" />
                           ) : (
                             <span className="text-xs text-muted-foreground">{a.filename}</span>
                           )}
@@ -384,7 +384,7 @@ const AdminBrandPage = () => {
                     >
                       <div className="aspect-square bg-[conic-gradient(at_top_left,_#f5f5f5_25%,_#ffffff_25%_50%,_#f5f5f5_50%_75%,_#ffffff_75%)] bg-[length:12px_12px] flex items-center justify-center p-2">
                         {/\.(png|jpe?g|svg|webp|ico)$/i.test(name) ? (
-                          <img src={url} alt={name} className="max-h-full max-w-full object-contain" />
+                          <img src={url} alt={`Brand asset: ${name}`} className="max-h-full max-w-full object-contain" />
                         ) : (
                           <span className="text-xs text-muted-foreground">{name}</span>
                         )}
