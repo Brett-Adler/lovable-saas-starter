@@ -178,6 +178,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/admin/seo"
+                element={
+                  <ProtectedRoute>
+                    <AdminSeo />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/subscribers"
                 element={
                   <ProtectedRoute>
