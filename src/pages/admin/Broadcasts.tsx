@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
-import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useAdminSiteSettings } from "@/hooks/useSiteSettings";
 import { toast } from "sonner";
 import { AdminShell } from "@/components/admin/AdminShell";
 import {
