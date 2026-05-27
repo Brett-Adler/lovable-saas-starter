@@ -43,10 +43,14 @@ const PUBLIC_ROUTES: Array<{
   { path: "/compare", changefreq: "monthly", priority: "0.6", llmsLabel: "Compare", llmsDesc: "Compare with alternatives." },
   { path: "/customers", changefreq: "monthly", priority: "0.6", llmsLabel: "Customers", llmsDesc: "Customer stories." },
   { path: "/blog", changefreq: "weekly", priority: "0.7", llmsLabel: "Blog", llmsDesc: "Engineering and product notes." },
+  { path: "/checkout/return", changefreq: "yearly", priority: "0.2" },
+  { path: "/unsubscribe", changefreq: "yearly", priority: "0.2" },
+  { path: "/newsletter/confirm", changefreq: "yearly", priority: "0.2" },
   { path: "/security", changefreq: "monthly", priority: "0.5", llmsLabel: "Security", llmsDesc: "Security posture and controls." },
   { path: "/status", changefreq: "weekly", priority: "0.4", llmsLabel: "Status", llmsDesc: "System health and incidents." },
   { path: "/use-template/lovable", changefreq: "monthly", priority: "0.6", llmsLabel: "Use on Lovable", llmsDesc: "Step-by-step remix guide." },
   { path: "/use-template/github", changefreq: "monthly", priority: "0.6", llmsLabel: "Use on GitHub", llmsDesc: "Local clone-and-sync guide." },
+  { path: "/login", changefreq: "yearly", priority: "0.2" },
   { path: "/changelog", changefreq: "weekly", priority: "0.6", llmsLabel: "Changelog", llmsDesc: "Recent product updates." },
   { path: "/sitemap", changefreq: "monthly", priority: "0.3" },
   { path: "/privacy", changefreq: "yearly", priority: "0.3", llmsLabel: "Privacy Policy", llmsDesc: "Privacy practices." },
@@ -72,6 +76,12 @@ interface SeoPage {
   description: string | null;
   noindex: boolean;
   updated_at: string;
+}
+
+interface BlogPostSitemapRow {
+  slug: string;
+  updated_at: string;
+  published_at: string | null;
 }
 
 async function fetchJson<T>(path: string): Promise<T | null> {
@@ -183,14 +193,20 @@ function writeLlmsTxt(seo: SiteSeo, pages: SeoPage[], base: string) {
   console.log(`[sync-seo] llms.txt written (${indexable.length} pages)`);
 }
 
-function writeSitemap(pages: SeoPage[], base: string) {
+function writeSitemap(pages: SeoPage[], blogPosts: BlogPostSitemapRow[], base: string) {
   const blocked = new Set(pages.filter((p) => p.noindex).map((p) => p.path));
   const lastmodMap = new Map(pages.map((p) => [p.path, p.updated_at]));
 
-  const entries = PUBLIC_ROUTES.filter((r) => !blocked.has(r.path));
+  const blogEntries = blogPosts.map((post) => ({
+    path: `/blog/${post.slug}`,
+    lastmod: post.updated_at || post.published_at || undefined,
+    changefreq: "monthly" as const,
+    priority: "0.6",
+  }));
+  const entries = [...PUBLIC_ROUTES.filter((r) => !blocked.has(r.path)), ...blogEntries.filter((r) => !blocked.has(r.path))];
 
   const urls = entries.map((e) => {
-    const lastmod = lastmodMap.get(e.path);
+    const lastmod = "lastmod" in e ? e.lastmod : lastmodMap.get(e.path);
     return [
       `  <url>`,
       `    <loc>${base}${e.path}</loc>`,
@@ -217,6 +233,10 @@ function writeSitemap(pages: SeoPage[], base: string) {
 async function main() {
   const seoRows = await fetchJson<SiteSeo[]>("site_seo?select=*&id=eq.1");
   const pagesRows = (await fetchJson<SeoPage[]>("seo_pages?select=path,title,description,noindex,updated_at")) ?? [];
+  const blogPostRows =
+    (await fetchJson<BlogPostSitemapRow[]>(
+      `blog_posts?select=slug,updated_at,published_at&status=eq.published&published_at=not.is.null&published_at=lte.${encodeURIComponent(new Date().toISOString())}`,
+    )) ?? [];
 
   const seo: SiteSeo = (seoRows && seoRows[0]) || {
     site_name: "Your App",
@@ -232,7 +252,7 @@ async function main() {
 
   rewriteIndexHtml(seo, base);
   writeLlmsTxt(seo, pagesRows, base);
-  writeSitemap(pagesRows, base);
+  writeSitemap(pagesRows, blogPostRows, base);
 }
 
 main().catch((e) => {

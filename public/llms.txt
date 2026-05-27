@@ -1,6 +1,6 @@
-# Your Brand
+# SaaS Starter
 
-> Replace this description in admin → Site SEO before launch.
+> Launch faster with a production-ready SaaS starter for auth, billing, teams, emails, analytics, and admin workflows.
 
 ## Pages
 
@@ -11,7 +11,18 @@
 - [Demo](/demo): Book a demo.
 - [Waitlist](/waitlist): Join the waitlist.
 - [Newsletter](/newsletter): Subscribe to updates.
+- [Docs](/docs): Setup and customization guide.
 - [Readme](/readme): Project overview and roadmap.
+- [Launch checklist](/launch): Pre-launch credential checklist.
+- [Roadmap](/roadmap): Upcoming features.
+- [Integrations](/integrations): Available integrations.
+- [Compare](/compare): Compare with alternatives.
+- [Customers](/customers): Customer stories.
+- [Blog](/blog): Engineering and product notes.
+- [Security](/security): Security posture and controls.
+- [Status](/status): System health and incidents.
+- [Use on Lovable](/use-template/lovable): Step-by-step remix guide.
+- [Use on GitHub](/use-template/github): Local clone-and-sync guide.
 - [Changelog](/changelog): Recent product updates.
 - [Privacy Policy](/privacy): Privacy practices.
 - [Terms of Service](/terms): Terms of service.
