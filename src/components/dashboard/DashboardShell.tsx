@@ -50,6 +50,8 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
   };
 
   return (
+    <>
+      <NoIndex />
     <div className="min-h-screen flex bg-background">
       <aside className="hidden lg:flex w-64 flex-col border-r border-border bg-card">
         <div className="px-6 py-5 border-b border-border">
