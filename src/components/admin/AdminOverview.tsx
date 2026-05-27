@@ -5,8 +5,6 @@ import {
   Building2,
   CreditCard,
   DollarSign,
-  Inbox,
-  Mail,
   Send,
   Settings as SettingsIcon,
   AlertCircle,
@@ -14,10 +12,13 @@ import {
   Loader2,
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
+import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
+import { EmailHealthCard } from "@/components/admin/EmailHealthCard";
+import { RecentAuditCard } from "@/components/admin/RecentAuditCard";
 
 type Overview = {
   totalUsers: number;
@@ -49,13 +50,15 @@ interface KpiProps {
   icon: React.ComponentType<{ className?: string }>;
   to: string;
   loading?: boolean;
+  trend?: { day: string; count: number }[];
 }
 
-function Kpi({ label, value, sub, icon: Icon, to, loading }: KpiProps) {
+function Kpi({ label, value, sub, icon: Icon, to, loading, trend }: KpiProps) {
+  const hasTrend = trend && trend.length > 1;
   return (
     <Link
       to={to}
-      className="group rounded-xl border border-border bg-card p-5 hover:border-primary/40 hover:shadow-sm transition-all"
+      className="group relative overflow-hidden rounded-xl border border-border bg-card p-5 hover:border-primary/40 hover:shadow-sm transition-all"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="text-sm text-muted-foreground">{label}</div>
@@ -65,6 +68,28 @@ function Kpi({ label, value, sub, icon: Icon, to, loading }: KpiProps) {
         {loading ? <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /> : value}
       </div>
       {sub && <div className="mt-1 text-xs text-muted-foreground">{sub}</div>}
+      {hasTrend && (
+        <div className="mt-3 h-8 -mx-1">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={trend} margin={{ top: 2, right: 2, bottom: 0, left: 2 }}>
+              <defs>
+                <linearGradient id={`kpi-fill-${label}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
+                  <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Area
+                type="monotone"
+                dataKey="count"
+                stroke="hsl(var(--primary))"
+                strokeWidth={1.5}
+                fill={`url(#kpi-fill-${label})`}
+                isAnimationActive={false}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </Link>
   );
 }
