@@ -47,13 +47,29 @@ const testimonials = [
   { quote: "Cleanest SaaS starter I've used. Beautiful design, real architecture.", name: "Priya S.", role: "Engineer, Drift" },
 ];
 
-const faqs = [
+type Faq = { q: string; a: string; status?: FeatureStatus; tooltip?: string };
+
+const faqs: Faq[] = [
   { q: "What's included?", a: "Authentication (email, Google, Apple), Stripe subscriptions, transactional + auth email, in-app notifications, audit logs, teams and roles, full settings UI, super-admin dashboard, brand-kit generator, and built-in analytics. Marketing broadcasts, SMS OTP, Web Push, and SAML SSO ship as wired pipelines you enable with credentials — see the launch checklist." },
-  { q: "Are SMS, push, and SSO live out of the box?", a: "The UI, database, and edge functions are wired up but ship as stubs. SMS waits for Twilio credentials, Web Push waits for VAPID keys, and SAML SSO accepts your IdP config through a form and is then provisioned manually — each is a credential or config swap, not a rewrite. See the Readme for the pre-launch checklist." },
+  {
+    q: "Are SMS, push, and SSO live out of the box?",
+    a: "The UI, database, and edge functions are wired up but ship as stubs. SMS waits for Twilio credentials, Web Push waits for VAPID keys, and SAML SSO accepts your IdP config through a form and is then provisioned manually — each is a credential or config swap, not a rewrite. See the Readme for the pre-launch checklist.",
+    status: "setup",
+    tooltip: "SMS: add Twilio (TWILIO_ACCOUNT_SID, AUTH_TOKEN, FROM_NUMBER). Push: VAPID keys. SSO: submit IdP config via the form.",
+  },
   { q: "Can I use this commercially?", a: "Yes. This is a starter template — once you've built your product on top, it's yours." },
   { q: "How do I add my logo?", a: "Drop your files into /public using the names listed in BRANDING.md. The app picks them up automatically." },
-  { q: "Does it support dark mode?", a: "Yes — every component is themed via semantic tokens. Toggle in the header." },
-  { q: "What about marketing emails?", a: "We use Resend on a separate subdomain so it never affects deliverability of your auth emails." },
+  {
+    q: "Does it support dark mode?",
+    a: "Yes — every component is themed via semantic tokens. Toggle in the header.",
+    status: "shipped",
+  },
+  {
+    q: "What about marketing emails?",
+    a: "We use Resend on a separate subdomain so it never affects deliverability of your auth emails.",
+    status: "setup",
+    tooltip: "Add RESEND_API_KEY and verify your sending domain in Resend.",
+  },
 ];
 
 const Index = () => {
@@ -256,7 +272,12 @@ const Index = () => {
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((f, i) => (
               <AccordionItem key={i} value={`item-${i}`}>
-                <AccordionTrigger className="text-left">{f.q}</AccordionTrigger>
+                <AccordionTrigger className="text-left">
+                  <span className="flex-1">{f.q}</span>
+                  {f.status && (
+                    <StatusBadge status={f.status} tooltip={f.tooltip} className="ml-3 mr-2 shrink-0" />
+                  )}
+                </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>
               </AccordionItem>
             ))}
