@@ -1,68 +1,60 @@
-# Plan: `/admin/analytics` — core SaaS metrics
+# Plan: Cleaner, more user-friendly `/admin`
 
-Replace the dashed "Analytics" tile on `AdminIndex` with a real page. Phase 1 focuses on the standard metrics every SaaS dashboard starts with, all derivable from existing tables (`auth.users`, `profiles`, `subscriptions`, `organizations`, `leads`, `marketing_subscribers`, `analytics_events`). No new tables.
+Today every admin page repeats its own header, back button, and one-off layout. The index is a flat 8-tile grid with no grouping or signal of what needs attention. Goal: a single consistent admin shell with grouped navigation, an overview that surfaces live numbers, and small UX wins on every subpage.
 
-## Page layout — `src/pages/admin/Analytics.tsx`
+## 1. New shared `AdminShell` — `src/components/admin/AdminShell.tsx`
 
-Inside `AdminShell`-style header. Date-range selector (Last 7 / 30 / 90 days, default 30) — drives every query.
+Mirror the pattern of `DashboardShell` so subpages stop reinventing chrome.
 
-### 1. KPI strip (6 cards)
-- **MRR** — sum of active subscription prices × interval normalization (monthly). Pulled from `subscriptions` where `status IN ('active','trialing')` and `environment = 'live'`. Show absolute + delta vs previous period.
-- **Active subscriptions** — count of same filter. Delta vs previous period.
-- **New signups** — `auth.users.created_at` in range (via edge function, same service-role pattern as `admin-list-users`).
-- **New paying customers** — distinct `user_id` in `subscriptions` with first active sub in range.
-- **Churn count** — subs that moved to `canceled` or `current_period_end` passed in range without renewal.
-- **Newsletter subscribers** — `marketing_subscribers` where `status='subscribed'`, delta vs prev period.
+- Sticky top bar: Logo, page title (breadcrumb), right-side: theme toggle, "View site" link, user menu (avatar → Dashboard / Sign out).
+- Left sidebar (collapsible on mobile via shadcn `Sheet`), grouped:
+  - **Overview** — Dashboard
+  - **People** — Users, Organizations
+  - **Revenue** — Subscriptions, Analytics
+  - **Growth** — Leads, Subscribers, Broadcasts
+  - **Configure** — Site settings
+- Active route highlighted; lucide icon per item.
+- Page content slot with consistent `max-w-6xl` container, `py-8`, page heading + optional action button area.
+- Centralised admin-guard: shell renders the "Admins only" card if `!isAdmin`, so every subpage drops its own guard block.
 
-### 2. Charts (Recharts, already in deps)
-- **Signups over time** — daily line, range-bucketed.
-- **MRR over time** — daily line, computed from subscription state at each day's end.
-- **Active subscriptions by plan** — stacked bar by `product_name`.
-- **Leads by source** — horizontal bar grouped by `source`/`kind` from `leads`.
+## 2. `/admin` — redesigned overview
 
-### 3. Tables
-- **Top events** (last 30d) — group `analytics_events.event_name`, count, unique users. Sorted desc, top 20.
-- **Recent signups** — last 10 from edge function (email, created_at, provider).
+Replace the flat tile grid with a real dashboard landing:
 
-## Data layer
+- **Top KPI strip (4 cards)** — Total users, Active subscriptions, MRR (live), New signups (7d). Reuses the `admin-analytics-overview` edge function + `subscriptions` query already built for `/admin/analytics`. Each card links to its detail page.
+- **"Needs attention" panel** — count of new leads (`leads.status='new'`), pending newsletter confirmations (`marketing_subscribers.status='pending'`), past-due subscriptions. Each row links to a pre-filtered subpage.
+- **Quick actions** — buttons for "New broadcast", "Invite admin user", "Edit site settings".
+- **Recent activity** — last 5 signups + last 5 leads in a compact two-column list.
+- Remove the "Back to dashboard" footer button (user menu handles it).
 
-Two new edge functions (service-role, admin-gated like `admin-list-users`):
+## 3. Subpage cleanups
 
-### `admin-analytics-overview`
-Returns the KPI strip + chart series for a given range. One round-trip. Computes:
-- signups daily series via `auth.admin.listUsers` filtered by `created_at` (pagination), or a `count_signups_by_day` RPC. **Choose RPC**: simpler, faster — add `public.count_signups_by_day(start, end)` security-definer that reads `auth.users`.
-- MRR snapshot + daily series via SQL over `subscriptions`.
-- churn count via SQL.
-- newsletter counts via SQL.
+Each admin subpage drops its custom header and wraps in `<AdminShell title="…">`:
 
-### `admin-analytics-events`
-Returns top-events table from `analytics_events` for a range (admin already has SELECT via RLS — could be done client-side; keep client-side and skip this function).
+- `Users`, `Organizations`, `Subscriptions`, `Analytics`, `Leads`, `Subscribers`, `Broadcasts`, `SiteSettings`.
+- Each gets a one-line description under the title and a primary action button in the header slot when applicable (e.g. Broadcasts → "New broadcast").
+- Remove the duplicated `Logo` + `Sign out` headers and "Back to admin" links — sidebar handles navigation.
+- Standardise empty/loading states using a shared `<AdminEmpty />` and shared spinner.
 
-### New RPCs (one migration)
-- `public.admin_signups_daily(_start timestamptz, _end timestamptz)` → `(day date, count int)` — reads `auth.users`, security definer, gated by `has_role(auth.uid(),'admin')`.
-- `public.admin_signups_count(_start, _end)` → int.
-- `public.admin_mrr_snapshot(_env text)` → numeric — sums monthly-normalized prices over active subs (price comes from `subscriptions.metadata->>'unit_amount'` and `metadata->>'interval'`, set by the webhook today; if missing, fall back to counting subs).
-- `public.admin_subs_by_plan(_env)` → `(product_name text, count int)`.
+## 4. Small UX polish
 
-All RPCs `SECURITY DEFINER`, raise if caller isn't admin.
-
-## AdminIndex + routes
-- Move "Analytics" out of "Coming next phase" into the live grid.
-- Add `/admin/analytics` route in `src/App.tsx`, admin-gated.
+- Page titles set via `document.title` per page (`Users · Admin`, etc.).
+- Tables: sticky header, zebra rows, right-aligned numeric columns, consistent date format (`MMM d, yyyy`).
+- Mobile: sidebar collapses behind a hamburger; KPI grid stacks 2-up.
 
 ## Files
 
 **Created**
-- `src/pages/admin/Analytics.tsx`
-- `src/components/admin/analytics/KpiCard.tsx`
-- `src/components/admin/analytics/RangePicker.tsx`
-- `supabase/functions/admin-analytics-overview/index.ts` + `deno.json`
-- `supabase/migrations/<ts>_admin_analytics_rpcs.sql`
+- `src/components/admin/AdminShell.tsx`
+- `src/components/admin/AdminSidebar.tsx`
+- `src/components/admin/AdminOverview.tsx` (the new `/admin` body)
 
 **Edited**
-- `src/pages/admin/AdminIndex.tsx` — promote tile
-- `src/App.tsx` — add route
-- `supabase/config.toml` — register function
+- `src/pages/admin/AdminIndex.tsx` — render `AdminShell` + `AdminOverview`
+- `src/pages/admin/{Users,Organizations,Subscriptions,Analytics,Leads,Subscribers,Broadcasts,SiteSettings}.tsx` — wrap in `AdminShell`, drop their headers/guards
 
-## Out of scope (phase 2)
-Cohort retention, LTV, ARPU, funnel/conversion, geographic breakdown, custom date ranges, CSV export, scheduled email digests. Confirm if any of these should move into phase 1.
+## Out of scope
+- Renaming routes, changing permissions, or adding new admin features.
+- Visual redesign beyond shell/grid/spacing (no new color tokens or typography).
+
+Confirm and I'll build it.
