@@ -107,6 +107,15 @@ const checklist: { label: string; detail: string }[] = [
   { label: "Category", detail: "Business apps → SaaS templates is the closest fit." },
 ];
 
+const UseTemplateLovable = () => {
+  const [copied, setCopied] = useState<string | null>(null);
+  const copy = (key: string, text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(key);
+      setTimeout(() => setCopied((c) => (c === key ? null : c)), 1500);
+    });
+  };
+  return (
 
   <MarketingLayout>
     <PageSeo
