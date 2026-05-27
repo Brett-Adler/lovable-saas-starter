@@ -511,6 +511,51 @@ export type Database = {
         }
         Relationships: []
       }
+      org_sso_config: {
+        Row: {
+          acs_url: string | null
+          created_at: string
+          created_by: string | null
+          email_domains: string[]
+          enabled: boolean
+          id: string
+          idp_entity_id: string | null
+          metadata_url: string | null
+          notes: string | null
+          organization_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          acs_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          email_domains?: string[]
+          enabled?: boolean
+          id?: string
+          idp_entity_id?: string | null
+          metadata_url?: string | null
+          notes?: string | null
+          organization_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          acs_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          email_domains?: string[]
+          enabled?: boolean
+          id?: string
+          idp_entity_id?: string | null
+          metadata_url?: string | null
+          notes?: string | null
+          organization_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       organization_invites: {
         Row: {
           accepted_at: string | null
@@ -659,6 +704,39 @@ export type Database = {
           phone?: string | null
           timezone?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          last_used_at: string | null
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          last_used_at?: string | null
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          last_used_at?: string | null
+          p256dh?: string
+          user_agent?: string | null
+          user_id?: string
         }
         Relationships: []
       }
