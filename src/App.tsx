@@ -64,6 +64,8 @@ import DashboardSecurity from "./pages/dashboard/settings/Security";
 import DashboardApiKeys from "./pages/dashboard/settings/ApiKeys";
 import DashboardWebhooks from "./pages/dashboard/settings/Webhooks";
 import DashboardData from "./pages/dashboard/settings/Data";
+import UseTemplateLovable from "./pages/UseTemplateLovable";
+import UseTemplateGithub from "./pages/UseTemplateGithub";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -106,6 +108,8 @@ const App = () => (
               <Route path="/checkout/return" element={<CheckoutReturn />} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
+              <Route path="/use-template/lovable" element={<UseTemplateLovable />} />
+              <Route path="/use-template/github" element={<UseTemplateGithub />} />
 
               {/* Auth */}
               <Route path="/login" element={<Auth mode="login" />} />
