@@ -12,6 +12,7 @@ import {
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { OrgSwitcher } from "@/components/dashboard/OrgSwitcher";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
@@ -80,7 +81,10 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
             ))}
         </nav>
         <div className="px-3 py-4 border-t border-border space-y-2">
-          <div className="px-3 py-2 text-xs text-muted-foreground truncate">{user?.email}</div>
+          <div className="flex items-center justify-between px-3">
+            <div className="text-xs text-muted-foreground truncate">{user?.email}</div>
+            <NotificationBell />
+          </div>
           <Button variant="outline" size="sm" className="w-full" onClick={handleSignOut}>
             <LogOut className="h-4 w-4" />
             Sign out
@@ -92,9 +96,12 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
         <header className="lg:hidden border-b border-border bg-card">
           <div className="flex items-center justify-between px-4 py-3">
             <Logo />
-            <Button variant="outline" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <NotificationBell />
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
           <div className="px-4 pb-3">
             <OrgSwitcher />

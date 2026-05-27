@@ -94,6 +94,10 @@ Deno.serve(async (req) => {
       productDescription = product.name;
     }
 
+    // 14-day free trial on new recurring subscriptions. Stripe ignores this if
+    // the customer has already used a trial for this price.
+    const TRIAL_DAYS = 14;
+
     const session = await stripe.checkout.sessions.create({
       line_items: [{ price: stripePrice.id, quantity: quantity || 1 }],
       mode: isRecurring ? "subscription" : "payment",
@@ -103,7 +107,12 @@ Deno.serve(async (req) => {
       customer: customerId,
       ...(!isRecurring && { payment_intent_data: { description: productDescription } }),
       metadata: { userId },
-      ...(isRecurring && { subscription_data: { metadata: { userId } } }),
+      ...(isRecurring && {
+        subscription_data: {
+          metadata: { userId },
+          trial_period_days: TRIAL_DAYS,
+        },
+      }),
     });
 
     return new Response(JSON.stringify({ clientSecret: session.client_secret }), {

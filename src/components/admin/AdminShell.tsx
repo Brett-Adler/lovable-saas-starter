@@ -11,6 +11,7 @@ import {
   Send,
   Settings as SettingsIcon,
   Shield,
+  ScrollText,
   ArrowLeft,
   LogOut,
   Menu,
@@ -20,6 +21,7 @@ import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { cn } from "@/lib/utils";
@@ -53,6 +55,10 @@ const GROUPS: NavGroup[] = [
       { to: "/admin/subscribers", label: "Subscribers", icon: Mail },
       { to: "/admin/broadcasts", label: "Broadcasts", icon: Send },
     ],
+  },
+  {
+    label: "Security",
+    items: [{ to: "/admin/audit", label: "Audit log", icon: ScrollText }],
   },
   {
     label: "Configure",
@@ -228,7 +234,10 @@ export const AdminShell = ({
                   <p className="text-muted-foreground mt-1 text-sm lg:text-base">{description}</p>
                 )}
               </div>
-              {actions && <div className="flex items-center gap-2 flex-wrap">{actions}</div>}
+              <div className="flex items-center gap-2 flex-wrap">
+                {actions}
+                <NotificationBell />
+              </div>
             </div>
             {children}
           </div>

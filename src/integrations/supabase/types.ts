@@ -56,6 +56,48 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_log: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_user_id: string | null
+          created_at: string
+          id: string
+          ip_address: unknown
+          metadata: Json
+          organization_id: string | null
+          target_id: string | null
+          target_type: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown
+          metadata?: Json
+          organization_id?: string | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown
+          metadata?: Json
+          organization_id?: string | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -834,6 +876,17 @@ export type Database = {
           id: string
           name: string
         }[]
+      }
+      log_audit: {
+        Args: {
+          _action: string
+          _actor_user_id?: string
+          _metadata?: Json
+          _organization_id?: string
+          _target_id?: string
+          _target_type?: string
+        }
+        Returns: string
       }
       move_to_dlq: {
         Args: {
