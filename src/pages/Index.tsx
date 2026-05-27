@@ -141,6 +141,12 @@ const Index = () => {
       {/* Logo cloud */}
       <section className="border-y border-border/40 bg-muted/20">
         <div className="container py-10">
+          <TemplatePlaceholderRibbon
+            id="index-logo-cloud"
+            className="max-w-md mx-auto mb-6"
+            message="Placeholder logos — replace in src/pages/Index.tsx"
+            hint="This ribbon is only shown on Lovable preview hosts, not on your custom domain."
+          />
           <p className="text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-6">
             Trusted by teams shipping faster
           </p>
