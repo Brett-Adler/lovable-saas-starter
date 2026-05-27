@@ -62,9 +62,12 @@ export const MarketingFooter = () => {
                 {g.links.map((l) =>
                   l.to.startsWith("/#") ? (
                     <li key={l.to}>
-                      <a href={l.to} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                      <Link
+                        to={{ pathname: "/", hash: l.to.slice(1) }}
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      >
                         {l.label}
-                      </a>
+                      </Link>
                     </li>
                   ) : (
                     <li key={l.to}>
