@@ -184,6 +184,9 @@ const Pricing = () => {
         <p className="text-center text-sm text-muted-foreground mt-12">
           Need something custom? <Link to="/contact" className="text-primary font-medium">Talk to sales</Link>
         </p>
+        <p className="text-center text-xs text-muted-foreground mt-4 max-w-2xl mx-auto">
+          Checkout uses Stripe <code className="px-1 rounded bg-muted">lookup_keys</code>: <code className="px-1 rounded bg-muted">pro_monthly</code>, <code className="px-1 rounded bg-muted">pro_yearly</code>, <code className="px-1 rounded bg-muted">team_monthly</code>, <code className="px-1 rounded bg-muted">team_yearly</code>. Create those products in your Stripe dashboard before going live — see <Link to="/readme" className="text-primary">Readme</Link>.
+        </p>
       </section>
 
       <Dialog open={isOpen} onOpenChange={(v) => !v && closeCheckout()}>
