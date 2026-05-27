@@ -12,6 +12,7 @@ import {
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { OrgSwitcher } from "@/components/dashboard/OrgSwitcher";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
