@@ -133,6 +133,16 @@ Lovable Cloud auto-provisions the backend — no separate Supabase account
 needed. Database migrations live in `supabase/migrations/` and run
 automatically. Edge functions in `supabase/functions/*` deploy on save.
 
+## Placeholder screens
+
+A few routes ship as "Coming soon" placeholders so the nav and IA feel
+complete. Build them out or remove the links before launch:
+
+- `/dashboard/settings/security` — 2FA, session management
+- `/dashboard/settings/api-keys` — personal access tokens
+- `/dashboard/settings/webhooks` — outbound webhook config
+- `/customers` — marketing case-studies page
+
 ## Before you launch — pre-launch checklist
 
 The app runs out of the box, but a handful of external services need
