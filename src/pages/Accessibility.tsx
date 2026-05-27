@@ -3,6 +3,9 @@ import { PageSeo } from "@/components/seo/PageSeo";
 import { Badge } from "@/components/ui/badge";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 
+// Bump this when policy text changes.
+const LAST_UPDATED = "May 27, 2026";
+
 const Accessibility = () => {
   const { data: settings } = useSiteSettings();
   const email = settings?.contact_email ?? "hello@example.com";
@@ -14,7 +17,7 @@ const Accessibility = () => {
         <div className="max-w-3xl mx-auto">
           <Badge variant="outline" className="mb-4">Accessibility</Badge>
           <h1 className="text-4xl md:text-5xl font-bold">Accessibility statement</h1>
-          <p className="mt-4 text-sm text-muted-foreground">Last updated: January 1, 2026</p>
+          <p className="mt-4 text-sm text-muted-foreground">Last updated: {LAST_UPDATED}</p>
           <div className="prose prose-lg mt-10 max-w-none text-muted-foreground space-y-5">
             <p>
               We are committed to making this product usable for everyone, regardless of ability or
