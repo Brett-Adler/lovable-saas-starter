@@ -13,6 +13,7 @@ import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { NoIndex } from "@/components/seo/NoIndex";
 import { OrgSwitcher } from "@/components/dashboard/OrgSwitcher";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
@@ -112,5 +113,6 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
         <main className="flex-1 overflow-y-auto">{children}</main>
       </div>
     </div>
+    </>
   );
 };
