@@ -28,7 +28,10 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const { data: settings } = useSiteSettings();
-  const contactEmail = settings?.contact_email ?? "hello@example.com";
+  const { isAdmin } = useUserRoles();
+  const rawEmail = settings?.contact_email ?? null;
+  const contactEmail = rawEmail ?? "hello@example.com";
+  const emailIsPlaceholder = !rawEmail || rawEmail.endsWith("@example.com");
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
