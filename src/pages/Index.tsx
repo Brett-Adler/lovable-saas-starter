@@ -12,16 +12,26 @@ import { PageSeo } from "@/components/seo/PageSeo";
 import { NewsletterForm } from "@/components/marketing/NewsletterForm";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { publicNavGroups } from "@/lib/public-routes";
+import { StatusBadge, type FeatureStatus } from "@/components/marketing/StatusBadge";
+import { TemplatePlaceholderRibbon } from "@/components/marketing/TemplatePlaceholderRibbon";
 
-const features = [
-  { icon: Lock, title: "Auth, batteries included", desc: "Email/password, Google, Apple, and SMS — wired and ready." },
-  { icon: CreditCard, title: "Stripe payments", desc: "Subscriptions, customer portal, plan-gating, and admin billing." },
-  { icon: Mail, title: "Branded emails", desc: "Auth + transactional templates. Marketing campaigns via Resend." },
-  { icon: Users, title: "Teams & roles", desc: "Organizations, invites, and role-based access out of the box." },
-  { icon: BarChart3, title: "Built-in analytics", desc: "Signups, MRR, churn, retention — your own self-hosted dashboard." },
-  { icon: Smartphone, title: "SMS & notifications", desc: "Twilio for OTP login and critical alerts. Per-user preferences." },
-  { icon: Shield, title: "Secure by default", desc: "Row-level security, separate roles table, validated inputs everywhere." },
-  { icon: Sparkles, title: "Beautiful UI", desc: "Polished design system with light + dark mode and themable tokens." },
+type Feature = {
+  icon: typeof Lock;
+  title: string;
+  desc: string;
+  status: FeatureStatus;
+  tooltip?: string;
+};
+
+const features: Feature[] = [
+  { icon: Lock, title: "Auth, batteries included", desc: "Email/password, Google, and Apple — wired and ready.", status: "shipped" },
+  { icon: CreditCard, title: "Stripe payments", desc: "Subscriptions, customer portal, plan-gating, and admin billing.", status: "setup", tooltip: "Add your Stripe products with lookup_keys: pro_monthly, pro_yearly, team_monthly, team_yearly." },
+  { icon: Mail, title: "Branded emails", desc: "Auth + transactional templates ship live. Marketing broadcasts via Resend.", status: "shipped" },
+  { icon: Users, title: "Teams & roles", desc: "Organizations, invites, and role-based access out of the box.", status: "shipped" },
+  { icon: BarChart3, title: "Built-in analytics", desc: "Signups, MRR, churn, retention — your own self-hosted dashboard.", status: "shipped" },
+  { icon: Smartphone, title: "SMS & push", desc: "Twilio for OTP/alerts, Web Push for in-app — stubs ready to enable.", status: "setup", tooltip: "Add Twilio credentials for SMS and VAPID keys for Web Push. See the Readme." },
+  { icon: Shield, title: "Secure by default", desc: "Row-level security, separate roles table, validated inputs everywhere.", status: "shipped" },
+  { icon: Sparkles, title: "Beautiful UI", desc: "Polished design system with light + dark mode and themable tokens.", status: "shipped" },
 ];
 
 const steps = [
