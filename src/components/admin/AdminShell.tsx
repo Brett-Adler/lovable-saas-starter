@@ -57,6 +57,10 @@ const GROUPS: NavGroup[] = [
     ],
   },
   {
+    label: "Security",
+    items: [{ to: "/admin/audit", label: "Audit log", icon: ScrollText }],
+  },
+  {
     label: "Configure",
     items: [{ to: "/admin/site-settings", label: "Site settings", icon: SettingsIcon }],
   },
