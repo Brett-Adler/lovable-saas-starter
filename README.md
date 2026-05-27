@@ -141,6 +141,13 @@ not a code change.
 
 ### Required
 
+- **Brand env vars** — set these so static HTML, the sitemap, and outbound
+  emails use your brand instead of placeholders:
+  - `PUBLIC_SITE_NAME` — display name used in email subjects and footers.
+  - `PUBLIC_SITE_URL` — canonical https URL of your site (no trailing slash).
+  - `SENDER_DOMAIN` — domain used for `From:` addresses and unsubscribe links.
+  - `VITE_BASE_URL` — same as `PUBLIC_SITE_URL`, exposed to the frontend
+    build for SEO tags and the generated sitemap.
 - **Stripe (live mode)** — replace test products with real ones, point
   `STRIPE_API_KEY` and webhook secret at your live account. See
   `supabase/functions/create-checkout/index.ts`.
