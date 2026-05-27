@@ -16,18 +16,25 @@ interface PageSeoProps {
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const DEFAULT_BASE = "https://saas-starter-suite.lovable.app";
+
 
 function applyTemplate(template: string | null | undefined, value: string): string {
   if (!template || !template.includes("%s")) return value;
   return template.replace("%s", value);
 }
 
+function getDefaultBase(): string {
+  const envBase = (import.meta.env.VITE_BASE_URL as string | undefined)?.trim();
+  if (envBase) return envBase;
+  if (typeof window !== "undefined" && window.location?.origin) return window.location.origin;
+  return "";
+}
+
 export function PageSeo({ path, title, description, ogImage, noindex, jsonLd }: PageSeoProps) {
   const { data: siteSeo } = useSiteSeo();
   const pageOverride = useSeoForPath(path);
 
-  const base = (siteSeo?.base_url || DEFAULT_BASE).replace(/\/$/, "");
+  const base = (siteSeo?.base_url || getDefaultBase()).replace(/\/$/, "");
   const isHome = path === "/";
 
   const rawTitle = pageOverride?.title ?? title ?? siteSeo?.default_title ?? "";

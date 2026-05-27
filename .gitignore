@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Env (Lovable Cloud auto-generates these on remix)
+.env
+.env.local
+.env.*.local
