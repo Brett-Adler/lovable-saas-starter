@@ -229,7 +229,10 @@ export const AdminShell = ({
                   <p className="text-muted-foreground mt-1 text-sm lg:text-base">{description}</p>
                 )}
               </div>
-              {actions && <div className="flex items-center gap-2 flex-wrap">{actions}</div>}
+              <div className="flex items-center gap-2 flex-wrap">
+                {actions}
+                <NotificationBell />
+              </div>
             </div>
             {children}
           </div>
