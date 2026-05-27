@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
-import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useAdminSiteSettings } from "@/hooks/useSiteSettings";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AdminShell } from "@/components/admin/AdminShell";
