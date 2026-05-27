@@ -13,8 +13,8 @@ import { AdminShell } from "@/components/admin/AdminShell";
 
 const fields = [
   { key: "contact_email", label: "Public contact email", placeholder: "hello@yourdomain.com", type: "email" },
-  { key: "company_legal_name", label: "Company legal name (CAN-SPAM footer)", placeholder: "Blues Brothers Holdings, LLC", type: "text" },
-  { key: "mailing_address", label: "Mailing address (CAN-SPAM footer)", placeholder: "1060 W Addison St, Chicago, IL 60613, USA", type: "text" },
+  { key: "company_legal_name", label: "Company legal name (CAN-SPAM footer)", placeholder: "Your Company, LLC", type: "text" },
+  { key: "mailing_address", label: "Mailing address (CAN-SPAM footer)", placeholder: "123 Main St, City, State 00000, Country", type: "text" },
   { key: "from_name", label: "Default newsletter From name", placeholder: "Jake & Elwood", type: "text" },
   { key: "from_email", label: "Default newsletter From email", placeholder: "newsletter@notify.yourdomain.com", type: "email" },
   { key: "reply_to", label: "Default newsletter Reply-to", placeholder: "hello@yourdomain.com", type: "email" },
