@@ -13,6 +13,7 @@ const links = [
   { to: "/pricing", label: "Pricing" },
   { to: "/integrations", label: "Integrations" },
   { to: "/roadmap", label: "Roadmap" },
+  { to: "/docs", label: "Docs" },
   { to: "/about", label: "About" },
 ];
 
