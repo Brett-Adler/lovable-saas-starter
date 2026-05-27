@@ -62,7 +62,10 @@ const GROUPS: NavGroup[] = [
   },
   {
     label: "Configure",
-    items: [{ to: "/admin/site-settings", label: "Site settings", icon: SettingsIcon }],
+    items: [
+      { to: "/admin/site-settings", label: "Site settings", icon: SettingsIcon },
+      { to: "/admin/seo", label: "SEO", icon: SettingsIcon },
+    ],
   },
 ];
 
