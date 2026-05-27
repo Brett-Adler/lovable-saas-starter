@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, BookOpen, Github, MessageSquare, Palette, Rocket, ShieldAlert, Sparkles, Wrench } from "lucide-react";
+import { AlertTriangle, BookOpen, CheckCircle2, Github, MessageSquare, Palette, Rocket, ShieldAlert, Sparkles, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Section = ({ icon: Icon, title, children }: { icon: any; title: string; children: React.ReactNode }) => (
