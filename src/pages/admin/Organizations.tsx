@@ -116,7 +116,7 @@ const Organizations = () => {
             </TableBody>
           </Table>
         </Card>
-      </main>
+      
 
       <Sheet open={!!selected} onOpenChange={(o) => !o && setSelectedId(null)}>
         <SheetContent className="w-full sm:max-w-md overflow-y-auto">
@@ -162,7 +162,7 @@ const Organizations = () => {
           )}
         </SheetContent>
       </Sheet>
-    </div>
+    </AdminShell>
   );
 };
 
