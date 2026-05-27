@@ -83,8 +83,7 @@ const SiteSettingsPage = () => {
             </Button>
           </CardContent>
         </Card>
-      </main>
-    </div>
+    </AdminShell>
   );
 };
 
