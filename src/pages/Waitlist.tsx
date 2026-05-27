@@ -62,7 +62,7 @@ const Waitlist = () => {
             {done ? (
               <div className="text-center py-6">
                 <h2 className="text-xl font-semibold">You're in 🎉</h2>
-                <p className="mt-2 text-muted-foreground">We'll email you the moment access opens.</p>
+                <p className="mt-2 text-muted-foreground">We'll be in touch when access opens.</p>
               </div>
             ) : (
               <form onSubmit={onSubmit} className="space-y-4">
