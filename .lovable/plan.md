@@ -1,81 +1,88 @@
 ## Goal
 
-Refresh `/dashboard` and `/admin` so both surface more of the data we already collect, and give both shells a more modern, consistent look. No new backend, no schema changes — purely frontend on existing tables, hooks, and the `admin-analytics-overview` edge function.
+No such page exists today. Add an admin "Brand kit" page where the user uploads one square logo (PNG/SVG, ideally ≥ 512×512) and the app generates and publishes every common web/PWA/social variant. Generated assets are stored in a new public Supabase storage bucket and wired up through the existing `site_seo` / `Logo` / `PageSeo` pipeline.
 
-## /dashboard (user overview)
+Today `public/*.png` are static placeholders documented in `public/BRANDING.md` and pointed at by `index.html`. We keep those as the first-paint fallback and override them at runtime once a brand kit is published.
 
-Replace the current 3-card layout in `src/pages/Dashboard.tsx` with a richer overview:
+## What gets generated from one logo
 
-1. **Hero strip** — keep welcome, but add a compact org/plan badge row and a primary CTA tied to the next best action (create org, accept invite, finish billing, or "Invite teammates").
+Everything happens client-side in a single `<canvas>` pass. The source logo is rendered into each target size, padded for safe area, and exported as PNG (or kept as SVG when the upload is SVG).
 
-2. **Getting started checklist** (new component `OnboardingChecklist.tsx`)
-   - Profile complete (display name set)
-   - Organization created
-   - Members invited (≥1 invite sent OR ≥2 members)
-   - Subscription active (via `useSubscription`)
-   - Push notifications enabled (`push_subscriptions` for current user)
-   - Auto-hides once all done.
+**Icons & favicons** (square, transparent PNG):
+- `favicon-16.png`, `favicon-32.png`, `favicon-48.png`
+- `apple-touch-icon-180.png` (white background, iOS strips alpha anyway)
+- `android-chrome-192.png`, `android-chrome-512.png`
+- `maskable-512.png` (192px safe area inside 512 canvas, themed background)
+- `mstile-150.png` (Windows tile, themed background)
+- `favicon.ico` (multi-size 16/32/48) — built with `to-ico` (pure JS)
 
-3. **Subscription status card** — uses existing `useSubscription`/`usePlan`. Shows plan name, status badge (active/trialing/past_due/canceled), period end, "Manage billing" → `/dashboard/billing`, upgrade nudge on free.
+**Logos for UI**:
+- `logo.png` (max width 320, transparent) — replaces `/logo.svg` in the navbar/footer via the `Logo` component
+- `logo-mark.png` (64×64 transparent)
+- If the upload is SVG, also store the SVG verbatim and prefer it for the navbar.
 
-4. **Invites + notifications row** (two cards side by side)
-   - Pending invites: query `organization_invites` for the user's email where `accepted_at IS NULL`, with inline Accept button linking to `/invite/:token`.
-   - Recent notifications: latest 5 rows from `notifications` for `auth.uid()`, mark-as-read on click, link to full list (`NotificationBell` already exists — this is a list preview).
+**Social cards** (themed background + centered logo):
+- `og-image.png` (1200×630) — used for Facebook, LinkedIn, Slack, iMessage previews
+- `twitter-image.png` (1200×600)
+- `og-square.png` (1200×1200) — used by some messaging apps that prefer square
 
-5. **Org activity feed** — last 8 entries from `audit_log` filtered by current `organization_id` (RLS already permits owner/admin). Shows action, actor email, target, relative time. Empty state for members without permission.
+**PWA & misc**:
+- `splash-light-1024.png`, `splash-dark-1024.png` — centered mark on theme background / inverted
+- `site.webmanifest` regenerated with the right icon URLs, `theme_color`, `background_color`, app name (pulled from `site_seo.site_name`)
+- `browserconfig.xml` regenerated with the new mstile URL and tile color
 
-6. **Visual polish**
-   - Gradient hero header band with subtle pattern.
-   - Cards: `rounded-xl`, hover lift, consistent icon-in-pill header style matching `AdminOverview` Kpi cards.
-   - Section dividers with small uppercase eyebrow labels (mirroring admin sidebar groups).
-   - Skeletons for each query while loading.
+All generated files are uploaded to a new public bucket `brand-assets/` under a versioned folder (`v{epoch}/`) so cached URLs invalidate cleanly.
 
-## /admin overview refresh
+## Wiring (so the new assets actually take effect)
 
-Update `src/components/admin/AdminOverview.tsx`:
+1. **DB**: extend `site_seo` with one jsonb column `brand_assets` (URL map) plus `theme_color` (already exists) and `background_color` (new text). Migration also creates the public `brand-assets` storage bucket with public-read RLS and admin-only write.
 
-1. **Sparkline on KPI cards**
-   - Add a tiny inline sparkline to the "Total users" Kpi using `signups.series` already returned by `admin-analytics-overview`.
-   - Use `recharts` (already a dep) `<ResponsiveContainer>` with a 32-px high `<AreaChart>`, no axes, primary-tinted fill.
-   - Extend `Kpi` component to accept optional `trend?: { day: string; count: number }[]`.
+2. **Logo component** (`src/components/Logo.tsx`): if `site_seo.brand_assets.logo` exists, use it; otherwise fall back to the static `/logo.svg`. Keep the same dimensions API.
 
-2. **Email health card** (new section)
-   - Last 7 days: counts of `email_send_log` grouped by status (sent / failed / dlq / suppressed), deduplicated by `message_id` using the pattern from the email-monitoring guide.
-   - Show: total sent, failure rate %, suppressed count, link to a future Broadcasts page, with status-colored badges.
-   - Suppressed count from `suppressed_emails` (last 30 days).
+3. **PageSeo** (`src/components/seo/PageSeo.tsx`): when `brand_assets` is present, inject `<link rel="icon">`, `<link rel="apple-touch-icon">`, `<link rel="manifest">` (pointing at the regenerated manifest URL), and `<meta name="theme-color">` via Helmet so every route picks up the runtime brand. OG and Twitter image already flow through `default_og_image_url`; the brand kit writes its generated `og-image.png` into that field automatically.
 
-3. **Recent audit events card**
-   - Latest 6 entries from `audit_log` (admin RLS already allows all). Show action, actor email, target type, relative time. Link "View all" → `/admin/audit`.
+4. **`AdminShell`** sidebar: add a new "Brand kit" item under the Configure group.
 
-4. **Layout reshuffle**
-   - Row 1: KPI strip (now with sparkline on users).
-   - Row 2: Needs attention (2/3) + Quick actions (1/3).
-   - Row 3: Email health (1/2) + Recent audit events (1/2).
-   - Row 4: Recent signups + Recent leads (existing).
+## Admin "Brand kit" page (`src/pages/admin/Brand.tsx`)
 
-5. **Visual polish across both shells**
-   - Sidebar: active item gets a subtle left primary bar; group eyebrows already exist in admin, mirror them on the dashboard sidebar (Workspace / Account / Admin).
-   - Consistent KPI card style (used in both `/dashboard` subscription card and `/admin` Kpis).
-   - Unified card padding, header weight, and muted/foreground hierarchy.
-   - Soft animated entry (`animate-fade-in` on grid children) for the overview grids.
+Single page, three sections:
 
-## Files
+1. **Upload**: drag-and-drop a PNG/SVG/JPG up to 4 MB. Show a preview, dimensions, warn if smaller than 512×512 on the longer side or non-square.
 
-- Edit `src/pages/Dashboard.tsx` — restructure overview.
-- Edit `src/components/dashboard/DashboardShell.tsx` — group sidebar nav, active indicator, polish.
-- Add `src/components/dashboard/OnboardingChecklist.tsx`.
-- Add `src/components/dashboard/SubscriptionStatusCard.tsx`.
-- Add `src/components/dashboard/PendingInvitesCard.tsx`.
-- Add `src/components/dashboard/RecentNotificationsCard.tsx`.
-- Add `src/components/dashboard/OrgActivityCard.tsx`.
-- Edit `src/components/admin/AdminOverview.tsx` — sparkline, new cards, layout.
-- Add `src/components/admin/EmailHealthCard.tsx`.
-- Add `src/components/admin/RecentAuditCard.tsx`.
-- Edit `src/components/admin/AdminShell.tsx` — active indicator polish.
-- Append entry to `src/data/changelog.ts`.
+2. **Style**: two color pickers for `theme_color` and `background_color` (defaults read from existing `site_seo` and from the dominant color of the upload when first chosen), text input for "App name" (mirrors `site_seo.site_name`), and a "padding" slider for icon safe area (10–25%).
+
+3. **Generate & publish**: a single button that:
+   - renders every variant in a worker-friendly canvas loop with a progress bar (`Generating apple-touch-icon-180… 12/22`),
+   - uploads each to `brand-assets/v{epoch}/<filename>` via `supabase.storage`,
+   - writes the URL map into `site_seo.brand_assets` and updates `default_og_image_url`, `theme_color`, manifest URL,
+   - shows a results grid with thumbnail + filename + size + "Download" + "Copy URL" for every generated file, plus a "Download all (.zip)" button (built client-side with `jszip` — already in tree? if not, add).
+
+A second tab "Preview" mocks browser tab favicon, iOS home-screen icon, Android home-screen icon, OG card (Slack/Facebook style), Twitter card, and the in-app navbar so the admin can visually confirm before publishing.
+
+## Libraries to add
+
+- `to-ico` (pure JS, ~5 kB) for multi-size `.ico`
+- `jszip` (for "Download all") — already a common dep; install if missing
+
+No backend code beyond the storage bucket creation. No edge functions.
 
 ## Out of scope
 
-- No schema changes, no new edge functions, no new RLS.
-- No changes to sub-pages (Members, Billing, Users, Leads, etc.).
-- No new routes.
+- Rewriting `index.html` at build time (we override via Helmet at runtime).
+- Per-tenant brand kits — this is site-wide brand for the marketing site/app shell, not per-organization theming.
+- Email-template logo URL (already separately editable; can be wired in a follow-up).
+- Generating animated splash screens or full iOS launch images (sizes per device).
+
+## Files
+
+- New: `src/pages/admin/Brand.tsx`
+- New: `src/lib/brand/generate.ts` (pure functions: `renderIcon`, `renderOg`, `renderManifest`, `renderBrowserconfig`, `buildIco`)
+- New: `src/lib/brand/upload.ts` (upload + URL-map writer)
+- New: `src/components/admin/BrandPreview.tsx` (mock cards)
+- Edit: `src/components/Logo.tsx` (runtime override via `useSiteSeo`)
+- Edit: `src/components/seo/PageSeo.tsx` (inject favicon/manifest/theme-color links from `brand_assets`)
+- Edit: `src/hooks/useSiteSeo.ts` (include `brand_assets`, `background_color`)
+- Edit: `src/components/admin/AdminShell.tsx` (add Brand kit nav item)
+- Edit: `src/App.tsx` (route `/admin/brand`)
+- New migration: add `brand_assets jsonb`, `background_color text` to `site_seo`; create `brand-assets` public storage bucket with admin-write / public-read policies
+- Append to `src/data/changelog.ts`
