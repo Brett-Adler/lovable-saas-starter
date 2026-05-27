@@ -118,9 +118,7 @@ const Users = () => {
         <Input className="pl-9" placeholder="Search email or name…" value={q} onChange={(e) => setQ(e.target.value)} />
       </div>
 
-      </div>
-
-        <Card>
+      <Card>
           <Table>
             <TableHeader>
               <TableRow>
