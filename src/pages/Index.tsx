@@ -55,9 +55,19 @@ const Index = () => {
     }
   }, [hash]);
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
   return (
     <MarketingLayout>
-      <PageSeo path="/" />
+      <PageSeo path="/" jsonLd={faqJsonLd} />
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 gradient-mesh opacity-80" aria-hidden />
