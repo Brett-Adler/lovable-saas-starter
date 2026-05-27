@@ -192,12 +192,60 @@ const Readme = () => (
 
         {/* Tech stack */}
         <Section icon={Wrench} title="Tech stack">
-          <ul className="space-y-1">
-            <li>React 18 + Vite 5 + TypeScript 5</li>
-            <li>Tailwind CSS v3 + shadcn/ui</li>
-            <li>Lovable Cloud (Postgres + Auth + Edge Functions + Storage)</li>
-            <li>React Router v6, TanStack Query, Zod, Lucide icons</li>
-          </ul>
+          <div className="space-y-5">
+            <div>
+              <h3 className="font-semibold text-foreground mb-1">Frontend</h3>
+              <ul className="space-y-1">
+                <li>React 18, Vite 5, TypeScript 5</li>
+                <li>Tailwind CSS v3 with HSL design tokens, shadcn/ui components</li>
+                <li>React Router v6, TanStack Query, React Hook Form + Zod</li>
+                <li>Lucide icons, Sonner toasts, date-fns</li>
+                <li>Vitest + Testing Library for unit tests</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-foreground mb-1">Lovable Cloud (managed Supabase)</h3>
+              <ul className="space-y-1">
+                <li>Postgres with strict Row Level Security on every public table</li>
+                <li>Auth: email/password, Google, Apple, phone OTP, SAML SSO scaffolding</li>
+                <li>Edge Functions (Deno) for Stripe, email pipeline, push, admin tools</li>
+                <li>Realtime channels for in-app notifications and subscriptions</li>
+                <li>pgmq message queues for transactional + marketing email batching</li>
+                <li>Storage buckets (ready, no buckets configured yet)</li>
+                <li>Auto-generated TypeScript types from the live schema</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-foreground mb-1">Lovable AI Gateway</h3>
+              <ul className="space-y-1">
+                <li>Single <code>LOVABLE_API_KEY</code> — no per-provider keys to manage</li>
+                <li>Used from edge functions for any future AI features (summaries, classification, etc.)</li>
+                <li>Access to Google Gemini and OpenAI GPT-5 model families</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-foreground mb-1">Third-party services (swap-ready)</h3>
+              <ul className="space-y-1">
+                <li>Stripe — checkout, customer portal, webhooks (sandbox keys wired)</li>
+                <li>Resend — transactional + marketing email delivery (notify.voicept.com)</li>
+                <li>Twilio — SMS / OTP delivery (edge function stub ready)</li>
+                <li>Web Push / VAPID — browser push notifications (service worker shipped)</li>
+                <li>SAML 2.0 IdPs — Okta, Azure AD, Google Workspace (per-org config table ready)</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-foreground mb-1">Tooling</h3>
+              <ul className="space-y-1">
+                <li>ESLint, Prettier-compatible formatting</li>
+                <li>Sitemap generator script, SEO meta + JSON-LD per page</li>
+                <li>Deployed via Lovable (custom domain ready)</li>
+              </ul>
+            </div>
+          </div>
         </Section>
       </div>
     </section>
