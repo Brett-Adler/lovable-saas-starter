@@ -22,7 +22,7 @@ const Code = ({ children }: { children: React.ReactNode }) => (
 export const ReadmeContent = () => (
       <div className="max-w-3xl mx-auto">
         <Badge variant="outline" className="mb-4">Docs</Badge>
-        <h1 className="text-4xl md:text-5xl font-bold">Setup &amp; Customization Guide</h1>
+        <h2 className="text-4xl md:text-5xl font-bold">Setup &amp; Customization Guide</h2>
         <p className="mt-4 text-lg text-muted-foreground">
           Everything you need to make this SaaS starter your own. There are three ways to start:
           <strong className="text-foreground"> remix</strong> the live Lovable project for a one-click copy,

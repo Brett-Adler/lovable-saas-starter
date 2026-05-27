@@ -120,7 +120,7 @@ const Pricing = () => {
           </p>
           <div className="mt-8 inline-flex items-center gap-3 bg-muted/50 rounded-full px-4 py-2">
             <span className={cn("text-sm font-medium", !yearly && "text-foreground")}>Monthly</span>
-            <Switch checked={yearly} onCheckedChange={setYearly} />
+            <Switch checked={yearly} onCheckedChange={setYearly} aria-label="Toggle between monthly and yearly billing" />
             <span className={cn("text-sm font-medium", yearly && "text-foreground")}>
               Yearly <Badge variant="secondary" className="ml-1">Save 20%</Badge>
             </span>
@@ -141,7 +141,7 @@ const Pricing = () => {
                   Most popular
                 </Badge>
               )}
-              <h3 className="text-xl font-bold">{t.name}</h3>
+              <h2 className="text-xl font-bold">{t.name}</h2>
               <p className="text-sm text-muted-foreground mt-1">{t.description}</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold">${yearly ? t.yearly : t.monthly}</span>
