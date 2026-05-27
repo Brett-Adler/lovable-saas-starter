@@ -288,7 +288,6 @@ export default function AdminBroadcasts() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </main>
-    </div>
+    </AdminShell>
   );
 }
