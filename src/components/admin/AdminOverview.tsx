@@ -304,6 +304,12 @@ export const AdminOverview = () => {
         </Card>
       </div>
 
+      {/* Email health + recent audit */}
+      <div className="grid lg:grid-cols-2 gap-4">
+        <EmailHealthCard />
+        <RecentAuditCard />
+      </div>
+
       {/* Recent activity */}
       <div className="grid lg:grid-cols-2 gap-4">
         <Card>
