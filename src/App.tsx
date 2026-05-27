@@ -34,6 +34,7 @@ import AcceptInvite from "./pages/AcceptInvite";
 import AdminIndex from "./pages/admin/AdminIndex";
 import AdminLeads from "./pages/admin/Leads";
 import AdminSiteSettings from "./pages/admin/SiteSettings";
+import AdminSeo from "./pages/admin/SEO";
 import AdminSubscribers from "./pages/admin/Subscribers";
 import AdminBroadcasts from "./pages/admin/Broadcasts";
 import AdminUsers from "./pages/admin/Users";
@@ -173,6 +174,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <AdminSiteSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/seo"
+                element={
+                  <ProtectedRoute>
+                    <AdminSeo />
                   </ProtectedRoute>
                 }
               />

@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 
@@ -63,6 +64,7 @@ const Contact = () => {
 
   return (
     <MarketingLayout>
+      <PageSeo path="/contact" title="Contact" description="Get in touch with our team. We typically reply within one business day." />
       <section className="container py-20 md:py-28">
         <div className="grid gap-12 lg:grid-cols-2 max-w-6xl mx-auto">
           <div>

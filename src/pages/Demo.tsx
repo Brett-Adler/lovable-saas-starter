@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { supabase } from "@/integrations/supabase/client";
 
 const schema = z.object({
@@ -44,6 +45,7 @@ const Demo = () => {
 
   return (
     <MarketingLayout>
+      <PageSeo path="/demo" title="Book a demo" description="See SaaS Starter in action — 20 minutes, tailored to your use case." />
       <section className="container py-20 md:py-28">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-10">

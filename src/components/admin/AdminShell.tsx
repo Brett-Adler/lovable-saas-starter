@@ -25,6 +25,7 @@ import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { cn } from "@/lib/utils";
+import { NoIndex } from "@/components/seo/NoIndex";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; end?: boolean };
 type NavGroup = { label: string; items: NavItem[] };
@@ -62,7 +63,10 @@ const GROUPS: NavGroup[] = [
   },
   {
     label: "Configure",
-    items: [{ to: "/admin/site-settings", label: "Site settings", icon: SettingsIcon }],
+    items: [
+      { to: "/admin/site-settings", label: "Site settings", icon: SettingsIcon },
+      { to: "/admin/seo", label: "SEO", icon: SettingsIcon },
+    ],
   },
 ];
 
@@ -185,6 +189,8 @@ export const AdminShell = ({
   }
 
   return (
+    <>
+      <NoIndex />
     <div className="min-h-screen flex bg-background">
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex w-64 flex-col border-r border-border bg-card">
@@ -244,6 +250,7 @@ export const AdminShell = ({
         </main>
       </div>
     </div>
+    </>
   );
 };
 

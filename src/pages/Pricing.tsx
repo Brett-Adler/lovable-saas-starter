@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 import { useAuth } from "@/hooks/useAuth";
@@ -84,8 +85,22 @@ const Pricing = () => {
     });
   };
 
+  const productSchemas = tiers.map((t) => ({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `SaaS Starter — ${t.name}`,
+    description: t.description,
+    offers: {
+      "@type": "Offer",
+      price: (yearly ? t.yearly : t.monthly).toString(),
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+    },
+  }));
+
   return (
     <MarketingLayout>
+      <PageSeo path="/pricing" title="Pricing" description="Simple, transparent pricing. Start free, upgrade when you grow. Cancel anytime." jsonLd={productSchemas} />
       <PaymentTestModeBanner />
       <div className="container pt-8">
         <Alert className="max-w-3xl mx-auto">

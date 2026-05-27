@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { Badge } from "@/components/ui/badge";
 import { publicNavGroups } from "@/lib/public-routes";
 
 const Sitemap = () => (
   <MarketingLayout>
+      <PageSeo path="/sitemap" title="Sitemap" description="Every public page on the SaaS Starter site, in one list." />
     <section className="container py-20 md:py-28">
       <div className="max-w-4xl mx-auto">
         <Badge variant="outline" className="mb-4">Sitemap</Badge>

@@ -1,4 +1,5 @@
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { Badge } from "@/components/ui/badge";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 
@@ -7,12 +8,20 @@ interface LegalProps {
   kind: "privacy" | "terms" | "cookies";
 }
 
+const PATHS = { privacy: "/privacy", terms: "/terms", cookies: "/cookies" } as const;
+const DESCS = {
+  privacy: "How we collect, use, and protect personal information.",
+  terms: "The terms governing your use of our product and services.",
+  cookies: "How we use cookies and similar tracking technologies.",
+} as const;
+
 const Legal = ({ title, kind }: LegalProps) => {
   const { data: settings } = useSiteSettings();
   const email = settings?.contact_email ?? "hello@example.com";
 
   return (
     <MarketingLayout>
+      <PageSeo path={PATHS[kind]} title={title} description={DESCS[kind]} />
       <section className="container py-20 md:py-28">
         <div className="max-w-3xl mx-auto">
           <Badge variant="outline" className="mb-4">Legal</Badge>

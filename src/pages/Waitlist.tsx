@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { supabase } from "@/integrations/supabase/client";
 
 const schema = z.object({
@@ -40,6 +41,7 @@ const Waitlist = () => {
 
   return (
     <MarketingLayout>
+      <PageSeo path="/waitlist" title="Join the waitlist" description="Be first in line when we open up access. No spam, unsubscribe anytime." />
       <section className="container py-20 md:py-28">
         <div className="max-w-xl mx-auto">
           <div className="text-center mb-10">

@@ -1,4 +1,5 @@
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { AlertTriangle, BookOpen, Palette, Rocket, ShieldAlert, Wrench } from "lucide-react";
@@ -22,6 +23,7 @@ const Code = ({ children }: { children: React.ReactNode }) => (
 
 const Readme = () => (
   <MarketingLayout>
+      <PageSeo path="/readme" title="Readme" description="Tech stack, architecture, and roadmap for the SaaS Starter project." />
     <section className="container py-20 md:py-28">
       <div className="max-w-3xl mx-auto">
         <Badge variant="outline" className="mb-4">Docs</Badge>

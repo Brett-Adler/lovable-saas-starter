@@ -1,0 +1,19 @@
+# SaaS Starter
+
+> A complete SaaS starter template with auth, payments, emails, teams, and analytics. Replace the branding and ship.
+
+## Pages
+
+- [Home](/): Product overview.
+- [Pricing](/pricing): Plans and pricing.
+- [About](/about): About the product.
+- [Contact](/contact): Get in touch.
+- [Demo](/demo): Book a demo.
+- [Waitlist](/waitlist): Join the waitlist.
+- [Newsletter](/newsletter): Subscribe to updates.
+- [Readme](/readme): Project overview and roadmap.
+- [Changelog](/changelog): Recent product updates.
+- [Privacy Policy](/privacy): Privacy practices.
+- [Terms of Service](/terms): Terms of service.
+- [Cookie Policy](/cookies): Cookie usage.
+- [Accessibility](/accessibility): Accessibility statement.

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { changelog, type ChangeType } from "@/data/changelog";
 import { cn } from "@/lib/utils";
 
@@ -62,6 +63,7 @@ const Changelog = () => {
 
   return (
     <MarketingLayout>
+      <PageSeo path="/changelog" title="Changelog" description="Recent releases, fixes, and improvements shipped to SaaS Starter." />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <section className="container py-20 md:py-28">
         <div className="max-w-3xl mx-auto">

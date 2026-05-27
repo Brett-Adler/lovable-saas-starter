@@ -1,4 +1,5 @@
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { Badge } from "@/components/ui/badge";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 
@@ -8,6 +9,7 @@ const Accessibility = () => {
 
   return (
     <MarketingLayout>
+      <PageSeo path="/accessibility" title="Accessibility" description="Our commitment to building an inclusive product accessible to everyone." />
       <section className="container py-20 md:py-28">
         <div className="max-w-3xl mx-auto">
           <Badge variant="outline" className="mb-4">Accessibility</Badge>
