@@ -30,6 +30,45 @@ export const ReadmeContent = () => (
           <strong className="text-foreground"> clone from GitHub</strong> if you want to run it locally.
         </p>
 
+        {/* First-run checklist */}
+        <Card className="mt-8 p-6 border-primary/30 bg-primary/5">
+          <div className="flex items-center gap-2 mb-3">
+            <Rocket className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-bold text-foreground">First-run checklist</h2>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">
+            Do these once right after remixing. Each step is a credential or content swap — no code changes required.
+          </p>
+          <ul className="space-y-2 text-sm">
+            {[
+              <>Set <Code>PUBLIC_SITE_NAME</Code>, <Code>PUBLIC_SITE_URL</Code>, <Code>SENDER_DOMAIN</Code>, and <Code>VITE_BASE_URL</Code> in project secrets so emails, sitemap, and meta tags use your brand.</>,
+              <>Open <Link to="/admin/site-settings" className="text-primary hover:underline">Admin → Site settings</Link> and fill in your company name, mailing address, contact email, and social links.</>,
+              <>Open <Link to="/admin/brand" className="text-primary hover:underline">Admin → Brand</Link> to upload your logo, favicon, and OG image. Set the site name and description in <Link to="/admin/seo" className="text-primary hover:underline">Admin → SEO</Link>.</>,
+              <>Replace placeholder files in <Code>/public</Code> — see <Code>public/BRANDING.md</Code> for the swap list.</>,
+              <>Swap Stripe test products for live ones in <Code>supabase/functions/create-checkout/index.ts</Code> and update <Code>STRIPE_API_KEY</Code> + webhook secret.</>,
+              <>Verify your sending domain in Resend (or your provider) and update the From address in Admin → Site settings.</>,
+            ].map((item, i) => (
+              <li key={i} className="flex gap-2">
+                <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                <span className="text-muted-foreground">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        {/* Coming-soon notice */}
+        <Card className="mt-4 p-5 border-amber-500/30 bg-amber-500/5">
+          <div className="flex items-center gap-2 mb-2">
+            <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+            <h3 className="font-semibold text-foreground text-sm">Coming-soon screens</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            A few dashboard pages ship as placeholders — <Code>/dashboard/settings/security</Code>, <Code>/dashboard/settings/api-keys</Code>,{" "}
+            <Code>/dashboard/settings/webhooks</Code>, and the marketing <Code>/customers</Code> page. Build them out or remove the nav links before launch.
+          </p>
+        </Card>
+
+
         {/* Use this starter */}
         <Section icon={Sparkles} title="Use this starter">
           <div className="grid gap-4 md:grid-cols-3">
