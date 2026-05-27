@@ -27,9 +27,12 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-27",
-    title: "Docs hub",
+    title: "Launch checklist & honesty pass",
     changes: [
-      { type: "added", text: "New /docs page surfacing the setup guide alongside quick links to Roadmap, Changelog, Status, and Security. Added Docs to the marketing header and footer." },
+      { type: "added", text: "New /launch page consolidating every credential and copy swap needed to take the starter from preview to production." },
+      { type: "changed", text: "Landing page and Readme now mark marketing broadcasts as 'Needs setup' (requires RESEND_API_KEY) instead of fully live." },
+      { type: "changed", text: "Roadmap: self-serve data export marked as shipped (already available in Dashboard → Settings → Data)." },
+      { type: "changed", text: "Readme route list refreshed to include /docs, /launch, /integrations, /security, /status, /compare, /customers, /blog." },
     ],
   },
   {

@@ -26,7 +26,7 @@ type Feature = {
 const features: Feature[] = [
   { icon: Lock, title: "Auth, batteries included", desc: "Email/password, Google, and Apple — wired and ready.", status: "shipped" },
   { icon: CreditCard, title: "Stripe payments", desc: "Subscriptions, customer portal, plan-gating, and admin billing.", status: "setup", tooltip: "Add your Stripe products with lookup_keys: pro_monthly, pro_yearly, team_monthly, team_yearly." },
-  { icon: Mail, title: "Branded emails", desc: "Auth + transactional templates ship live. Marketing broadcasts via Resend.", status: "shipped" },
+  { icon: Mail, title: "Branded emails", desc: "Transactional + auth emails are live. Marketing broadcasts via Resend ship as a wired pipeline.", status: "setup", tooltip: "Transactional/auth emails work out of the box on notify.voicept.com. Add RESEND_API_KEY and verify a sending domain to enable marketing broadcasts." },
   { icon: Users, title: "Teams & roles", desc: "Organizations, invites, and role-based access out of the box.", status: "shipped" },
   { icon: BarChart3, title: "Built-in analytics", desc: "Signups, MRR, churn, retention — your own self-hosted dashboard.", status: "shipped" },
   { icon: Smartphone, title: "SMS & push", desc: "Twilio for OTP/alerts, Web Push for in-app — stubs ready to enable.", status: "setup", tooltip: "Add Twilio credentials for SMS and VAPID keys for Web Push. See the Readme." },
@@ -48,7 +48,7 @@ const testimonials = [
 ];
 
 const faqs = [
-  { q: "What's included?", a: "Authentication (email, Google, Apple), Stripe subscriptions, transactional and marketing email, in-app notifications, audit logs, teams and roles, full settings UI, super-admin dashboard, brand-kit generator, and built-in analytics. SMS OTP, Web Push, and SAML SSO ship as wired stubs you enable with credentials." },
+  { q: "What's included?", a: "Authentication (email, Google, Apple), Stripe subscriptions, transactional + auth email, in-app notifications, audit logs, teams and roles, full settings UI, super-admin dashboard, brand-kit generator, and built-in analytics. Marketing broadcasts, SMS OTP, Web Push, and SAML SSO ship as wired pipelines you enable with credentials — see the launch checklist." },
   { q: "Are SMS, push, and SSO live out of the box?", a: "The UI, database, and edge functions are wired up but ship as stubs. SMS waits for Twilio credentials, Web Push waits for VAPID keys, and SAML SSO accepts your IdP config through a form and is then provisioned manually — each is a credential or config swap, not a rewrite. See the Readme for the pre-launch checklist." },
   { q: "Can I use this commercially?", a: "Yes. This is a starter template — once you've built your product on top, it's yours." },
   { q: "How do I add my logo?", a: "Drop your files into /public using the names listed in BRANDING.md. The app picks them up automatically." },
