@@ -188,6 +188,8 @@ export const AdminShell = ({
   }
 
   return (
+    <>
+      <NoIndex />
     <div className="min-h-screen flex bg-background">
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex w-64 flex-col border-r border-border bg-card">
