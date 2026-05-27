@@ -16,7 +16,7 @@ interface PageSeoProps {
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const DEFAULT_BASE = "https://saas-starter-suite.lovable.app";
+
 
 function applyTemplate(template: string | null | undefined, value: string): string {
   if (!template || !template.includes("%s")) return value;
