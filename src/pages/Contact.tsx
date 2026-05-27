@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { z } from "zod";
-import { Loader2, Mail, MessageSquare, Send } from "lucide-react";
+import { Loader2, Mail, Clock, Send, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useUserRoles } from "@/hooks/useUserRole";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Name required").max(100),
@@ -26,7 +28,10 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const { data: settings } = useSiteSettings();
-  const contactEmail = settings?.contact_email ?? "hello@example.com";
+  const { isAdmin } = useUserRoles();
+  const rawEmail = settings?.contact_email ?? null;
+  const contactEmail = rawEmail ?? "hello@example.com";
+  const emailIsPlaceholder = !rawEmail || rawEmail.endsWith("@example.com");
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,8 +76,18 @@ const Contact = () => {
             <Badge variant="outline" className="mb-4">Contact</Badge>
             <h1 className="text-4xl md:text-5xl font-bold">Let's talk.</h1>
             <p className="mt-4 text-lg text-muted-foreground">
-              Questions, feedback, or want a demo? We typically reply within one business day.
+              Questions, feedback, or want a demo? Email is the fastest way to reach us — we reply within one business day.
             </p>
+            {isAdmin && emailIsPlaceholder && (
+              <div className="mt-6 flex items-start gap-2 rounded-md border border-warning/30 bg-warning/10 text-warning px-3 py-2 text-xs">
+                <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                <div>
+                  <span className="font-medium">Admin only:</span> your public contact email is still the placeholder{" "}
+                  <code className="px-1 rounded bg-warning/10">{contactEmail}</code>.{" "}
+                  <Link to="/admin/site-settings" className="underline">Set it in Site Settings</Link>.
+                </div>
+              </div>
+            )}
             <div className="mt-10 space-y-6">
               <div className="flex gap-4">
                 <div className="h-11 w-11 rounded-xl bg-primary-soft flex items-center justify-center shrink-0">
@@ -85,11 +100,11 @@ const Contact = () => {
               </div>
               <div className="flex gap-4">
                 <div className="h-11 w-11 rounded-xl bg-primary-soft flex items-center justify-center shrink-0">
-                  <MessageSquare className="h-5 w-5 text-primary" />
+                  <Clock className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="font-semibold">Live chat</p>
-                  <p className="text-sm text-muted-foreground">Mon–Fri, 9am–5pm UTC</p>
+                  <p className="font-semibold">Response time</p>
+                  <p className="text-sm text-muted-foreground">Within one business day, Mon–Fri.</p>
                 </div>
               </div>
             </div>

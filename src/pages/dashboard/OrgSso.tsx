@@ -10,6 +10,7 @@ import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { RequirePlan } from "@/components/billing/RequirePlan";
 import { useOrganization } from "@/hooks/useOrganization";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { toast } from "sonner";
 
 const PROJECT_ID = import.meta.env.VITE_SUPABASE_PROJECT_ID;
@@ -37,6 +38,8 @@ const EMPTY: SsoConfig = {
 
 const OrgSso = () => {
   const { currentOrg } = useOrganization();
+  const { data: settings } = useSiteSettings();
+  const supportEmail = settings?.contact_email ?? "support@example.com";
   const [config, setConfig] = useState<SsoConfig>(EMPTY);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -225,7 +228,7 @@ const OrgSso = () => {
                   </div>
                   <div className="flex items-center justify-between border-t border-border pt-4">
                     <a
-                      href="mailto:support@example.com?subject=Finish SAML SSO setup"
+                      href={`mailto:${supportEmail}?subject=Finish SAML SSO setup`}
                       className="text-sm text-primary inline-flex items-center gap-1 hover:underline"
                     >
                       Contact support to finish provisioning

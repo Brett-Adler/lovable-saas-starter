@@ -2,6 +2,10 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
 import { Badge } from "@/components/ui/badge";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { TemplatePlaceholderRibbon } from "@/components/marketing/TemplatePlaceholderRibbon";
+
+// Bump this when policy text changes.
+const LAST_UPDATED = "May 27, 2026";
 
 interface LegalProps {
   title: string;
@@ -24,9 +28,14 @@ const Legal = ({ title, kind }: LegalProps) => {
       <PageSeo path={PATHS[kind]} title={title} description={DESCS[kind]} />
       <section className="container py-20 md:py-28">
         <div className="max-w-3xl mx-auto">
+          <TemplatePlaceholderRibbon
+            id={`legal-${kind}`}
+            className="mb-6"
+            message={`Placeholder ${kind} text — replace with your own before launch.`}
+          />
           <Badge variant="outline" className="mb-4">Legal</Badge>
           <h1 className="text-4xl md:text-5xl font-bold">{title}</h1>
-          <p className="mt-4 text-sm text-muted-foreground">Last updated: January 1, 2026</p>
+          <p className="mt-4 text-sm text-muted-foreground">Last updated: {LAST_UPDATED}</p>
           <div className="prose prose-lg mt-10 max-w-none text-muted-foreground space-y-5">
             <p className="text-foreground font-semibold">
               ⚠️ Template placeholder — replace this with your own {kind} content reviewed by legal

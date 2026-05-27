@@ -12,16 +12,26 @@ import { PageSeo } from "@/components/seo/PageSeo";
 import { NewsletterForm } from "@/components/marketing/NewsletterForm";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { publicNavGroups } from "@/lib/public-routes";
+import { StatusBadge, type FeatureStatus } from "@/components/marketing/StatusBadge";
+import { TemplatePlaceholderRibbon } from "@/components/marketing/TemplatePlaceholderRibbon";
 
-const features = [
-  { icon: Lock, title: "Auth, batteries included", desc: "Email/password, Google, Apple, and SMS — wired and ready." },
-  { icon: CreditCard, title: "Stripe payments", desc: "Subscriptions, customer portal, plan-gating, and admin billing." },
-  { icon: Mail, title: "Branded emails", desc: "Auth + transactional templates. Marketing campaigns via Resend." },
-  { icon: Users, title: "Teams & roles", desc: "Organizations, invites, and role-based access out of the box." },
-  { icon: BarChart3, title: "Built-in analytics", desc: "Signups, MRR, churn, retention — your own self-hosted dashboard." },
-  { icon: Smartphone, title: "SMS & notifications", desc: "Twilio for OTP login and critical alerts. Per-user preferences." },
-  { icon: Shield, title: "Secure by default", desc: "Row-level security, separate roles table, validated inputs everywhere." },
-  { icon: Sparkles, title: "Beautiful UI", desc: "Polished design system with light + dark mode and themable tokens." },
+type Feature = {
+  icon: typeof Lock;
+  title: string;
+  desc: string;
+  status: FeatureStatus;
+  tooltip?: string;
+};
+
+const features: Feature[] = [
+  { icon: Lock, title: "Auth, batteries included", desc: "Email/password, Google, and Apple — wired and ready.", status: "shipped" },
+  { icon: CreditCard, title: "Stripe payments", desc: "Subscriptions, customer portal, plan-gating, and admin billing.", status: "setup", tooltip: "Add your Stripe products with lookup_keys: pro_monthly, pro_yearly, team_monthly, team_yearly." },
+  { icon: Mail, title: "Branded emails", desc: "Auth + transactional templates ship live. Marketing broadcasts via Resend.", status: "shipped" },
+  { icon: Users, title: "Teams & roles", desc: "Organizations, invites, and role-based access out of the box.", status: "shipped" },
+  { icon: BarChart3, title: "Built-in analytics", desc: "Signups, MRR, churn, retention — your own self-hosted dashboard.", status: "shipped" },
+  { icon: Smartphone, title: "SMS & push", desc: "Twilio for OTP/alerts, Web Push for in-app — stubs ready to enable.", status: "setup", tooltip: "Add Twilio credentials for SMS and VAPID keys for Web Push. See the Readme." },
+  { icon: Shield, title: "Secure by default", desc: "Row-level security, separate roles table, validated inputs everywhere.", status: "shipped" },
+  { icon: Sparkles, title: "Beautiful UI", desc: "Polished design system with light + dark mode and themable tokens.", status: "shipped" },
 ];
 
 const steps = [
@@ -38,8 +48,8 @@ const testimonials = [
 ];
 
 const faqs = [
-  { q: "What's included?", a: "Authentication (email, Google, Apple, SMS OTP), Stripe payments with a 14-day trial, transactional and marketing email, in-app notifications, audit logs, teams and roles, full settings UI, super-admin dashboard, and built-in analytics. Plus scaffolding for SAML SSO, SMS via Twilio, and Web Push." },
-  { q: "Are SMS, push, and SSO live out of the box?", a: "The UI, database, and edge functions are wired up. SMS waits for Twilio credentials, Web Push waits for VAPID keys, and SAML SSO waits for your identity provider — each is a credential swap, not a rewrite. See README.md for the pre-launch checklist." },
+  { q: "What's included?", a: "Authentication (email, Google, Apple), Stripe subscriptions, transactional and marketing email, in-app notifications, audit logs, teams and roles, full settings UI, super-admin dashboard, brand-kit generator, and built-in analytics. SMS OTP, Web Push, and SAML SSO ship as wired stubs you enable with credentials." },
+  { q: "Are SMS, push, and SSO live out of the box?", a: "The UI, database, and edge functions are wired up but ship as stubs. SMS waits for Twilio credentials, Web Push waits for VAPID keys, and SAML SSO accepts your IdP config through a form and is then provisioned manually — each is a credential or config swap, not a rewrite. See the Readme for the pre-launch checklist." },
   { q: "Can I use this commercially?", a: "Yes. This is a starter template — once you've built your product on top, it's yours." },
   { q: "How do I add my logo?", a: "Drop your files into /public using the names listed in BRANDING.md. The app picks them up automatically." },
   { q: "Does it support dark mode?", a: "Yes — every component is themed via semantic tokens. Toggle in the header." },
@@ -131,6 +141,12 @@ const Index = () => {
       {/* Logo cloud */}
       <section className="border-y border-border/40 bg-muted/20">
         <div className="container py-10">
+          <TemplatePlaceholderRibbon
+            id="index-logo-cloud"
+            className="max-w-md mx-auto mb-6"
+            message="Placeholder logos — replace in src/pages/Index.tsx"
+            hint="This ribbon is only shown on Lovable preview hosts, not on your custom domain."
+          />
           <p className="text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-6">
             Trusted by teams shipping faster
           </p>
@@ -152,10 +168,13 @@ const Index = () => {
           </p>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {features.map((f, i) => (
+          {features.map((f) => (
             <Card key={f.title} className="p-6 border-border/60 shadow-card hover:shadow-md transition-shadow group">
-              <div className="h-11 w-11 rounded-xl bg-primary-soft flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <f.icon className="h-5 w-5 text-primary" />
+              <div className="flex items-start justify-between mb-4">
+                <div className="h-11 w-11 rounded-xl bg-primary-soft flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <f.icon className="h-5 w-5 text-primary" />
+                </div>
+                <StatusBadge status={f.status} tooltip={f.tooltip} />
               </div>
               <h3 className="font-semibold mb-1">{f.title}</h3>
               <p className="text-sm text-muted-foreground">{f.desc}</p>
@@ -185,10 +204,15 @@ const Index = () => {
 
       {/* Testimonials */}
       <section className="container py-24">
-        <div className="max-w-2xl mx-auto text-center mb-16">
+        <div className="max-w-2xl mx-auto text-center mb-10">
           <Badge variant="outline" className="mb-4">Loved by builders</Badge>
           <h2 className="text-3xl md:text-5xl font-bold">Don't just take our word</h2>
         </div>
+        <TemplatePlaceholderRibbon
+          id="index-testimonials"
+          className="max-w-md mx-auto mb-8"
+          message="Placeholder testimonials — replace in src/pages/Index.tsx"
+        />
         <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((t) => (
             <Card key={t.name} className="p-6 border-border/60">

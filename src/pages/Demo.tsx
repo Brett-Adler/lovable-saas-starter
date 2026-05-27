@@ -32,12 +32,16 @@ const Demo = () => {
     if (!parsed.success) { toast.error(parsed.error.issues[0].message); return; }
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from("lead_submissions" as never)
-        .insert({ type: "demo", payload: parsed.data, status: "new" } as never);
-      if (error && !error.message.includes("does not exist")) throw error;
+      const { error } = await supabase.from("leads").insert({
+        kind: "demo",
+        name: parsed.data.name,
+        email: parsed.data.email,
+        source: `demo:${parsed.data.company} (${parsed.data.size})`,
+        message: parsed.data.notes || null,
+      });
+      if (error) throw error;
       setDone(true);
-      toast.success("Demo requested — we'll reach out within 24h.");
+      toast.success("Got it — we'll be in touch.");
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally { setLoading(false); }
@@ -45,7 +49,7 @@ const Demo = () => {
 
   return (
     <MarketingLayout>
-      <PageSeo path="/demo" title="Book a demo" description="See SaaS Starter in action — 20 minutes, tailored to your use case." />
+      <PageSeo path="/demo" title="Book a demo" description="See SaaS Starter in action — a 30-minute walkthrough tailored to your use case." />
       <section className="container py-20 md:py-28">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-10">
@@ -62,7 +66,7 @@ const Demo = () => {
             {done ? (
               <div className="text-center py-8">
                 <h2 className="text-xl font-semibold">Got it — we'll be in touch.</h2>
-                <p className="mt-2 text-muted-foreground">Check your inbox for a calendar link.</p>
+                <p className="mt-2 text-muted-foreground">We received your request and will follow up by email.</p>
               </div>
             ) : (
               <form onSubmit={onSubmit} className="space-y-4">
