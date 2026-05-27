@@ -93,7 +93,12 @@ const Index = () => {
 
   return (
     <MarketingLayout>
-      <PageSeo path="/" jsonLd={faqJsonLd} />
+      <PageSeo
+        path="/"
+        title="SaaS Starter — production-ready SaaS template"
+        description="Launch faster with a production-ready SaaS starter for auth, billing, teams, emails, analytics, and admin workflows."
+        jsonLd={faqJsonLd}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 gradient-mesh opacity-80" aria-hidden />
@@ -142,11 +147,13 @@ const Index = () => {
                 className="w-full aspect-[16/9] object-cover bg-muted"
                 src="/explainer.mp4"
                 poster="/explainer-poster.jpg"
+                width={1280}
+                height={720}
                 autoPlay
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                preload="auto"
                 aria-label="SaaS Starter explainer — build your SaaS in days, not months"
               />
             </Card>
