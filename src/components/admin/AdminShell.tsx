@@ -11,6 +11,7 @@ import {
   Send,
   Settings as SettingsIcon,
   Shield,
+  ScrollText,
   ArrowLeft,
   LogOut,
   Menu,
