@@ -27,6 +27,16 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-27",
+    title: "AI support chat, blog, and real status page",
+    changes: [
+      { type: "added", text: "First-party AI support chat widget on every marketing page — anonymous, rate-limited to 15 messages/IP/day, powered by Lovable AI Gateway." },
+      { type: "added", text: "Built-in blog at /blog with categories, tags, Markdown content, cover images, and an admin editor at /admin/blog." },
+      { type: "added", text: "Self-hosted status page wired to live DB-backed components and incidents, editable at /admin/status. Note kept that true uptime monitoring still belongs to an external provider." },
+      { type: "changed", text: "Live chat, blog, and status page promoted from 'Coming soon' to 'Live' across roadmap, features, and integrations." },
+    ],
+  },
+  {
+    date: "2026-05-27",
     title: "Launch checklist & honesty pass",
     changes: [
       { type: "added", text: "New /launch page consolidating every credential and copy swap needed to take the starter from preview to production." },
