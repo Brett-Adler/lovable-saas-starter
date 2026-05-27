@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
 import { Card } from "@/components/ui/card";
@@ -44,17 +45,20 @@ const Compare = () => (
             <div className="px-5 py-3 font-semibold border-b border-border">Feature</div>
             <div className="px-5 py-3 font-semibold border-b border-border text-center">This starter</div>
             <div className="px-5 py-3 font-semibold border-b border-border text-center">DIY</div>
-            {rows.map((r, i) => (
-              <>
-                <div key={`${i}-f`} className={`px-5 py-3 ${i < rows.length - 1 ? "border-b border-border" : ""}`}>{r.feature}</div>
-                <div key={`${i}-u`} className={`px-5 py-3 text-center ${i < rows.length - 1 ? "border-b border-border" : ""}`}>
-                  {r.us ? <CheckCircle2 className="h-5 w-5 text-success mx-auto" /> : <XCircle className="h-5 w-5 text-muted-foreground mx-auto" />}
-                </div>
-                <div key={`${i}-d`} className={`px-5 py-3 text-center text-xs text-muted-foreground ${i < rows.length - 1 ? "border-b border-border" : ""}`}>
-                  {r.diy === true ? "Yes" : r.diy === "weeks" ? "Weeks of work" : "Not typical"}
-                </div>
-              </>
-            ))}
+            {rows.map((r, i) => {
+              const border = i < rows.length - 1 ? "border-b border-border" : "";
+              return (
+                <Fragment key={r.feature}>
+                  <div className={`px-5 py-3 ${border}`}>{r.feature}</div>
+                  <div className={`px-5 py-3 text-center ${border}`}>
+                    {r.us ? <CheckCircle2 className="h-5 w-5 text-success mx-auto" /> : <XCircle className="h-5 w-5 text-muted-foreground mx-auto" />}
+                  </div>
+                  <div className={`px-5 py-3 text-center text-xs text-muted-foreground ${border}`}>
+                    {r.diy === true ? "Yes" : r.diy === "weeks" ? "Weeks of work" : "Not typical"}
+                  </div>
+                </Fragment>
+              );
+            })}
           </div>
         </Card>
       </div>
