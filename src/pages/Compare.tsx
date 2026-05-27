@@ -24,9 +24,10 @@ const Compare = () => (
     />
     <section className="container py-16 md:py-20">
       <div className="max-w-3xl mx-auto">
-        <TemplatePlaceholderRibbon>
-          Swap the table below with a real competitor comparison once you know who you compete with.
-        </TemplatePlaceholderRibbon>
+        <TemplatePlaceholderRibbon
+          id="compare-page"
+          message="Swap the table below with a real competitor comparison once you know who you compete with."
+        />
 
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">

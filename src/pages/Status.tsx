@@ -22,10 +22,11 @@ const Status = () => (
     />
     <section className="container py-16 md:py-20">
       <div className="max-w-3xl mx-auto">
-        <TemplatePlaceholderRibbon>
-          This is a static placeholder. Wire it to a real monitoring provider (BetterStack,
-          Instatus, etc.) before launch.
-        </TemplatePlaceholderRibbon>
+        <TemplatePlaceholderRibbon
+          id="status-page"
+          message="This is a static placeholder."
+          hint="Wire it to a real monitoring provider (BetterStack, Instatus, etc.) before launch."
+        />
 
         <div className="text-center mb-10">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">All systems normal</h1>
