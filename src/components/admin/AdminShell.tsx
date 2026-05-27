@@ -17,6 +17,8 @@ import {
   Menu,
   ExternalLink,
   Palette,
+  FileText,
+  Activity,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
@@ -56,6 +58,13 @@ const GROUPS: NavGroup[] = [
       { to: "/admin/leads", label: "Leads", icon: Inbox },
       { to: "/admin/subscribers", label: "Subscribers", icon: Mail },
       { to: "/admin/broadcasts", label: "Broadcasts", icon: Send },
+    ],
+  },
+  {
+    label: "Content",
+    items: [
+      { to: "/admin/blog", label: "Blog", icon: FileText },
+      { to: "/admin/status", label: "Status page", icon: Activity },
     ],
   },
   {

@@ -56,6 +56,10 @@ import SecurityPage from "./pages/Security";
 import Compare from "./pages/Compare";
 import Customers from "./pages/Customers";
 import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import AdminBlog from "./pages/admin/Blog";
+import AdminBlogEditor from "./pages/admin/BlogEditor";
+import AdminStatus from "./pages/admin/Status";
 import DashboardSecurity from "./pages/dashboard/settings/Security";
 import DashboardApiKeys from "./pages/dashboard/settings/ApiKeys";
 import DashboardWebhooks from "./pages/dashboard/settings/Webhooks";
@@ -98,6 +102,7 @@ const App = () => (
               <Route path="/compare" element={<Compare />} />
               <Route path="/customers" element={<Customers />} />
               <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/checkout/return" element={<CheckoutReturn />} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
@@ -288,6 +293,10 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route path="/admin/blog" element={<ProtectedRoute><AdminBlog /></ProtectedRoute>} />
+              <Route path="/admin/blog/new" element={<ProtectedRoute><AdminBlogEditor /></ProtectedRoute>} />
+              <Route path="/admin/blog/:id" element={<ProtectedRoute><AdminBlogEditor /></ProtectedRoute>} />
+              <Route path="/admin/status" element={<ProtectedRoute><AdminStatus /></ProtectedRoute>} />
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
