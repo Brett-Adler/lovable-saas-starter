@@ -228,7 +228,7 @@ const OrgSso = () => {
                   </div>
                   <div className="flex items-center justify-between border-t border-border pt-4">
                     <a
-                      href="mailto:support@example.com?subject=Finish SAML SSO setup"
+                      href={`mailto:${supportEmail}?subject=Finish SAML SSO setup`}
                       className="text-sm text-primary inline-flex items-center gap-1 hover:underline"
                     >
                       Contact support to finish provisioning
