@@ -57,7 +57,7 @@ const tiers: Tier[] = [
     cta: "Subscribe to Team",
     priceMonthly: "team_monthly",
     priceYearly: "team_yearly",
-    features: ["Everything in Pro", "Unlimited team members", "SSO / SAML", "Dedicated success manager", "99.9% SLA", "Audit logs"],
+    features: ["Everything in Pro", "Unlimited team members", "SSO / SAML (provisioned manually)", "Dedicated success manager", "99.9% SLA", "Audit logs"],
     missing: [],
   },
 ];
