@@ -384,8 +384,7 @@ const Analytics = () => {
             </CardContent>
           </Card>
         </div>
-      </main>
-    </div>
+    </AdminShell>
   );
 };
 
