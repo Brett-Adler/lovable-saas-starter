@@ -206,6 +206,7 @@ export const AdminOverview = () => {
           icon={UsersIcon}
           to="/admin/users"
           loading={overview.isLoading}
+          trend={overview.data?.signups.series}
         />
         <Kpi
           label="Organizations"
