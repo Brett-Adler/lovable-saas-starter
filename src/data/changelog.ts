@@ -29,6 +29,7 @@ export const changelog: ChangelogEntry[] = [
     date: "2026-05-27",
     title: "SEO controls and per-page metadata",
     changes: [
+      { type: "added", text: "README and /readme page now cover Remix, prompt-based customization, and GitHub clone workflows." },
       { type: "added", text: "Animated explainer video on the home page hero showing what's included out of the box." },
       { type: "added", text: "Admin SEO page (/admin/seo) to edit site-wide defaults and per-route overrides." },
       { type: "added", text: "Per-route titles, descriptions, canonicals, OG tags, and JSON-LD via React Helmet." },

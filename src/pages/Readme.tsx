@@ -2,7 +2,7 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, BookOpen, Palette, Rocket, ShieldAlert, Wrench } from "lucide-react";
+import { AlertTriangle, BookOpen, Github, MessageSquare, Palette, Rocket, ShieldAlert, Sparkles, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Section = ({ icon: Icon, title, children }: { icon: any; title: string; children: React.ReactNode }) => (
@@ -29,11 +29,153 @@ const Readme = () => (
         <Badge variant="outline" className="mb-4">Docs</Badge>
         <h1 className="text-4xl md:text-5xl font-bold">Setup &amp; Customization Guide</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Everything you need to make this SaaS starter your own.
+          Everything you need to make this SaaS starter your own. There are three ways to start:
+          <strong className="text-foreground"> remix</strong> the live Lovable project for a one-click copy,
+          <strong className="text-foreground"> customize with a prompt</strong> to rebrand or pivot in seconds, or
+          <strong className="text-foreground"> clone from GitHub</strong> if you want to run it locally.
         </p>
 
+        {/* Use this starter */}
+        <Section icon={Sparkles} title="Use this starter">
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card className="p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <h3 className="font-semibold text-foreground">Remix on Lovable</h3>
+              </div>
+              <p className="text-sm mb-3">
+                One click forks the live project into your own Lovable workspace with Cloud preconfigured. Best for non-developers.
+              </p>
+              <a
+                href="https://lovable.dev/projects/65731117-aac8-4723-ab30-aec22d01517c?remix=1"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+              >
+                Remix this project →
+              </a>
+            </Card>
+            <Card className="p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <MessageSquare className="h-4 w-4 text-primary" />
+                <h3 className="font-semibold text-foreground">Customize with a prompt</h3>
+              </div>
+              <p className="text-sm">
+                Once remixed, rebrand or pivot the whole app in one message. See the prompt library below.
+              </p>
+            </Card>
+            <Card className="p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <Github className="h-4 w-4 text-primary" />
+                <h3 className="font-semibold text-foreground">Clone from GitHub</h3>
+              </div>
+              <p className="text-sm">
+                Run locally and keep the codebase in your own repo. Best when you want a developer workflow alongside Lovable.
+              </p>
+            </Card>
+          </div>
+
+          <div className="mt-8 space-y-6">
+            <div>
+              <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-primary" /> 1. Remix on Lovable
+              </h3>
+              <ol className="list-decimal list-inside space-y-1">
+                <li>
+                  Open the{" "}
+                  <a href="https://lovable-saas-starter.lovable.app" target="_blank" rel="noreferrer" className="text-primary hover:underline">
+                    live demo
+                  </a>
+                  {" "}or the{" "}
+                  <a
+                    href="https://lovable.dev/projects/65731117-aac8-4723-ab30-aec22d01517c"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    Lovable project page
+                  </a>.
+                </li>
+                <li>Click <strong className="text-foreground">Remix</strong> in the top bar (or use the direct link in the card above).</li>
+                <li>Sign in. Lovable copies the code and provisions a fresh Lovable Cloud backend for you automatically.</li>
+                <li>Open the new project and start prompting — your remix is fully isolated from the original.</li>
+              </ol>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+                <MessageSquare className="h-4 w-4 text-primary" /> 2. Customize with one prompt
+              </h3>
+              <p className="mb-3">
+                Paste any of these into the chat after remixing. Each is intentionally one self-contained message so you spend a single credit's worth of work.
+              </p>
+              <div className="space-y-3">
+                <Card className="p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Full rebrand</p>
+                  <pre className="text-sm whitespace-pre-wrap font-mono text-foreground">
+{`Rebrand this app as "Acme" — a project management tool for design teams.
+Use a calm sage + cream palette, Inter for body and Space Grotesk for headings.
+Update the home page hero, pricing copy, About page, and FAQ to match.
+Replace "SaaS Starter" with "Acme" across logos, footer, and metadata.`}
+                  </pre>
+                </Card>
+                <Card className="p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Change pricing</p>
+                  <pre className="text-sm whitespace-pre-wrap font-mono text-foreground">
+{`Change pricing to three tiers: Starter $0, Pro $19/mo, Business $49/mo,
+with a 20% annual discount. Update /pricing, the landing teaser, and the
+Stripe products in the checkout edge function. Add a changelog entry.`}
+                  </pre>
+                </Card>
+                <Card className="p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Pivot to a niche</p>
+                  <pre className="text-sm whitespace-pre-wrap font-mono text-foreground">
+{`Turn this into a SaaS for fitness studios. Rewrite the marketing copy on
+/, /about, /pricing, and the FAQ to speak to studio owners. Keep auth,
+billing, teams, and admin exactly as-is.`}
+                  </pre>
+                </Card>
+                <Card className="p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Swap a provider in docs</p>
+                  <pre className="text-sm whitespace-pre-wrap font-mono text-foreground">
+{`Update README and the /readme page to reference Postmark instead of Resend
+for marketing email. Don't change any edge functions or runtime behavior —
+docs only.`}
+                  </pre>
+                </Card>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+                <Github className="h-4 w-4 text-primary" /> 3. Clone from GitHub
+              </h3>
+              <ol className="list-decimal list-inside space-y-2">
+                <li>
+                  In your Lovable project, open <strong className="text-foreground">Settings → GitHub</strong> and connect your account.
+                  Lovable creates a repo and keeps it two-way synced with the editor.
+                </li>
+                <li>Clone it locally and install dependencies:</li>
+              </ol>
+              <Card className="p-4 mt-3">
+                <pre className="text-sm whitespace-pre-wrap font-mono text-foreground">
+{`git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
+npm install        # or: bun install
+npm run dev        # http://localhost:8080`}
+                </pre>
+              </Card>
+              <p className="mt-3 text-sm">
+                The <Code>.env</Code> file (containing the Lovable Cloud URL + anon key) is generated and synced automatically when the project is linked to Lovable —
+                your local dev server talks to the same Cloud backend as the editor preview. Any push to the connected branch shows up in Lovable, and any prompt
+                in Lovable commits back to GitHub.
+              </p>
+            </div>
+          </div>
+        </Section>
+
         {/* Quickstart */}
-        <Section icon={Rocket} title="Quickstart">
+        <Section icon={Rocket} title="First-run quickstart">
           <ol className="list-decimal list-inside space-y-2">
             <li>
               Sign up at <Link to="/signup" className="text-primary hover:underline">/signup</Link>.
