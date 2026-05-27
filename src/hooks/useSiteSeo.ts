@@ -10,8 +10,10 @@ export interface SiteSeo {
   default_og_image_url: string | null;
   twitter_handle: string | null;
   theme_color: string | null;
+  background_color: string | null;
   base_url: string | null;
   organization_json_ld: Record<string, unknown> | null;
+  brand_assets: Record<string, string> | null;
 }
 
 export interface SeoPage {
