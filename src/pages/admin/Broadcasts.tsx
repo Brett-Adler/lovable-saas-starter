@@ -41,7 +41,7 @@ const empty: Partial<Campaign> = {
 
 export default function AdminBroadcasts() {
   const { isAdmin } = useUserRoles();
-  const { data: settings } = useSiteSettings();
+  const { data: settings } = useAdminSiteSettings();
   const [list, setList] = useState<Campaign[]>([]);
   const [fetching, setFetching] = useState(true);
   const [editing, setEditing] = useState<Partial<Campaign>>(empty);
