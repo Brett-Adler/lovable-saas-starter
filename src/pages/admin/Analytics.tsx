@@ -206,42 +206,21 @@ const Analytics = () => {
       .slice(0, 20);
   }, [events.data]);
 
-  if (rolesLoading) return <div className="min-h-screen grid place-items-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen grid place-items-center p-6">
-        <Card className="max-w-md w-full">
-          <CardHeader><CardTitle>Admins only</CardTitle><CardDescription>You don't have permission to view this page.</CardDescription></CardHeader>
-          <CardContent><Button asChild variant="outline" className="w-full"><Link to="/dashboard"><ArrowLeft className="h-4 w-4" />Back to dashboard</Link></Button></CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="container flex items-center justify-between py-4">
-          <Logo />
-          <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
-        </div>
-      </header>
-      <main className="container py-12 max-w-6xl">
-        <Button asChild variant="ghost" size="sm" className="mb-4"><Link to="/admin"><ArrowLeft className="h-4 w-4" />Back to admin</Link></Button>
-        <div className="flex items-end justify-between gap-4 mb-6 flex-wrap">
-          <div>
-            <h1 className="text-3xl font-bold mb-1">Analytics</h1>
-            <p className="text-muted-foreground">Signups, revenue, and engagement across the platform.</p>
-          </div>
-          <Select value={String(range)} onValueChange={(v) => setRange(Number(v) as Range)}>
-            <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7">Last 7 days</SelectItem>
-              <SelectItem value="30">Last 30 days</SelectItem>
-              <SelectItem value="90">Last 90 days</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+    <AdminShell
+      title="Analytics"
+      description="Signups, revenue, and engagement across the platform."
+      actions={
+        <Select value={String(range)} onValueChange={(v) => setRange(Number(v) as Range)}>
+          <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="7">Last 7 days</SelectItem>
+            <SelectItem value="30">Last 30 days</SelectItem>
+            <SelectItem value="90">Last 90 days</SelectItem>
+          </SelectContent>
+        </Select>
+      }
+    >
 
         {/* KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
