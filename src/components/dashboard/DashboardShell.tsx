@@ -96,9 +96,12 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
         <header className="lg:hidden border-b border-border bg-card">
           <div className="flex items-center justify-between px-4 py-3">
             <Logo />
-            <Button variant="outline" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <NotificationBell />
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
           <div className="px-4 pb-3">
             <OrgSwitcher />
