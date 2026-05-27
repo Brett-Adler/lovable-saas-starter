@@ -1,4 +1,6 @@
-# Your App
+# Your Brand
+
+> Replace this description in admin → Site SEO before launch.
 
 ## Pages
 
