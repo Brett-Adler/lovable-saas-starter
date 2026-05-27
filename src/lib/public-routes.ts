@@ -17,16 +17,30 @@ export const publicNavGroups: PublicGroup[] = [
     links: [
       { to: "/#features", label: "Features" },
       { to: "/pricing", label: "Pricing" },
+      { to: "/integrations", label: "Integrations" },
+      { to: "/compare", label: "Compare" },
       { to: "/demo", label: "Request demo" },
-      { to: "/waitlist", label: "Join waitlist" },
     ],
   },
   {
     title: "Company",
     links: [
       { to: "/about", label: "About" },
+      { to: "/customers", label: "Customers" },
+      { to: "/blog", label: "Blog" },
       { to: "/contact", label: "Contact" },
       { to: "/newsletter", label: "Newsletter" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { to: "/roadmap", label: "Roadmap" },
+      { to: "/changelog", label: "Changelog" },
+      { to: "/readme", label: "Setup guide" },
+      { to: "/status", label: "System status" },
+      { to: "/security", label: "Security" },
+      { to: "/sitemap", label: "Sitemap" },
     ],
   },
   {
@@ -39,18 +53,11 @@ export const publicNavGroups: PublicGroup[] = [
     ],
   },
   {
-    title: "Resources",
-    links: [
-      { to: "/readme", label: "Setup guide" },
-      { to: "/changelog", label: "Changelog" },
-      { to: "/sitemap", label: "Sitemap" },
-    ],
-  },
-  {
     title: "Account",
     links: [
       { to: "/login", label: "Log in" },
       { to: "/signup", label: "Sign up" },
+      { to: "/waitlist", label: "Join waitlist" },
     ],
   },
 ];

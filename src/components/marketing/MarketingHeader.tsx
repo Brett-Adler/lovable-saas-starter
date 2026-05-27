@@ -11,8 +11,9 @@ const links = [
   { to: "/", label: "Home" },
   { to: "/#features", label: "Features" },
   { to: "/pricing", label: "Pricing" },
+  { to: "/integrations", label: "Integrations" },
+  { to: "/roadmap", label: "Roadmap" },
   { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
 ];
 
 export const MarketingHeader = () => {
