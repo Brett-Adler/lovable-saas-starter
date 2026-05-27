@@ -84,7 +84,30 @@ billing, teams, and admin exactly as-is.`,
   },
 ];
 
-const UseTemplateLovable = () => (
+const listing = {
+  title: "SaaS Starter — production-ready multi-tenant SaaS",
+  tagline: "Auth, orgs, Stripe billing, admin, emails, and notifications. Remix and ship in a weekend.",
+  category: "Business apps → SaaS templates",
+  about: `SaaS Starter is a complete, production-grade SaaS template. Remix it and you get a working app with multi-tenant organizations (owner / admin / member roles), email + Google authentication, Stripe Checkout and Customer Portal, an admin panel, transactional email pipeline, realtime notifications, a brand kit generator, and a launch checklist.
+
+Everything is wired to Lovable Cloud — no separate Supabase project to spin up, no API keys to copy. The first account you create is automatically promoted to admin.
+
+Rebrand the whole app in a single prompt: drop in your logo, change the palette, rewrite the marketing copy. Walk the built-in launch checklist when you're ready to flip on live Stripe and a custom sending domain.
+
+Great for: indie SaaS founders, agencies launching client products, hackathon teams, and anyone tired of rebuilding auth + billing + admin for every new idea.`,
+};
+
+const checklist: { label: string; detail: string }[] = [
+  { label: "App icon (1024×1024)", detail: "Use the generated icon-1024.png from /admin/brand, or upload your own logo first." },
+  { label: "Cover image (1600×900)", detail: "A hero screenshot of the landing page. The Brand kit page exports a social card you can reuse." },
+  { label: "2–4 in-app screenshots", detail: "Suggested: landing hero, pricing page, dashboard, admin overview. Take them at 1440px wide." },
+  { label: "Title (≤60 chars)", detail: "Lead with what it is, then the differentiator. See suggested copy below." },
+  { label: "Tagline (≤120 chars)", detail: "One sentence on the outcome. Avoid jargon." },
+  { label: "About (3–5 paragraphs)", detail: "What it does, what's included, who it's for, and how to get started." },
+  { label: "Category", detail: "Business apps → SaaS templates is the closest fit." },
+];
+
+
   <MarketingLayout>
     <PageSeo
       path="/use-template/lovable"
