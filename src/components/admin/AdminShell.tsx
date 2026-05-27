@@ -16,6 +16,7 @@ import {
   LogOut,
   Menu,
   ExternalLink,
+  Palette,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
@@ -64,6 +65,7 @@ const GROUPS: NavGroup[] = [
   {
     label: "Configure",
     items: [
+      { to: "/admin/brand", label: "Brand kit", icon: Palette },
       { to: "/admin/site-settings", label: "Site settings", icon: SettingsIcon },
       { to: "/admin/seo", label: "SEO", icon: SettingsIcon },
     ],
