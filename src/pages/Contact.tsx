@@ -76,8 +76,18 @@ const Contact = () => {
             <Badge variant="outline" className="mb-4">Contact</Badge>
             <h1 className="text-4xl md:text-5xl font-bold">Let's talk.</h1>
             <p className="mt-4 text-lg text-muted-foreground">
-              Questions, feedback, or want a demo? We typically reply within one business day.
+              Questions, feedback, or want a demo? Email is the fastest way to reach us — we reply within one business day.
             </p>
+            {isAdmin && emailIsPlaceholder && (
+              <div className="mt-6 flex items-start gap-2 rounded-md border border-warning/30 bg-warning/10 text-warning px-3 py-2 text-xs">
+                <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                <div>
+                  <span className="font-medium">Admin only:</span> your public contact email is still the placeholder{" "}
+                  <code className="px-1 rounded bg-warning/10">{contactEmail}</code>.{" "}
+                  <Link to="/admin/site-settings" className="underline">Set it in Site Settings</Link>.
+                </div>
+              </div>
+            )}
             <div className="mt-10 space-y-6">
               <div className="flex gap-4">
                 <div className="h-11 w-11 rounded-xl bg-primary-soft flex items-center justify-center shrink-0">
@@ -90,11 +100,11 @@ const Contact = () => {
               </div>
               <div className="flex gap-4">
                 <div className="h-11 w-11 rounded-xl bg-primary-soft flex items-center justify-center shrink-0">
-                  <MessageSquare className="h-5 w-5 text-primary" />
+                  <Clock className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="font-semibold">Live chat</p>
-                  <p className="text-sm text-muted-foreground">Mon–Fri, 9am–5pm UTC</p>
+                  <p className="font-semibold">Response time</p>
+                  <p className="text-sm text-muted-foreground">Within one business day, Mon–Fri.</p>
                 </div>
               </div>
             </div>
