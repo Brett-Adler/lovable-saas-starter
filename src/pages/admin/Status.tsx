@@ -56,7 +56,7 @@ const AdminStatus = () => {
     },
   });
 
-  const updateComponent = async (id: string, patch: Record<string, unknown>) => {
+  const updateComponent = async (id: string, patch: Partial<{ name: string; current_status: string; description: string; position: number }>) => {
     const { error } = await supabase.from("status_components").update(patch).eq("id", id);
     if (error) toast.error(error.message);
     else {
@@ -111,7 +111,7 @@ const AdminStatus = () => {
     qc.invalidateQueries({ queryKey: ["status-incidents"] });
   };
 
-  const updateIncident = async (id: string, patch: Record<string, unknown>) => {
+  const updateIncident = async (id: string, patch: Partial<{ title: string; body_md: string | null; severity: string; status: string; resolved_at: string | null }>) => {
     const { error } = await supabase.from("status_incidents").update(patch).eq("id", id);
     if (error) toast.error(error.message);
     else {
