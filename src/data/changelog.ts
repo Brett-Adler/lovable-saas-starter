@@ -27,6 +27,20 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-27",
+    title: "Honest status across every page",
+    changes: [
+      { type: "added", text: "New Live / Needs setup / Coming soon badges on the landing feature cards so it's clear which features ship working and which need credentials." },
+      { type: "added", text: "Dismissible 'template placeholder' ribbons on landing logo cloud, testimonials, About, and Legal pages — only visible on Lovable preview hosts, hidden on custom domains." },
+      { type: "added", text: "Admin-only inline notice on the Contact page when contact_email is still the placeholder, linking straight to Site Settings." },
+      { type: "changed", text: "Demo and Waitlist forms now write to the real leads table (no more silently-dropped lead_submissions stub) and the success copy no longer promises calendar links or emails that aren't wired." },
+      { type: "changed", text: "Contact page: replaced the never-shipped 'Live chat Mon–Fri' block with a truthful response-time card." },
+      { type: "changed", text: "Pricing: SSO/SAML labelled as 'provisioned manually' on the Team plan, plus a small footnote naming the Stripe lookup_keys checkout expects." },
+      { type: "fixed", text: "Accessibility and Legal pages: replaced the hardcoded 'January 1, 2026' last-updated date with a single LAST_UPDATED constant per page." },
+      { type: "fixed", text: "Org SSO page: support email pulled from Site Settings instead of hardcoded support@example.com." },
+    ],
+  },
+  {
+    date: "2026-05-27",
     title: "Brand kit generator in admin",
     changes: [
       { type: "added", text: "New /admin/brand page: upload one logo and generate every favicon, iOS / Android / Windows icon, OG and Twitter social cards, splash screens, and PWA manifest." },
