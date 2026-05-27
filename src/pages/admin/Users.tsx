@@ -118,7 +118,7 @@ const Users = () => {
         <Input className="pl-9" placeholder="Search email or name…" value={q} onChange={(e) => setQ(e.target.value)} />
       </div>
 
-      <>{/* table starts below */}</>
+      </div>
 
         <Card>
           <Table>
@@ -171,7 +171,7 @@ const Users = () => {
             </TableBody>
           </Table>
         </Card>
-      </main>
+      
 
       <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <SheetContent className="w-full sm:max-w-md overflow-y-auto">
@@ -212,7 +212,7 @@ const Users = () => {
           )}
         </SheetContent>
       </Sheet>
-    </div>
+    </AdminShell>
   );
 };
 
