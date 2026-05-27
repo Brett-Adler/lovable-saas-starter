@@ -193,14 +193,20 @@ function writeLlmsTxt(seo: SiteSeo, pages: SeoPage[], base: string) {
   console.log(`[sync-seo] llms.txt written (${indexable.length} pages)`);
 }
 
-function writeSitemap(pages: SeoPage[], base: string) {
+function writeSitemap(pages: SeoPage[], blogPosts: BlogPostSitemapRow[], base: string) {
   const blocked = new Set(pages.filter((p) => p.noindex).map((p) => p.path));
   const lastmodMap = new Map(pages.map((p) => [p.path, p.updated_at]));
 
-  const entries = PUBLIC_ROUTES.filter((r) => !blocked.has(r.path));
+  const blogEntries = blogPosts.map((post) => ({
+    path: `/blog/${post.slug}`,
+    lastmod: post.updated_at || post.published_at || undefined,
+    changefreq: "monthly" as const,
+    priority: "0.6",
+  }));
+  const entries = [...PUBLIC_ROUTES.filter((r) => !blocked.has(r.path)), ...blogEntries.filter((r) => !blocked.has(r.path))];
 
   const urls = entries.map((e) => {
-    const lastmod = lastmodMap.get(e.path);
+    const lastmod = "lastmod" in e ? e.lastmod : lastmodMap.get(e.path);
     return [
       `  <url>`,
       `    <loc>${base}${e.path}</loc>`,
@@ -227,6 +233,10 @@ function writeSitemap(pages: SeoPage[], base: string) {
 async function main() {
   const seoRows = await fetchJson<SiteSeo[]>("site_seo?select=*&id=eq.1");
   const pagesRows = (await fetchJson<SeoPage[]>("seo_pages?select=path,title,description,noindex,updated_at")) ?? [];
+  const blogPostRows =
+    (await fetchJson<BlogPostSitemapRow[]>(
+      `blog_posts?select=slug,updated_at,published_at&status=eq.published&published_at=not.is.null&published_at=lte.${encodeURIComponent(new Date().toISOString())}`,
+    )) ?? [];
 
   const seo: SiteSeo = (seoRows && seoRows[0]) || {
     site_name: "Your App",
@@ -242,7 +252,7 @@ async function main() {
 
   rewriteIndexHtml(seo, base);
   writeLlmsTxt(seo, pagesRows, base);
-  writeSitemap(pagesRows, base);
+  writeSitemap(pagesRows, blogPostRows, base);
 }
 
 main().catch((e) => {
