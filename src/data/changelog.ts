@@ -27,6 +27,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-27",
+    title: "Refreshed dashboard and admin overviews",
+    changes: [
+      { type: "added", text: "Dashboard now shows a getting-started checklist, subscription status, pending invites, recent notifications, and org activity." },
+      { type: "added", text: "Admin overview gains a signups sparkline, 7-day email health card, and recent audit events." },
+      { type: "changed", text: "Dashboard and admin sidebars regrouped with section eyebrows and an active-item indicator." },
+    ],
+  },
+  {
+    date: "2026-05-27",
     title: "SEO controls and per-page metadata",
     changes: [
       { type: "added", text: "README and /readme page now cover Remix, prompt-based customization, and GitHub clone workflows." },
