@@ -27,10 +27,14 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-27",
-    title: "Public changelog",
+    title: "SEO controls and per-page metadata",
     changes: [
-      { type: "added", text: "Public /changelog page listing notable releases." },
-      { type: "added", text: "Footer link to the changelog under Resources." },
+      { type: "added", text: "Admin SEO page (/admin/seo) to edit site-wide defaults and per-route overrides." },
+      { type: "added", text: "Per-route titles, descriptions, canonicals, OG tags, and JSON-LD via React Helmet." },
+      { type: "added", text: "Site-wide SEO baked into initial HTML at build time so social crawlers see correct previews." },
+      { type: "added", text: "Organization, WebSite, FAQPage, and Product structured data for richer search results." },
+      { type: "added", text: "/llms.txt published for AI assistants." },
+      { type: "added", text: "Public changelog page listing notable releases." },
       { type: "fixed", text: "Footer links and anchor links now scroll to top / section on navigation." },
     ],
   },
