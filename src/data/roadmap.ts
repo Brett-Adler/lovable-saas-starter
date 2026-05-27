@@ -56,8 +56,8 @@ export const roadmap: RoadmapEntry[] = [
   { id: "webhooks", label: "Outbound webhooks", status: "soon", category: "developer", notifySource: "coming_soon:webhooks", summary: "Subscribe to events with retries and signing." },
   { id: "zapier", label: "Zapier integration", status: "soon", category: "developer", notifySource: "coming_soon:zapier", summary: "Trigger and action templates for thousands of apps." },
   { id: "slack", label: "Slack notifications", status: "soon", category: "comms", notifySource: "coming_soon:slack", summary: "Pipe critical events into a Slack channel." },
-  { id: "live-chat", label: "Live chat widget", status: "soon", category: "comms", notifySource: "coming_soon:live_chat", summary: "Drop-in Crisp/Intercom adapter for in-app conversations." },
-  { id: "blog", label: "Built-in blog", status: "soon", category: "marketing", notifySource: "coming_soon:blog", summary: "MDX-powered blog with SEO baked in.", href: "/blog" },
+  { id: "live-chat", label: "AI support chat", status: "shipped", category: "comms", summary: "Anonymous AI assistant on marketing pages, rate-limited per IP." },
+  { id: "blog", label: "Built-in blog", status: "shipped", category: "marketing", summary: "Markdown blog with categories and tags, admin editor included.", href: "/blog" },
   { id: "customers", label: "Customer stories", status: "soon", category: "marketing", notifySource: "coming_soon:customers", summary: "Case-study templates and a logo wall.", href: "/customers" },
   { id: "data-export", label: "Self-serve data export", status: "shipped", category: "compliance", href: "/dashboard/settings/data", summary: "Download all your data as JSON. Self-serve account deletion still on the way." },
 

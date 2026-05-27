@@ -54,10 +54,12 @@ export const featureStatus: FeatureStatusEntry[] = [
   },
   {
     id: "live-chat",
-    label: "Live chat widget",
-    status: "soon",
-    note: "Not bundled — drop in Crisp, Intercom, or similar when ready.",
+    label: "AI support chat",
+    status: "shipped",
+    note: "Anonymous AI assistant on every marketing page, rate-limited per IP.",
   },
+  { id: "blog", label: "Blog with categories & tags", status: "shipped" },
+  { id: "status-page", label: "Self-hosted status page", status: "shipped" },
 ];
 
 export const isShipped = (id: string) =>

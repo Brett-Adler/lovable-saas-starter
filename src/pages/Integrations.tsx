@@ -22,7 +22,7 @@ const integrations: Integration[] = [
   { name: "Twilio", description: "SMS OTP login for high-trust auth.", status: "setup", note: "Add TWILIO_ACCOUNT_SID, AUTH_TOKEN, FROM_NUMBER." },
   { name: "Web Push (VAPID)", description: "Browser push notifications.", status: "setup", note: "Generate VAPID keys (public, private, subject)." },
   { name: "SAML SSO", description: "Okta, Azure AD, OneLogin, JumpCloud.", status: "setup", href: "/dashboard/organization/sso" },
-  { name: "Crisp / Intercom", description: "Live chat widget.", status: "soon" },
+  { name: "AI support chat", description: "First-party AI assistant powered by Lovable AI.", status: "shipped" },
   { name: "Slack", description: "Pipe events into a channel.", status: "soon" },
   { name: "Zapier", description: "Triggers and actions across 6,000+ apps.", status: "soon" },
   { name: "Outbound webhooks", description: "Subscribe to events with retries and signing.", status: "soon" },
