@@ -172,7 +172,7 @@ export const AdminShell = ({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-dvh flex items-center justify-center bg-background">
         <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
       </div>
     );
@@ -180,7 +180,7 @@ export const AdminShell = ({
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-6">
+      <div className="min-h-dvh flex items-center justify-center bg-background p-6">
         <Card className="max-w-md w-full">
           <CardHeader>
             <CardTitle>Admins only</CardTitle>
@@ -202,7 +202,7 @@ export const AdminShell = ({
   return (
     <>
       <NoIndex />
-    <div className="min-h-screen flex bg-background">
+    <div className="min-h-dvh flex bg-background">
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex w-64 flex-col border-r border-border bg-card">
         <div className="px-6 py-5 border-b border-border flex items-center gap-2">

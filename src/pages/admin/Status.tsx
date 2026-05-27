@@ -170,7 +170,7 @@ const AdminStatus = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                <Button variant="ghost" size="icon" onClick={() => deleteComponent(c.id)} className="text-destructive">
+                <Button variant="ghost" size="icon" aria-label="Delete component" onClick={() => deleteComponent(c.id)} className="text-destructive">
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
@@ -258,7 +258,7 @@ const AdminStatus = () => {
                           Resolve
                         </Button>
                       )}
-                      <Button size="icon" variant="ghost" onClick={() => deleteIncident(inc.id)} className="text-destructive h-8 w-8">
+                      <Button size="icon" variant="ghost" aria-label="Delete incident" onClick={() => deleteIncident(inc.id)} className="text-destructive h-8 w-8">
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
                     </div>

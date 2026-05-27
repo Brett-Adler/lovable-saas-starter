@@ -8,7 +8,7 @@ const CheckoutReturn = () => {
   const sessionId = searchParams.get("session_id");
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-background">
+    <div className="min-h-dvh flex items-center justify-center p-6 bg-background">
       <Card className="max-w-md w-full">
         <CardHeader>
           {sessionId ? (
