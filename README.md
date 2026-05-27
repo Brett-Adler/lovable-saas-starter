@@ -46,7 +46,83 @@ Mirrors `/pricing` — keep the two in sync when you change either.
 
 The 14-day trial is set in `supabase/functions/create-checkout/index.ts`.
 
-## Quick start
+## Use this starter (pick one)
+
+There are three ways to get started. Pick the one that matches how you work:
+
+- **Remix on Lovable** — one-click fork of the live project with Cloud preconfigured. Best for non-developers.
+- **Customize with a prompt** — once remixed, rebrand or pivot the whole app in a single message.
+- **Clone from GitHub** — keep the code in your own repo and run it locally. Best for a developer workflow.
+
+### 1. Remix on Lovable
+
+1. Open the [live demo](https://lovable-saas-starter.lovable.app) or the
+   [Lovable project page](https://lovable.dev/projects/65731117-aac8-4723-ab30-aec22d01517c).
+2. Click **Remix** in the top bar — or use the direct link:
+   <https://lovable.dev/projects/65731117-aac8-4723-ab30-aec22d01517c?remix=1>
+3. Sign in. Lovable copies the code and provisions a fresh Lovable Cloud
+   backend for you automatically.
+4. Open your new project and start prompting — it's fully isolated from the
+   original.
+
+### 2. Customize with one prompt
+
+Paste any of these into Lovable chat after remixing. Each is intentionally
+one self-contained message.
+
+**Full rebrand**
+
+```
+Rebrand this app as "Acme" — a project management tool for design teams.
+Use a calm sage + cream palette, Inter for body and Space Grotesk for headings.
+Update the home page hero, pricing copy, About page, and FAQ to match.
+Replace "SaaS Starter" with "Acme" across logos, footer, and metadata.
+```
+
+**Change pricing**
+
+```
+Change pricing to three tiers: Starter $0, Pro $19/mo, Business $49/mo,
+with a 20% annual discount. Update /pricing, the landing teaser, and the
+Stripe products in the checkout edge function. Add a changelog entry.
+```
+
+**Pivot to a niche**
+
+```
+Turn this into a SaaS for fitness studios. Rewrite the marketing copy on
+/, /about, /pricing, and the FAQ to speak to studio owners. Keep auth,
+billing, teams, and admin exactly as-is.
+```
+
+**Swap a provider in docs**
+
+```
+Update README and the /readme page to reference Postmark instead of Resend
+for marketing email. Don't change any edge functions or runtime behavior —
+docs only.
+```
+
+### 3. Clone from GitHub
+
+In your Lovable project, open **Settings → GitHub** and connect your
+account. Lovable creates a repo and keeps it two-way synced with the editor
+(see <https://docs.lovable.dev/integrations/git>). Then locally:
+
+```bash
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
+npm install        # or: bun install
+npm run dev        # http://localhost:8080
+```
+
+The `.env` file (Lovable Cloud URL + anon key) is generated and synced
+automatically once the project is linked to Lovable, so your local dev
+server talks to the same Cloud backend as the editor preview. Any push to
+the connected branch shows up in Lovable; any prompt in Lovable commits
+back to GitHub.
+
+## Quick start (already linked to Lovable)
 
 ```bash
 npm install
