@@ -38,6 +38,8 @@ const EMPTY: SsoConfig = {
 
 const OrgSso = () => {
   const { currentOrg } = useOrganization();
+  const { data: settings } = useSiteSettings();
+  const supportEmail = settings?.contact_email ?? "support@example.com";
   const [config, setConfig] = useState<SsoConfig>(EMPTY);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
