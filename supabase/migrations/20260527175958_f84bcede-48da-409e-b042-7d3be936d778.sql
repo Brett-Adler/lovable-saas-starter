@@ -1,0 +1,31 @@
+-- Identify admins to preserve
+WITH admin_ids AS (
+  SELECT user_id FROM public.user_roles WHERE role = 'admin'
+)
+-- Delete in FK-safe order
+, _1 AS (DELETE FROM public.marketing_campaign_recipients RETURNING 1)
+, _2 AS (DELETE FROM public.marketing_campaigns RETURNING 1)
+, _3 AS (DELETE FROM public.marketing_segments RETURNING 1)
+, _4 AS (DELETE FROM public.marketing_subscribers RETURNING 1)
+, _5 AS (DELETE FROM public.suppressed_emails RETURNING 1)
+, _6 AS (DELETE FROM public.email_send_log RETURNING 1)
+, _7 AS (DELETE FROM public.email_unsubscribe_tokens RETURNING 1)
+, _8 AS (DELETE FROM public.leads RETURNING 1)
+, _9 AS (DELETE FROM public.blog_post_tags RETURNING 1)
+, _10 AS (DELETE FROM public.blog_posts RETURNING 1)
+, _11 AS (DELETE FROM public.blog_tags RETURNING 1)
+, _12 AS (DELETE FROM public.blog_categories RETURNING 1)
+, _13 AS (DELETE FROM public.audit_log RETURNING 1)
+, _14 AS (DELETE FROM public.analytics_events RETURNING 1)
+, _15 AS (DELETE FROM public.notifications WHERE user_id NOT IN (SELECT user_id FROM admin_ids) RETURNING 1)
+, _16 AS (DELETE FROM public.notification_preferences WHERE user_id NOT IN (SELECT user_id FROM admin_ids) RETURNING 1)
+, _17 AS (DELETE FROM public.push_subscriptions WHERE user_id NOT IN (SELECT user_id FROM admin_ids) RETURNING 1)
+, _18 AS (DELETE FROM public.subscriptions WHERE user_id IS NULL OR user_id NOT IN (SELECT user_id FROM admin_ids) RETURNING 1)
+, _19 AS (DELETE FROM public.organization_invites RETURNING 1)
+, _20 AS (DELETE FROM public.organization_members WHERE user_id NOT IN (SELECT user_id FROM admin_ids) RETURNING 1)
+, _21 AS (DELETE FROM public.org_sso_config WHERE organization_id NOT IN (SELECT organization_id FROM public.organization_members) RETURNING 1)
+, _22 AS (DELETE FROM public.organizations WHERE id NOT IN (SELECT organization_id FROM public.organization_members) RETURNING 1)
+, _23 AS (DELETE FROM public.user_roles WHERE user_id NOT IN (SELECT user_id FROM admin_ids) RETURNING 1)
+, _24 AS (DELETE FROM public.profiles WHERE id NOT IN (SELECT user_id FROM admin_ids) RETURNING 1)
+, _25 AS (DELETE FROM auth.users WHERE id NOT IN (SELECT user_id FROM admin_ids) RETURNING 1)
+SELECT 1;
