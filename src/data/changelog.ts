@@ -27,6 +27,14 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-27",
+    title: "Template hardening: realtime + site settings",
+    changes: [
+      { type: "security", text: "Realtime channels now require subscribers' topic name to include their own user ID — users can no longer listen in on other users' notification or subscription streams." },
+      { type: "security", text: "Public `site_settings` reads no longer expose internal `from_email` and `reply_to` fields. Admin pages use a new `useAdminSiteSettings` hook." },
+    ],
+  },
+  {
+    date: "2026-05-27",
     title: "AI support chat, blog, and real status page",
     changes: [
       { type: "added", text: "First-party AI support chat widget on every marketing page — anonymous, rate-limited to 15 messages/IP/day, powered by Lovable AI Gateway." },

@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
-import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useAdminSiteSettings } from "@/hooks/useSiteSettings";
 import { toast } from "sonner";
 import { AdminShell } from "@/components/admin/AdminShell";
 import {
@@ -41,7 +41,7 @@ const empty: Partial<Campaign> = {
 
 export default function AdminBroadcasts() {
   const { isAdmin } = useUserRoles();
-  const { data: settings } = useSiteSettings();
+  const { data: settings } = useAdminSiteSettings();
   const [list, setList] = useState<Campaign[]>([]);
   const [fetching, setFetching] = useState(true);
   const [editing, setEditing] = useState<Partial<Campaign>>(empty);
