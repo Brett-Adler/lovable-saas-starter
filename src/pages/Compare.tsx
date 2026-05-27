@@ -28,6 +28,7 @@ const Compare = () => (
         <TemplatePlaceholderRibbon
           id="compare-page"
           message="Swap the table below with a real competitor comparison once you know who you compete with."
+          hint="Visible only on Lovable preview hosts — never shown on your custom domain."
         />
 
         <div className="text-center mb-12">

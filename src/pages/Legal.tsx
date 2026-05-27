@@ -32,6 +32,7 @@ const Legal = ({ title, kind }: LegalProps) => {
             id={`legal-${kind}`}
             className="mb-6"
             message={`Placeholder ${kind} text — replace with your own before launch.`}
+            hint="Visible only on Lovable preview hosts — never shown on your custom domain."
           />
           <Badge variant="outline" className="mb-4">Legal</Badge>
           <h1 className="text-4xl md:text-5xl font-bold">{title}</h1>

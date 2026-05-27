@@ -22,6 +22,7 @@ const About = () => (
           id="about-copy"
           className="mb-6"
           message="Template copy — personalize this About page before launch."
+          hint="Visible only on Lovable preview hosts — never shown on your custom domain."
         />
         <Badge variant="outline" className="mb-4">About</Badge>
         <h1 className="text-4xl md:text-6xl font-bold">We build the boring stuff so you don't have to.</h1>
