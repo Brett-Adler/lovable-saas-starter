@@ -1,13 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, Download, Loader2, MailMinus, Search } from "lucide-react";
+import { Download, Loader2, MailMinus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Logo } from "@/components/Logo";
-import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -17,6 +14,7 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 type Subscriber = {
   id: string;
@@ -32,8 +30,7 @@ type Subscriber = {
 const STATUSES = ["all", "subscribed", "pending", "unsubscribed", "bounced"] as const;
 
 export default function AdminSubscribers() {
-  const { isAdmin, loading } = useUserRoles();
-  const { signOut } = useAuth();
+  const { isAdmin } = useUserRoles();
   const [rows, setRows] = useState<Subscriber[]>([]);
   const [fetching, setFetching] = useState(true);
   const [status, setStatus] = useState<(typeof STATUSES)[number]>("all");
@@ -109,51 +106,11 @@ export default function AdminSubscribers() {
     URL.revokeObjectURL(url);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen grid place-items-center">
-        <Loader2 className="h-6 w-6 animate-spin" />
-      </div>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen grid place-items-center p-6">
-        <Card className="max-w-md w-full">
-          <CardHeader>
-            <CardTitle>Admins only</CardTitle>
-            <CardDescription>You don't have permission to view this page.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild variant="outline" className="w-full">
-              <Link to="/dashboard"><ArrowLeft className="h-4 w-4" />Back</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const description = `${counts.subscribed} confirmed · ${counts.pending} pending · ${counts.unsubscribed} unsubscribed`;
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="container flex items-center justify-between py-4">
-          <Logo />
-          <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
-        </div>
-      </header>
-      <main className="container py-12 max-w-6xl">
-        <Button asChild variant="ghost" size="sm" className="mb-4">
-          <Link to="/admin"><ArrowLeft className="h-4 w-4" />Back to admin</Link>
-        </Button>
-        <h1 className="text-3xl font-bold mb-2">Newsletter subscribers</h1>
-        <p className="text-muted-foreground mb-6">
-          Curtis is tracking {counts.subscribed} confirmed, {counts.pending} pending, and{" "}
-          {counts.unsubscribed} unsubscribed.
-        </p>
-
-        <Card>
+    <AdminShell title="Newsletter subscribers" description={description}>
+      <Card>
           <CardContent className="pt-6">
             <div className="flex flex-wrap items-end gap-3 mb-4">
               <div className="flex-1 min-w-[200px]">
