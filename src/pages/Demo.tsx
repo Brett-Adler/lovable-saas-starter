@@ -49,7 +49,7 @@ const Demo = () => {
 
   return (
     <MarketingLayout>
-      <PageSeo path="/demo" title="Book a demo" description="See SaaS Starter in action — 20 minutes, tailored to your use case." />
+      <PageSeo path="/demo" title="Book a demo" description="See SaaS Starter in action — a 30-minute walkthrough tailored to your use case." />
       <section className="container py-20 md:py-28">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-10">
@@ -66,7 +66,7 @@ const Demo = () => {
             {done ? (
               <div className="text-center py-8">
                 <h2 className="text-xl font-semibold">Got it — we'll be in touch.</h2>
-                <p className="mt-2 text-muted-foreground">Check your inbox for a calendar link.</p>
+                <p className="mt-2 text-muted-foreground">We received your request and will follow up by email.</p>
               </div>
             ) : (
               <form onSubmit={onSubmit} className="space-y-4">
