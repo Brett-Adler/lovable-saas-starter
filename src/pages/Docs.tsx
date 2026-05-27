@@ -4,9 +4,10 @@ import { ReadmeContent } from "@/components/docs/ReadmeContent";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Activity, BookOpen, GitBranch, History, ShieldCheck } from "lucide-react";
+import { Activity, BookOpen, GitBranch, History, Rocket, ShieldCheck } from "lucide-react";
 
 const quickLinks = [
+  { to: "/launch", label: "Launch checklist", icon: Rocket, desc: "Every credential to flip from preview to production." },
   { to: "/roadmap", label: "Roadmap", icon: GitBranch, desc: "What's live, in setup, and on the way." },
   { to: "/changelog", label: "Changelog", icon: History, desc: "Every user-visible release in order." },
   { to: "/status", label: "Status", icon: Activity, desc: "System health and incident history." },

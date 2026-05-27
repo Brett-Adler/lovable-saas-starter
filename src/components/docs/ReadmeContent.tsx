@@ -195,7 +195,9 @@ npm run dev        # http://localhost:8080`}
                 <li><Code>/about</Code>, <Code>/contact</Code></li>
                 <li><Code>/demo</Code>, <Code>/waitlist</Code>, <Code>/newsletter</Code></li>
                 <li><Code>/privacy</Code>, <Code>/terms</Code></li>
-                <li><Code>/readme</Code> (this page)</li>
+                <li><Code>/docs</Code>, <Code>/readme</Code>, <Code>/launch</Code>, <Code>/changelog</Code>, <Code>/roadmap</Code></li>
+                <li><Code>/integrations</Code>, <Code>/security</Code>, <Code>/status</Code>, <Code>/compare</Code></li>
+                <li><Code>/customers</Code>, <Code>/blog</Code>, <Code>/sitemap</Code>, <Code>/accessibility</Code></li>
               </ul>
             </Card>
             <Card className="p-4">
@@ -320,12 +322,12 @@ npm run dev        # http://localhost:8080`}
             <li>✅ <strong className="text-foreground">Phase 3</strong> — Authentication (email, Google, Apple, password reset)</li>
             <li>✅ <strong className="text-foreground">Phase 4</strong> — Organizations, invites, role-based UI</li>
             <li>✅ <strong className="text-foreground">Phase 5</strong> — Stripe billing</li>
-            <li>✅ <strong className="text-foreground">Phase 6</strong> — Marketing email (Resend)</li>
+            <li>✅ <strong className="text-foreground">Phase 6</strong> — Marketing email pipeline (wired — add <code>RESEND_API_KEY</code> + verified domain to enable)</li>
             <li>✅ <strong className="text-foreground">Phase 7</strong> — In-app notifications (bell + Realtime)</li>
             <li>✅ <strong className="text-foreground">Phase 8</strong> — Self-hosted analytics dashboard</li>
             <li>✅ <strong className="text-foreground">Phase 9</strong> — Admin tools (users, orgs, leads, campaigns, audit log)</li>
             <li>✅ <strong className="text-foreground">Phase 10</strong> — SMS/OTP auth, Web Push, SSO/SAML scaffolding</li>
-            <li>⏳ <strong className="text-foreground">Phase 11</strong> — Live credentials swap (Stripe, Resend, Twilio, VAPID, Apple, SAML)</li>
+            <li>⏳ <strong className="text-foreground">Phase 11</strong> — Live credentials swap (Stripe live, Resend, Twilio, VAPID, Apple, SAML) — see <Link to="/launch" className="text-primary hover:underline">/launch</Link></li>
           </ul>
         </Section>
 
