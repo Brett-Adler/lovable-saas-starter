@@ -1,91 +1,42 @@
-# SEO improvements
+## Goal
+Create a ~20-second branded explainer video for the home page that shows visitors how this SaaS starter helps them ship in days, not months. Render to MP4 and embed it on `/` (Index.tsx), replacing the current static mock dashboard preview in the hero.
 
-Address every actionable finding from the SEO scan, plus give admins a UI to control the SEO fields that ship in the **initial HTML payload** (not just client-side after hydration — important for social crawlers like LinkedIn/Slack that don't run JS).
+## Creative direction
+- **Aesthetic**: Tech Product — clean, confident, slightly cinematic. Matches the existing site (Inter/sans, primary blue, gradient mesh background, dark+light mode polish).
+- **Palette**: pulled from `src/index.css` tokens — primary blue, soft mesh gradient background, neutral foreground, success green accents. Stated as hex in the script.
+- **Typography**: Inter (body) + Space Grotesk (display) via `@remotion/google-fonts`, to match the site's font stack.
+- **Motion system**: smooth spring-in entrances (damping 20, stiffness 200), 18–24f staggered reveals, subtle parallax on background mesh, `wipe` + `fade` transitions between scenes. One accent moment per scene (number count-up, checkmark pop, logo lockup).
+- **Duration**: 600 frames @ 30fps = 20s. 1920×1080.
 
-## 1. Database: admin-editable SEO
+## Scene plan
+1. **Hook (0–3s)** — "Build your SaaS in days, not months." Large kinetic type, mesh gradient background, primary CTA color pulse.
+2. **The problem (3–6s)** — Stack of greyed-out boring tasks (Auth, Billing, Emails, Teams, Analytics…) sliding in, then crossed off one by one.
+3. **What's included (6–11s)** — Bento grid of 6 feature tiles (Lock, CreditCard, Mail, Users, BarChart3, Shield) springing in with staggered icons + labels.
+4. **Proof / numbers (11–15s)** — Three count-up stat cards: "14-day trial", "8+ features", "Days, not months." Mirrors the in-page dashboard mock styling.
+5. **Close (15–20s)** — Logo lockup, tagline "Replace the branding. Ship.", subtle CTA chip "Start free →" (non-interactive visual only).
 
-New migration adds two tables:
+## Technical approach
+- Scaffold `remotion/` project per the video-creator skill (bun init, install Remotion + transitions + google-fonts + musl compositor, patch gnu compositor binary, symlink ffmpeg/ffprobe).
+- Files: `src/index.ts`, `src/Root.tsx`, `src/MainVideo.tsx`, `src/scenes/Scene1..5.tsx`, `src/components/PersistentBackground.tsx`.
+- All motion via `useCurrentFrame()` + `interpolate()` / `spring()`. No CSS animation.
+- `<TransitionSeries>` with `fade` and `wipe` between scenes; total duration accounts for transition overlaps.
+- Render via `scripts/render-remotion.mjs` (programmatic, `chromeMode: "chrome-for-testing"`, `muted: true`, concurrency 1) to `/mnt/documents/explainer.mp4`.
+- Spot-check 3 key frames with `bunx remotion still` before final render.
 
-- **`site_seo`** (singleton, `id = 1`) — global defaults
-  - `site_name`, `default_title`, `title_template` (e.g. `"%s — Acme"`), `default_description`, `default_og_image_url` (absolute), `twitter_handle`, `theme_color`, `organization_json_ld` (jsonb), `base_url`
-- **`seo_pages`** — per-route overrides
-  - `path` (PK, e.g. `/pricing`), `title`, `description`, `og_image_url`, `keywords`, `noindex` (bool), `canonical_override`, `json_ld` (jsonb, optional extra schema)
+## Home-page integration
+- Copy the rendered MP4 into `public/explainer.mp4`.
+- In `src/pages/Index.tsx`, replace the faux-dashboard `<Card>` block inside the hero (currently the `aspect-[16/9]` mock) with an autoplay, muted, loop, playsInline `<video>` wrapped in the same `<Card>` chrome (window dots + URL bar preserved) so the hero layout is unchanged.
+- Add a `poster` image (rendered still from frame 30) for fast first paint.
+- Add a one-line entry to `src/data/changelog.ts` under today's date: `added` — "Home page explainer video".
 
-RLS: public `SELECT` (needed by build script & client), `INSERT/UPDATE/DELETE` restricted to `has_role(auth.uid(), 'admin')`. Seed `site_seo` with current `index.html` values.
+## Out of scope
+- No audio/voiceover (muted autoplay; ffmpeg in sandbox lacks AAC anyway).
+- No changes to other marketing pages, no new routes, no DB/edge changes.
+- No SEO changes beyond the existing PageSeo on `/`.
 
-## 2. Per-route head with `react-helmet-async`
-
-- Install `react-helmet-async`, wrap `<App>` with `<HelmetProvider>` in `src/main.tsx`.
-- New `src/components/seo/PageSeo.tsx` — reads `useSiteSeo()` + optional per-page props, renders `<Helmet>` with title (via template), description, canonical (self-referential, absolute), og:* (absolute URLs), twitter:*, optional JSON-LD.
-- New `src/hooks/useSiteSeo.ts` — TanStack Query against `site_seo` + `seo_pages`.
-- Drop `<PageSeo path="/pricing" />` (etc.) into every public route: `Index`, `Pricing`, `About`, `Contact`, `Newsletter`, `Demo`, `Waitlist`, `Legal` (×3), `Accessibility`, `Sitemap`, `Readme`, `Changelog`.
-- Auth/dashboard/admin/checkout routes get a `<PageSeo noindex />` so robots stay out even if crawled.
-- Remove the duplicate canonical from `index.html` (Helmet owns canonical per-route); keep static og:* in `index.html` as a fallback for non-JS crawlers.
-
-## 3. Bake SEO into the initial HTML payload
-
-The user's "load with initial page load" requirement — critical for non-JS crawlers. Vite SPA, so we do this at build time, not SSR:
-
-- New `scripts/sync-seo-to-html.ts` (added to `predev` + `prebuild`, after the sitemap step):
-  1. Fetches `site_seo` + `seo_pages` from Supabase using the public anon key.
-  2. Rewrites `index.html`: replaces title, meta description, canonical, og:title/description/url/image (absolute), twitter:*, theme-color, and injects/updates the `Organization` + `WebSite` JSON-LD blocks. Uses delimited markers (`<!-- seo:start -->…<!-- seo:end -->`) so the rewrite is idempotent.
-  3. Writes `public/llms.txt` from a route allow-list + the global `site_name` / `default_description`.
-  4. Regenerates `public/sitemap.xml` (merge existing route list with `seo_pages.noindex` filter; adds `<lastmod>` from `seo_pages.updated_at`).
-- Failure of the Supabase fetch is non-fatal — falls back to the file's current values so offline dev still works.
-- Admin-page UX: after saving, show a toast explaining changes ship to the initial HTML on the next deploy/publish (since the rewrite happens at build time).
-
-This means the homepage's title/description/og/JSON-LD always render correctly to LinkedIn/Slack/Google's first fetch. Per-route deep-links additionally get Helmet for JS-aware crawlers (Googlebot).
-
-## 4. Structured data (fixes `agent_metadata:structured_data`)
-
-- Homepage: `Organization` + `WebSite` (baked into `index.html` via sync script) and `FAQPage` (via Helmet from existing FAQ section data).
-- `/pricing`: `Product` + `Offer` for each tier (via Helmet, sourced from existing pricing tier data).
-- `/changelog`: keep existing `ItemList`.
-- `BreadcrumbList` helper in `PageSeo` for deeper routes.
-
-## 5. Admin UI
-
-New `src/pages/admin/SEO.tsx` (linked from `AdminIndex`):
-
-- **Global tab** — edits `site_seo` fields. Live preview card showing how the homepage `<title>` / description / OG card will look.
-- **Pages tab** — table of routes (auto-discovered from a constant `PUBLIC_ROUTES` list), each row editable inline: title, description, og image, noindex toggle, canonical override.
-- Save calls Supabase upsert; explanatory banner: "Changes appear in the live HTML after the next publish."
-- Optional "Copy current index.html values into defaults" one-click seeding.
-
-## 6. Fix existing findings
-
-- `agent_metadata:metadata_quality` — fixed by §2 (per-route titles, descriptions, self-referential canonicals).
-- `agent_metadata:social_preview` — fixed by §3 (absolute og:image URL in index.html) and §2 (per-route og:* via Helmet).
-- `agent_metadata:structured_data` — fixed by §4.
-- `http:sitemap` — sitemap already exists; the scan is stale. Mark fixed after verification.
-- `http:llms_txt` — fixed by §3 (`/llms.txt` generated at build).
-- `lighthouse:lighthouse_accessibility` — out of scope (separate contrast issue). Will leave as-is unless the user asks.
-- `gsc:gsc` — Google Search Console connection requires the user; will mention in the closing message rather than auto-trigger.
-
-## 7. Files
-
-**New**
-- `supabase/migrations/<ts>_seo_tables.sql`
-- `src/hooks/useSiteSeo.ts`
-- `src/components/seo/PageSeo.tsx`
-- `src/pages/admin/SEO.tsx`
-- `scripts/sync-seo-to-html.ts`
-- `public/llms.txt` (generated, but commit a placeholder)
-
-**Edited**
-- `package.json` — add `react-helmet-async`, update `predev`/`prebuild`
-- `src/main.tsx` — wrap with `HelmetProvider`
-- `index.html` — add `<!-- seo:start --><!-- seo:end -->` markers, drop hardcoded canonical
-- `src/App.tsx` — add `/admin/seo` route
-- `src/pages/admin/AdminIndex.tsx` — add SEO card
-- All public-route page components — add `<PageSeo />`
-- Auth/dashboard/admin/checkout pages — add `<PageSeo noindex />`
-- `scripts/generate-sitemap.ts` — extend with DB merge (or replace with sync script's sitemap step)
-- `src/data/changelog.ts` — log the SEO release
-- `mem://index.md` — note the SEO sync flow
-
-## 8. Out of scope
-
-- True SSR / prerendering of every route (would require migrating to TanStack Start or `vite-plugin-prerender`). Calling out as a future option if the user wants per-route initial HTML for non-JS crawlers.
-- Connecting Google Search Console (user action).
-- Fixing the Lighthouse contrast finding (separate visual change).
+## Deliverables
+- `/mnt/documents/explainer.mp4` (downloadable)
+- `public/explainer.mp4` + `public/explainer-poster.jpg` in the repo
+- Updated `src/pages/Index.tsx` hero
+- Versioned `remotion/` source folder so the video can be re-rendered or tweaked later
+- Changelog entry
