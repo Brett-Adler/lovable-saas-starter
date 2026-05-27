@@ -81,7 +81,10 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
             ))}
         </nav>
         <div className="px-3 py-4 border-t border-border space-y-2">
-          <div className="px-3 py-2 text-xs text-muted-foreground truncate">{user?.email}</div>
+          <div className="flex items-center justify-between px-3">
+            <div className="text-xs text-muted-foreground truncate">{user?.email}</div>
+            <NotificationBell />
+          </div>
           <Button variant="outline" size="sm" className="w-full" onClick={handleSignOut}>
             <LogOut className="h-4 w-4" />
             Sign out
