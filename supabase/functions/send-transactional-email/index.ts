@@ -4,11 +4,11 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { TEMPLATES } from '../_shared/transactional-email-templates/registry.ts'
 
-// Configuration baked in at scaffold time — do NOT change these manually.
-// To update, re-run the email domain setup flow.
-const SITE_NAME = "SaaS Starter"
-const SENDER_DOMAIN = "notify.voicept.com"
-const FROM_DOMAIN = "notify.voicept.com"
+// Configuration — set PUBLIC_SITE_NAME and SENDER_DOMAIN in edge function secrets.
+// SENDER_DOMAIN must be a verified Resend domain.
+const SITE_NAME = Deno.env.get('PUBLIC_SITE_NAME') ?? 'Your App'
+const SENDER_DOMAIN = Deno.env.get('SENDER_DOMAIN') ?? 'mail.example.com'
+const FROM_DOMAIN = Deno.env.get('FROM_DOMAIN') ?? SENDER_DOMAIN
 
 // Templates that authenticated end-users are allowed to trigger and the
 // authorization rule for each. Anything not in this map requires service_role.

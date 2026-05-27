@@ -1,9 +1,11 @@
 // Runs before `vite dev` and `vite build` (predev/prebuild hooks); writes public/sitemap.xml.
+// Reads PUBLIC_SITE_URL from env. When unset, emits relative URLs so crawlers
+// resolve them against the actual host at request time.
 
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 
-const BASE_URL = "https://saas-starter-suite.lovable.app";
+const BASE_URL = (process.env.PUBLIC_SITE_URL ?? process.env.VITE_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
 
 interface SitemapEntry {
   path: string;
@@ -50,4 +52,4 @@ function generateSitemap(entries: SitemapEntry[]) {
 }
 
 writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
-console.log(`sitemap.xml written (${entries.length} entries)`);
+console.log(`sitemap.xml written (${entries.length} entries${BASE_URL ? `, base=${BASE_URL}` : `, relative URLs — set PUBLIC_SITE_URL`})`);
