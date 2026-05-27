@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { z } from "zod";
-import { Loader2, Mail, MessageSquare, Send } from "lucide-react";
+import { Loader2, Mail, Clock, Send, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useUserRoles } from "@/hooks/useUserRole";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Name required").max(100),
