@@ -28,10 +28,14 @@ const Waitlist = () => {
     if (!parsed.success) { toast.error(parsed.error.issues[0].message); return; }
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from("lead_submissions" as never)
-        .insert({ type: "waitlist", payload: parsed.data, status: "new" } as never);
-      if (error && !error.message.includes("does not exist")) throw error;
+      const { error } = await supabase.from("leads").insert({
+        kind: "waitlist",
+        name: parsed.data.name || null,
+        email: parsed.data.email,
+        source: "waitlist",
+        message: parsed.data.use_case || null,
+      });
+      if (error) throw error;
       setDone(true);
       toast.success("You're on the list!");
     } catch (err: unknown) {
