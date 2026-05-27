@@ -43,10 +43,14 @@ const PUBLIC_ROUTES: Array<{
   { path: "/compare", changefreq: "monthly", priority: "0.6", llmsLabel: "Compare", llmsDesc: "Compare with alternatives." },
   { path: "/customers", changefreq: "monthly", priority: "0.6", llmsLabel: "Customers", llmsDesc: "Customer stories." },
   { path: "/blog", changefreq: "weekly", priority: "0.7", llmsLabel: "Blog", llmsDesc: "Engineering and product notes." },
+  { path: "/checkout/return", changefreq: "yearly", priority: "0.2" },
+  { path: "/unsubscribe", changefreq: "yearly", priority: "0.2" },
+  { path: "/newsletter/confirm", changefreq: "yearly", priority: "0.2" },
   { path: "/security", changefreq: "monthly", priority: "0.5", llmsLabel: "Security", llmsDesc: "Security posture and controls." },
   { path: "/status", changefreq: "weekly", priority: "0.4", llmsLabel: "Status", llmsDesc: "System health and incidents." },
   { path: "/use-template/lovable", changefreq: "monthly", priority: "0.6", llmsLabel: "Use on Lovable", llmsDesc: "Step-by-step remix guide." },
   { path: "/use-template/github", changefreq: "monthly", priority: "0.6", llmsLabel: "Use on GitHub", llmsDesc: "Local clone-and-sync guide." },
+  { path: "/login", changefreq: "yearly", priority: "0.2" },
   { path: "/changelog", changefreq: "weekly", priority: "0.6", llmsLabel: "Changelog", llmsDesc: "Recent product updates." },
   { path: "/sitemap", changefreq: "monthly", priority: "0.3" },
   { path: "/privacy", changefreq: "yearly", priority: "0.3", llmsLabel: "Privacy Policy", llmsDesc: "Privacy practices." },
@@ -72,6 +76,12 @@ interface SeoPage {
   description: string | null;
   noindex: boolean;
   updated_at: string;
+}
+
+interface BlogPostSitemapRow {
+  slug: string;
+  updated_at: string;
+  published_at: string | null;
 }
 
 async function fetchJson<T>(path: string): Promise<T | null> {
