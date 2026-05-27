@@ -204,10 +204,15 @@ const Index = () => {
 
       {/* Testimonials */}
       <section className="container py-24">
-        <div className="max-w-2xl mx-auto text-center mb-16">
+        <div className="max-w-2xl mx-auto text-center mb-10">
           <Badge variant="outline" className="mb-4">Loved by builders</Badge>
           <h2 className="text-3xl md:text-5xl font-bold">Don't just take our word</h2>
         </div>
+        <TemplatePlaceholderRibbon
+          id="index-testimonials"
+          className="max-w-md mx-auto mb-8"
+          message="Placeholder testimonials — replace in src/pages/Index.tsx"
+        />
         <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((t) => (
             <Card key={t.name} className="p-6 border-border/60">
