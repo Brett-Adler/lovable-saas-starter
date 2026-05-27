@@ -52,6 +52,9 @@ export function PageSeo({ path, title, description, ogImage, noindex, jsonLd }: 
     else extraSchemas.push(jsonLd);
   }
 
+  const brand = (siteSeo?.brand_assets ?? {}) as Record<string, string>;
+  const themeColor = siteSeo?.theme_color ?? undefined;
+
   return (
     <Helmet>
       {finalTitle ? <title>{finalTitle}</title> : null}
@@ -59,6 +62,15 @@ export function PageSeo({ path, title, description, ogImage, noindex, jsonLd }: 
       {pageOverride?.keywords ? <meta name="keywords" content={pageOverride.keywords} /> : null}
       <link rel="canonical" href={canonical} />
       {shouldNoindex ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow" />}
+
+      {/* Brand-kit overrides (when an admin has published a kit). Override links so
+          Helmet replaces, rather than appends to, the defaults in index.html. */}
+      {themeColor ? <meta name="theme-color" content={themeColor} /> : null}
+      {brand["favicon.ico"] ? <link rel="icon" type="image/x-icon" href={brand["favicon.ico"]} /> : null}
+      {brand["favicon-32x32.png"] ? <link rel="icon" type="image/png" sizes="32x32" href={brand["favicon-32x32.png"]} /> : null}
+      {brand["favicon-16x16.png"] ? <link rel="icon" type="image/png" sizes="16x16" href={brand["favicon-16x16.png"]} /> : null}
+      {brand["apple-touch-icon.png"] ? <link rel="apple-touch-icon" sizes="180x180" href={brand["apple-touch-icon.png"]} /> : null}
+      {brand["site.webmanifest"] ? <link rel="manifest" href={brand["site.webmanifest"]} /> : null}
 
       {/* Open Graph */}
       <meta property="og:type" content={isHome ? "website" : "article"} />

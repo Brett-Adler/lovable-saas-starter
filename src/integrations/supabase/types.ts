@@ -781,7 +781,9 @@ export type Database = {
       }
       site_seo: {
         Row: {
+          background_color: string | null
           base_url: string | null
+          brand_assets: Json
           default_description: string | null
           default_og_image_url: string | null
           default_title: string | null
@@ -794,7 +796,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          background_color?: string | null
           base_url?: string | null
+          brand_assets?: Json
           default_description?: string | null
           default_og_image_url?: string | null
           default_title?: string | null
@@ -807,7 +811,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          background_color?: string | null
           base_url?: string | null
+          brand_assets?: Json
           default_description?: string | null
           default_og_image_url?: string | null
           default_title?: string | null

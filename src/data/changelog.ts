@@ -27,6 +27,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-27",
+    title: "Brand kit generator in admin",
+    changes: [
+      { type: "added", text: "New /admin/brand page: upload one logo and generate every favicon, iOS / Android / Windows icon, OG and Twitter social cards, splash screens, and PWA manifest." },
+      { type: "added", text: "Generated assets are published to a public brand-assets storage bucket and override the site's favicons, theme color, and navbar logo at runtime." },
+      { type: "added", text: "Download-all-as-zip and live previews of browser tab, home-screen icons, and social cards before publishing." },
+    ],
+  },
+  {
+    date: "2026-05-27",
     title: "Refreshed dashboard and admin overviews",
     changes: [
       { type: "added", text: "Dashboard now shows a getting-started checklist, subscription status, pending invites, recent notifications, and org activity." },
