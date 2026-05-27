@@ -151,8 +151,7 @@ const Subscriptions = () => {
             </TableBody>
           </Table>
         </Card>
-      </main>
-    </div>
+    </AdminShell>
   );
 };
 
