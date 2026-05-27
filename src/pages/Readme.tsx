@@ -180,11 +180,13 @@ const Readme = () => (
             <li>✅ <strong className="text-foreground">Phase 1–2</strong> — Branding, marketing site, legal scaffolding</li>
             <li>✅ <strong className="text-foreground">Phase 3</strong> — Authentication (email, Google, Apple, password reset)</li>
             <li>✅ <strong className="text-foreground">Phase 4</strong> — Organizations, invites, role-based UI</li>
-            <li>⏳ <strong className="text-foreground">Phase 5</strong> — Stripe billing</li>
-            <li>⏳ <strong className="text-foreground">Phase 6</strong> — Marketing email (Resend)</li>
-            <li>⏳ <strong className="text-foreground">Phase 7</strong> — In-app notifications</li>
-            <li>⏳ <strong className="text-foreground">Phase 8</strong> — Self-hosted analytics dashboard</li>
-            <li>⏳ <strong className="text-foreground">Phase 9</strong> — Admin tools (users, orgs, leads, campaigns)</li>
+            <li>✅ <strong className="text-foreground">Phase 5</strong> — Stripe billing</li>
+            <li>✅ <strong className="text-foreground">Phase 6</strong> — Marketing email (Resend)</li>
+            <li>✅ <strong className="text-foreground">Phase 7</strong> — In-app notifications (bell + Realtime)</li>
+            <li>✅ <strong className="text-foreground">Phase 8</strong> — Self-hosted analytics dashboard</li>
+            <li>✅ <strong className="text-foreground">Phase 9</strong> — Admin tools (users, orgs, leads, campaigns, audit log)</li>
+            <li>✅ <strong className="text-foreground">Phase 10</strong> — SMS/OTP auth, Web Push, SSO/SAML scaffolding</li>
+            <li>⏳ <strong className="text-foreground">Phase 11</strong> — Live credentials swap (Stripe, Resend, Twilio, VAPID, Apple, SAML)</li>
           </ul>
         </Section>
 
