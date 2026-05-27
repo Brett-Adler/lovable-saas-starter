@@ -55,7 +55,7 @@ const BlogPost = () => {
           : undefined,
         mainEntityOfPage: {
           "@type": "WebPage",
-          "@id": `https://lovable-saas-starter.lovable.app/blog/${slug}`,
+          "@id": `https://lovable-saas-starter.lovable.app/blog/${post.slug}`,
         },
       }
     : undefined;
