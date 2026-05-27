@@ -72,7 +72,9 @@ const Billing = () => {
                     {planLabel(subscription.price_id)}
                   </CardTitle>
                   <CardDescription className="mt-1">
-                    {subscription.cancel_at_period_end
+                    {subscription.status === "trialing"
+                      ? "Free trial — you won't be charged until it ends"
+                      : subscription.cancel_at_period_end
                       ? "Cancels at the end of the current period"
                       : "Renews automatically"}
                   </CardDescription>
@@ -85,7 +87,11 @@ const Billing = () => {
             <CardContent className="space-y-4">
               {subscription.current_period_end && (
                 <p className="text-sm text-muted-foreground">
-                  {subscription.cancel_at_period_end ? "Access ends " : "Next billing date: "}
+                  {subscription.status === "trialing"
+                    ? "Trial ends "
+                    : subscription.cancel_at_period_end
+                    ? "Access ends "
+                    : "Next billing date: "}
                   <span className="text-foreground font-medium">
                     {format(new Date(subscription.current_period_end), "MMMM d, yyyy")}
                   </span>
