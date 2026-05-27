@@ -740,6 +740,87 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_pages: {
+        Row: {
+          canonical_override: string | null
+          created_at: string
+          description: string | null
+          json_ld: Json | null
+          keywords: string | null
+          noindex: boolean
+          og_image_url: string | null
+          path: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          canonical_override?: string | null
+          created_at?: string
+          description?: string | null
+          json_ld?: Json | null
+          keywords?: string | null
+          noindex?: boolean
+          og_image_url?: string | null
+          path: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          canonical_override?: string | null
+          created_at?: string
+          description?: string | null
+          json_ld?: Json | null
+          keywords?: string | null
+          noindex?: boolean
+          og_image_url?: string | null
+          path?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_seo: {
+        Row: {
+          base_url: string | null
+          default_description: string | null
+          default_og_image_url: string | null
+          default_title: string | null
+          id: number
+          organization_json_ld: Json
+          site_name: string | null
+          theme_color: string | null
+          title_template: string | null
+          twitter_handle: string | null
+          updated_at: string
+        }
+        Insert: {
+          base_url?: string | null
+          default_description?: string | null
+          default_og_image_url?: string | null
+          default_title?: string | null
+          id?: number
+          organization_json_ld?: Json
+          site_name?: string | null
+          theme_color?: string | null
+          title_template?: string | null
+          twitter_handle?: string | null
+          updated_at?: string
+        }
+        Update: {
+          base_url?: string | null
+          default_description?: string | null
+          default_og_image_url?: string | null
+          default_title?: string | null
+          id?: number
+          organization_json_ld?: Json
+          site_name?: string | null
+          theme_color?: string | null
+          title_template?: string | null
+          twitter_handle?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           company_legal_name: string | null
