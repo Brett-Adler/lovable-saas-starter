@@ -127,7 +127,8 @@ function rewriteIndexHtml(seo: SiteSeo, base: string) {
     `<meta name="title" content="${escape(title)}" />`,
     `<meta name="description" content="${escape(description)}" />`,
     `<meta name="theme-color" content="${escape(themeColor)}" />`,
-    `<link rel="canonical" href="${base}/" />`,
+    // Canonical is emitted per-route via react-helmet-async (see src/components/seo/PageSeo.tsx)
+    // to avoid duplicate <link rel="canonical"> tags when Helmet appends a route-specific one.
     `<meta property="og:type" content="website" />`,
     `<meta property="og:url" content="${base}/" />`,
     `<meta property="og:title" content="${escape(title)}" />`,
