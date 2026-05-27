@@ -1,47 +1,81 @@
 ## Goal
-Make this starter easy for any Lovable user to take and run with. Add clear, action-oriented instructions covering the three ways someone might pick it up: (1) Remix the live Lovable project, (2) Customize it with one or a few prompts, (3) Clone it from GitHub and run locally. Reflect the same in both `README.md` (developer view) and the in-app `/readme` page (user view).
 
-## Scope
-Documentation only. No feature/code changes.
+Refresh `/dashboard` and `/admin` so both surface more of the data we already collect, and give both shells a more modern, consistent look. No new backend, no schema changes — purely frontend on existing tables, hooks, and the `admin-analytics-overview` edge function.
 
-## Changes
+## /dashboard (user overview)
 
-### 1. `src/pages/Readme.tsx`
-Add a new section "Use this starter" near the top, just below the existing **Quickstart** section, with three side-by-side cards:
+Replace the current 3-card layout in `src/pages/Dashboard.tsx` with a richer overview:
 
-- **Remix on Lovable** — one-click way to fork the live project. Steps: open the demo, click "Remix" in the top bar, sign in, get your own copy with Lovable Cloud preconfigured. Add a primary CTA button linking to `https://lovable.dev/projects/65731117-aac8-4723-ab30-aec22d01517c?remix=1` (using the actual Lovable project ID we have in context).
-- **Customize with one prompt** — show 3–4 ready-to-paste prompt examples that do the most common rebrands in a single shot. Examples:
-  1. *Rebrand* — "Rebrand this app as **Acme** — a project management tool for design teams. Use a calm sage + cream palette, Inter for body and Space Grotesk for headings. Update the home page hero, pricing copy, and About page to match. Replace the logo placeholder text with 'Acme'."
-  2. *Pricing* — "Change pricing to three tiers: Starter $0, Pro $19/mo, Business $49/mo with annual discounts. Update `/pricing`, the landing page teaser, and the changelog."
-  3. *Niche pivot* — "Turn this into a SaaS for fitness studios: replace the marketing copy on `/`, `/about`, `/pricing`, and the FAQ. Keep auth, billing, and admin as-is."
-  4. *Cloud-only swap* — "Swap the email provider copy from Resend to Postmark across the README and admin help text. Don't change any edge functions."
-  Each prompt is in a copy-friendly code block.
-- **Clone from GitHub** — bash snippet. Cover: connect Lovable → GitHub (Settings → GitHub), clone the repo, install with `npm i` (or `bun i`), run `npm run dev`. Note that Lovable Cloud env vars come from `.env` (auto-generated when the project is linked to Lovable) and that local dev still talks to the same Cloud backend.
+1. **Hero strip** — keep welcome, but add a compact org/plan badge row and a primary CTA tied to the next best action (create org, accept invite, finish billing, or "Invite teammates").
 
-Use the existing `Section` / `Card` / `Code` primitives already in the file. Add icons from `lucide-react` (`Sparkles`, `MessageSquare`, `Github`) to keep visual style consistent.
+2. **Getting started checklist** (new component `OnboardingChecklist.tsx`)
+   - Profile complete (display name set)
+   - Organization created
+   - Members invited (≥1 invite sent OR ≥2 members)
+   - Subscription active (via `useSubscription`)
+   - Push notifications enabled (`push_subscriptions` for current user)
+   - Auto-hides once all done.
 
-Also add one short paragraph at the very top of the page (before Quickstart) explaining the three paths and which one to pick.
+3. **Subscription status card** — uses existing `useSubscription`/`usePlan`. Shows plan name, status badge (active/trialing/past_due/canceled), period end, "Manage billing" → `/dashboard/billing`, upgrade nudge on free.
 
-### 2. `README.md`
-Mirror the same content in markdown. Add three new sections right after the existing intro / "What's included":
+4. **Invites + notifications row** (two cards side by side)
+   - Pending invites: query `organization_invites` for the user's email where `accepted_at IS NULL`, with inline Accept button linking to `/invite/:token`.
+   - Recent notifications: latest 5 rows from `notifications` for `auth.uid()`, mark-as-read on click, link to full list (`NotificationBell` already exists — this is a list preview).
 
-- **Use this starter (pick one)** — one-line description + bullet for each of the three paths.
-- **Remix on Lovable** — link + 4-step list.
-- **Customize with a prompt** — same 3–4 prompt examples as the in-app page, in fenced blocks.
-- **Clone from GitHub** — bash snippet, plus the note about Lovable → GitHub connection (`https://docs.lovable.dev/integrations/git` reference) and the env-file behavior.
+5. **Org activity feed** — last 8 entries from `audit_log` filtered by current `organization_id` (RLS already permits owner/admin). Shows action, actor email, target, relative time. Empty state for members without permission.
 
-Keep the existing "Quick start", "Pre-launch checklist", "Branding", and "Architecture notes" sections unchanged — the new sections sit above them.
+6. **Visual polish**
+   - Gradient hero header band with subtle pattern.
+   - Cards: `rounded-xl`, hover lift, consistent icon-in-pill header style matching `AdminOverview` Kpi cards.
+   - Section dividers with small uppercase eyebrow labels (mirroring admin sidebar groups).
+   - Skeletons for each query while loading.
 
-### 3. `src/data/changelog.ts`
-Append one entry to today's release: `added` — "README and /readme page now cover Remix, prompt-based customization, and GitHub clone workflows."
+## /admin overview refresh
+
+Update `src/components/admin/AdminOverview.tsx`:
+
+1. **Sparkline on KPI cards**
+   - Add a tiny inline sparkline to the "Total users" Kpi using `signups.series` already returned by `admin-analytics-overview`.
+   - Use `recharts` (already a dep) `<ResponsiveContainer>` with a 32-px high `<AreaChart>`, no axes, primary-tinted fill.
+   - Extend `Kpi` component to accept optional `trend?: { day: string; count: number }[]`.
+
+2. **Email health card** (new section)
+   - Last 7 days: counts of `email_send_log` grouped by status (sent / failed / dlq / suppressed), deduplicated by `message_id` using the pattern from the email-monitoring guide.
+   - Show: total sent, failure rate %, suppressed count, link to a future Broadcasts page, with status-colored badges.
+   - Suppressed count from `suppressed_emails` (last 30 days).
+
+3. **Recent audit events card**
+   - Latest 6 entries from `audit_log` (admin RLS already allows all). Show action, actor email, target type, relative time. Link "View all" → `/admin/audit`.
+
+4. **Layout reshuffle**
+   - Row 1: KPI strip (now with sparkline on users).
+   - Row 2: Needs attention (2/3) + Quick actions (1/3).
+   - Row 3: Email health (1/2) + Recent audit events (1/2).
+   - Row 4: Recent signups + Recent leads (existing).
+
+5. **Visual polish across both shells**
+   - Sidebar: active item gets a subtle left primary bar; group eyebrows already exist in admin, mirror them on the dashboard sidebar (Workspace / Account / Admin).
+   - Consistent KPI card style (used in both `/dashboard` subscription card and `/admin` Kpis).
+   - Unified card padding, header weight, and muted/foreground hierarchy.
+   - Soft animated entry (`animate-fade-in` on grid children) for the overview grids.
+
+## Files
+
+- Edit `src/pages/Dashboard.tsx` — restructure overview.
+- Edit `src/components/dashboard/DashboardShell.tsx` — group sidebar nav, active indicator, polish.
+- Add `src/components/dashboard/OnboardingChecklist.tsx`.
+- Add `src/components/dashboard/SubscriptionStatusCard.tsx`.
+- Add `src/components/dashboard/PendingInvitesCard.tsx`.
+- Add `src/components/dashboard/RecentNotificationsCard.tsx`.
+- Add `src/components/dashboard/OrgActivityCard.tsx`.
+- Edit `src/components/admin/AdminOverview.tsx` — sparkline, new cards, layout.
+- Add `src/components/admin/EmailHealthCard.tsx`.
+- Add `src/components/admin/RecentAuditCard.tsx`.
+- Edit `src/components/admin/AdminShell.tsx` — active indicator polish.
+- Append entry to `src/data/changelog.ts`.
 
 ## Out of scope
-- No UI redesign of `/readme` beyond the new section.
-- No new routes, components, or hooks.
-- No SEO changes.
-- No code or backend changes.
 
-## Deliverables
-- Updated `src/pages/Readme.tsx`
-- Updated `README.md`
-- One-line changelog entry
+- No schema changes, no new edge functions, no new RLS.
+- No changes to sub-pages (Members, Billing, Users, Leads, etc.).
+- No new routes.
