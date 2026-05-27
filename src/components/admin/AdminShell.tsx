@@ -25,6 +25,7 @@ import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { cn } from "@/lib/utils";
+import { NoIndex } from "@/components/seo/NoIndex";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; end?: boolean };
 type NavGroup = { label: string; items: NavItem[] };
@@ -249,6 +250,7 @@ export const AdminShell = ({
         </main>
       </div>
     </div>
+    </>
   );
 };
 
