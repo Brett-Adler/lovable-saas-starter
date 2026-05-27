@@ -1,18 +1,16 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import { ArrowLeft, ExternalLink, Loader2, Search } from "lucide-react";
+import { ExternalLink, Loader2, Search } from "lucide-react";
 import { format } from "date-fns";
-import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 type Sub = {
   id: string;
@@ -32,8 +30,7 @@ type Sub = {
 const STATUSES = ["all", "active", "trialing", "past_due", "canceled", "incomplete", "incomplete_expired", "unpaid", "paused"] as const;
 
 const Subscriptions = () => {
-  const { isAdmin, loading: rolesLoading } = useUserRoles();
-  const { signOut } = useAuth();
+  const { isAdmin } = useUserRoles();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("all");
   const [env, setEnv] = useState<"all" | "sandbox" | "live">("all");
@@ -74,32 +71,9 @@ const Subscriptions = () => {
     });
   }, [subs, q, status, env, data]);
 
-  if (rolesLoading) return <div className="min-h-screen grid place-items-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen grid place-items-center p-6">
-        <Card className="max-w-md w-full">
-          <CardHeader><CardTitle>Admins only</CardTitle><CardDescription>You don't have permission to view this page.</CardDescription></CardHeader>
-          <CardContent><Button asChild variant="outline" className="w-full"><Link to="/dashboard"><ArrowLeft className="h-4 w-4" />Back to dashboard</Link></Button></CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="container flex items-center justify-between py-4">
-          <Logo />
-          <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
-        </div>
-      </header>
-      <main className="container py-12 max-w-6xl">
-        <Button asChild variant="ghost" size="sm" className="mb-4"><Link to="/admin"><ArrowLeft className="h-4 w-4" />Back to admin</Link></Button>
-        <h1 className="text-3xl font-bold mb-2">Subscriptions</h1>
-        <p className="text-muted-foreground mb-6">All Stripe customers across sandbox and live.</p>
-
-        <div className="flex flex-wrap gap-3 mb-4">
+    <AdminShell title="Subscriptions" description="All Stripe customers across sandbox and live.">
+      <div className="flex flex-wrap gap-3 mb-4">
           <div className="relative flex-1 min-w-[220px] max-w-sm">
             <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input className="pl-9" placeholder="Customer, plan, or Stripe ID…" value={q} onChange={(e) => setQ(e.target.value)} />
