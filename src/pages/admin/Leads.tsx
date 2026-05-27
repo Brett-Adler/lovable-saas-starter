@@ -103,7 +103,7 @@ const Leads = () => {
             </TableBody>
           </Table>
         </Card>
-      </main>
+      
 
       <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
@@ -152,7 +152,7 @@ const Leads = () => {
           )}
         </SheetContent>
       </Sheet>
-    </div>
+    </AdminShell>
   );
 };
 
