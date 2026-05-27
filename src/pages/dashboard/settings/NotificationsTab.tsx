@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Bell, Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { isPushSupported, subscribeToPush, unsubscribeFromPush } from "@/lib/push";
 
 type Prefs = {
   email_marketing: boolean;
@@ -41,6 +42,45 @@ export const NotificationsTab = () => {
   const [prefs, setPrefs] = useState<Prefs>(DEFAULTS);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+  const [pushBusy, setPushBusy] = useState(false);
+  const [pushSubbed, setPushSubbed] = useState(false);
+  const pushSupported = typeof window !== "undefined" && isPushSupported();
+
+  useEffect(() => {
+    if (!pushSupported) return;
+    navigator.serviceWorker
+      .getRegistration()
+      .then((reg) => reg?.pushManager.getSubscription())
+      .then((sub) => setPushSubbed(!!sub))
+      .catch(() => {});
+  }, [pushSupported]);
+
+  const enablePush = async () => {
+    if (!user) return;
+    setPushBusy(true);
+    try {
+      await subscribeToPush(user.id);
+      setPushSubbed(true);
+      toast.success("Browser notifications enabled");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to enable push");
+    } finally {
+      setPushBusy(false);
+    }
+  };
+
+  const disablePush = async () => {
+    setPushBusy(true);
+    try {
+      await unsubscribeFromPush();
+      setPushSubbed(false);
+      toast.success("Browser notifications disabled");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to disable push");
+    } finally {
+      setPushBusy(false);
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -107,6 +147,34 @@ export const NotificationsTab = () => {
           ))}
         </CardContent>
       </Card>
+
+      {prefs.push_enabled && pushSupported && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bell className="h-4 w-4" /> Browser notifications
+            </CardTitle>
+            <CardDescription>
+              {pushSubbed
+                ? "This browser is subscribed to push notifications."
+                : "Allow this browser to receive push notifications even when the tab is closed."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {pushSubbed ? (
+              <Button variant="outline" onClick={disablePush} disabled={pushBusy}>
+                {pushBusy && <Loader2 className="h-4 w-4 animate-spin" />}
+                Disable on this browser
+              </Button>
+            ) : (
+              <Button onClick={enablePush} disabled={pushBusy}>
+                {pushBusy && <Loader2 className="h-4 w-4 animate-spin" />}
+                Enable on this browser
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
