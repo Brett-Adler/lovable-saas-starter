@@ -1,20 +1,18 @@
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Search, Shield, ShieldOff } from "lucide-react";
+import { Loader2, Search, Shield, ShieldOff } from "lucide-react";
 import { format } from "date-fns";
-import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 type AuthUser = {
   id: string;
@@ -42,8 +40,7 @@ type Row = Profile & {
 };
 
 const Users = () => {
-  const { isAdmin, loading: rolesLoading } = useUserRoles();
-  const { signOut } = useAuth();
+  const { isAdmin } = useUserRoles();
   const qc = useQueryClient();
   const [q, setQ] = useState("");
   const [selected, setSelected] = useState<Row | null>(null);
@@ -114,37 +111,14 @@ const Users = () => {
     }
   };
 
-  if (rolesLoading) return <div className="min-h-screen grid place-items-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen grid place-items-center p-6">
-        <Card className="max-w-md w-full">
-          <CardHeader><CardTitle>Admins only</CardTitle><CardDescription>You don't have permission to view this page.</CardDescription></CardHeader>
-          <CardContent><Button asChild variant="outline" className="w-full"><Link to="/dashboard"><ArrowLeft className="h-4 w-4" />Back to dashboard</Link></Button></CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="container flex items-center justify-between py-4">
-          <Logo />
-          <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
-        </div>
-      </header>
-      <main className="container py-12 max-w-6xl">
-        <Button asChild variant="ghost" size="sm" className="mb-4"><Link to="/admin"><ArrowLeft className="h-4 w-4" />Back to admin</Link></Button>
-        <h1 className="text-3xl font-bold mb-2">Users</h1>
-        <p className="text-muted-foreground mb-6">Every account on the platform.</p>
+    <AdminShell title="Users" description="Every account on the platform.">
+      <div className="relative max-w-sm mb-4">
+        <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <Input className="pl-9" placeholder="Search email or name…" value={q} onChange={(e) => setQ(e.target.value)} />
+      </div>
 
-        <div className="relative max-w-sm mb-4">
-          <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <Input className="pl-9" placeholder="Search email or name…" value={q} onChange={(e) => setQ(e.target.value)} />
-        </div>
-
-        <Card>
+      <Card>
           <Table>
             <TableHeader>
               <TableRow>
@@ -195,7 +169,7 @@ const Users = () => {
             </TableBody>
           </Table>
         </Card>
-      </main>
+      
 
       <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <SheetContent className="w-full sm:max-w-md overflow-y-auto">
@@ -236,7 +210,7 @@ const Users = () => {
           )}
         </SheetContent>
       </Sheet>
-    </div>
+    </AdminShell>
   );
 };
 

@@ -1,18 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Plus, Send, FlaskConical, Trash2 } from "lucide-react";
+import { Loader2, Plus, Send, FlaskConical, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Logo } from "@/components/Logo";
-import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { toast } from "sonner";
+import { AdminShell } from "@/components/admin/AdminShell";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -42,8 +40,7 @@ const empty: Partial<Campaign> = {
 };
 
 export default function AdminBroadcasts() {
-  const { isAdmin, loading } = useUserRoles();
-  const { signOut } = useAuth();
+  const { isAdmin } = useUserRoles();
   const { data: settings } = useSiteSettings();
   const [list, setList] = useState<Campaign[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -144,36 +141,16 @@ export default function AdminBroadcasts() {
       .replace(/\n/g, "<br>");
   }, [editing.body_text]);
 
-  if (loading) return <div className="min-h-screen grid place-items-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
-
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen grid place-items-center p-6">
-        <Card className="max-w-md w-full">
-          <CardHeader><CardTitle>Admins only</CardTitle><CardDescription>You don't have permission to view this page.</CardDescription></CardHeader>
-          <CardContent><Button asChild variant="outline" className="w-full"><Link to="/dashboard"><ArrowLeft className="h-4 w-4" />Back</Link></Button></CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="container flex items-center justify-between py-4">
-          <Logo />
-          <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
-        </div>
-      </header>
-      <main className="container py-12 max-w-6xl">
-        <Button asChild variant="ghost" size="sm" className="mb-4">
-          <Link to="/admin"><ArrowLeft className="h-4 w-4" />Back to admin</Link>
+    <AdminShell
+      title="Broadcasts"
+      description="Send the monthly newsletter via Resend. Mailing address and unsubscribe footer are appended automatically."
+      actions={
+        <Button onClick={() => setEditing(empty)} variant={!editing.id ? "default" : "outline"} size="sm">
+          <Plus className="h-4 w-4" /> New campaign
         </Button>
-        <h1 className="text-3xl font-bold mb-2">Broadcasts</h1>
-        <p className="text-muted-foreground mb-8">
-          Send the monthly newsletter via Resend. Mailing address and unsubscribe footer are
-          appended automatically.
-        </p>
+      }
+    >
 
         <div className="grid lg:grid-cols-[280px_1fr] gap-6">
           <Card className="self-start">
@@ -311,7 +288,6 @@ export default function AdminBroadcasts() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </main>
-    </div>
+    </AdminShell>
   );
 }

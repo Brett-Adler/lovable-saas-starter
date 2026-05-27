@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, Loader2 } from "lucide-react";
-import { Logo } from "@/components/Logo";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 const fields = [
   { key: "contact_email", label: "Public contact email", placeholder: "hello@yourdomain.com", type: "email" },
@@ -30,8 +28,7 @@ const fields = [
 ] as const;
 
 const SiteSettingsPage = () => {
-  const { isAdmin, loading } = useUserRoles();
-  const { signOut } = useAuth();
+  const { isAdmin } = useUserRoles();
   const { data: settings } = useSiteSettings();
   const qc = useQueryClient();
   const [form, setForm] = useState<Record<string, string>>({});
@@ -60,44 +57,13 @@ const SiteSettingsPage = () => {
     qc.invalidateQueries({ queryKey: ["site_settings"] });
   };
 
-  if (loading) return <div className="min-h-screen grid place-items-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
-
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen grid place-items-center p-6">
-        <Card className="max-w-md w-full">
-          <CardHeader>
-            <CardTitle>Admins only</CardTitle>
-            <CardDescription>You don't have permission to view this page.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild variant="outline" className="w-full">
-              <Link to="/dashboard"><ArrowLeft className="h-4 w-4" />Back to dashboard</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="container flex items-center justify-between py-4">
-          <Logo />
-          <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
-        </div>
-      </header>
-      <main className="container py-12 max-w-2xl">
-        <Button asChild variant="ghost" size="sm" className="mb-4">
-          <Link to="/admin"><ArrowLeft className="h-4 w-4" />Back to admin</Link>
-        </Button>
-        <h1 className="text-3xl font-bold mb-2">Site settings</h1>
-        <p className="text-muted-foreground mb-8">
-          Public contact email and social media links. Empty fields are hidden from the footer.
-        </p>
-
-        <Card>
+    <AdminShell
+      title="Site settings"
+      description="Public contact email and social media links. Empty fields are hidden from the footer."
+      maxWidth="5xl"
+    >
+      <Card className="max-w-2xl">
           <CardContent className="pt-6 space-y-4">
             {fields.map((f) => (
               <div key={f.key}>
@@ -117,8 +83,7 @@ const SiteSettingsPage = () => {
             </Button>
           </CardContent>
         </Card>
-      </main>
-    </div>
+    </AdminShell>
   );
 };
 
