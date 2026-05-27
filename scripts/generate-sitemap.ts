@@ -20,6 +20,7 @@ const entries: SitemapEntry[] = [
   { path: "/waitlist", changefreq: "monthly", priority: "0.6" },
   { path: "/newsletter", changefreq: "monthly", priority: "0.6" },
   { path: "/readme", changefreq: "monthly", priority: "0.5" },
+  { path: "/changelog", changefreq: "weekly", priority: "0.6" },
   { path: "/sitemap", changefreq: "monthly", priority: "0.3" },
   { path: "/privacy", changefreq: "yearly", priority: "0.3" },
   { path: "/terms", changefreq: "yearly", priority: "0.3" },

@@ -17,6 +17,7 @@ import Demo from "./pages/Demo";
 import Waitlist from "./pages/Waitlist";
 import Legal from "./pages/Legal";
 import Readme from "./pages/Readme";
+import Changelog from "./pages/Changelog";
 import CheckoutReturn from "./pages/CheckoutReturn";
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -72,6 +73,7 @@ const App = () => (
               <Route path="/accessibility" element={<Accessibility />} />
               <Route path="/sitemap" element={<SitemapPage />} />
               <Route path="/readme" element={<Readme />} />
+              <Route path="/changelog" element={<Changelog />} />
               <Route path="/checkout/return" element={<CheckoutReturn />} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />

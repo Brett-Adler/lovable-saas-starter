@@ -42,6 +42,7 @@ export const publicNavGroups: PublicGroup[] = [
     title: "Resources",
     links: [
       { to: "/readme", label: "Setup guide" },
+      { to: "/changelog", label: "Changelog" },
       { to: "/sitemap", label: "Sitemap" },
     ],
   },
