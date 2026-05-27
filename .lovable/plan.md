@@ -1,17 +1,39 @@
-## Finding: nothing to do
+## What's already correct
 
-I reviewed `src/pages/Contact.tsx` end-to-end and searched the codebase for related artifacts.
+The **Features grid** (`src/pages/Index.tsx` lines 26–35, rendered at 170–183) already passes `status` and `tooltip` to `StatusBadge` for every card. Each `setup` card has a tooltip; `shipped` cards don't need one. No change needed there.
 
-**Admin notice when `contact_email` is missing — already complete** (lines 81–90):
+## What's missing
 
-- Pulls `contact_email` via `useSiteSettings()`.
-- Treats it as a placeholder when null/missing or when it ends with `@example.com` (`emailIsPlaceholder`).
-- Gated on `isAdmin` (admins only) via `useUserRoles()`.
-- Renders a warning banner with a deep link to `/admin/site-settings` so the operator can fix it in one click.
-- The public-facing email (`mailto:` + display) gracefully falls back to `hello@example.com` when unset, so anonymous visitors see a sensible default while admins see the actionable warning.
+The **FAQ section** (lines 50–57, rendered 256–263) doesn't show any status indicator, even though three of the six questions are directly about a feature whose state matters:
 
-**Leftover placeholder chat UI — none found.** No chat widget, no `Crisp`/`Intercom`/`Tawk` references, no commented-out chat block in `Contact.tsx` or anywhere under `src/components`. The single match for "chat" in the codebase is unrelated copy in `src/components/docs/ReadmeContent.tsx` ("Paste any of these into the chat…").
+| Question | Related feature(s) | Correct badge |
+|---|---|---|
+| "Are SMS, push, and SSO live out of the box?" | `auth-sms`, `push`, `saml` | **Needs setup** |
+| "Does it support dark mode?" | UI / theming | **Live** |
+| "What about marketing emails?" | `marketing-email` | **Needs setup** |
 
-## Recommendation
+The other three FAQs ("What's included?", "Can I use this commercially?", "How do I add my logo?") are general — no badge.
 
-No code change is needed. If you were expecting a specific change (different copy, a different trigger condition, or a chat widget that was supposed to be removed from somewhere specific), point me at it and I'll handle it. Otherwise this task is already done and I'll close it out without edits.
+## Changes
+
+**`src/pages/Index.tsx`**
+
+1. Extend the FAQ type so an item can optionally carry status:
+   ```ts
+   type Faq = { q: string; a: string; status?: FeatureStatus; tooltip?: string };
+   const faqs: Faq[] = [ ... ];
+   ```
+2. Add `status` + `tooltip` to the three feature-related FAQs:
+   - SMS/push/SSO → `status: "setup"`, tooltip mirrors the setup notes from `featureStatus.ts` (Twilio, VAPID, SAML form).
+   - Dark mode → `status: "shipped"` (no tooltip).
+   - Marketing emails → `status: "setup"`, tooltip: "Add `RESEND_API_KEY` and verify a sending domain in Resend."
+3. In the FAQ render, place a `<StatusBadge>` next to the question label inside `AccordionTrigger`, only when `f.status` is defined. Keep the trigger left-aligned; badge sits to the right of the text and before the chevron.
+
+**Features grid** — keep as-is. Verified each entry already has the correct status/tooltip.
+
+## Out of scope
+
+- No edits to `featureStatus.ts` (single source of truth is already correct).
+- No new FAQ items.
+- No changes to schema.org `FAQPage` JSON-LD (status badges are visual hints, not part of the structured Q/A).
+- No changelog entry (cosmetic accuracy tweak).
