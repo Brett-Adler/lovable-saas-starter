@@ -42,7 +42,6 @@ export const changelog: ChangelogEntry[] = [
     date: "2026-05-27",
     title: "Honest status across every page",
     changes: [
-    changes: [
       { type: "added", text: "New Live / Needs setup / Coming soon badges on the landing feature cards so it's clear which features ship working and which need credentials." },
       { type: "added", text: "Dismissible 'template placeholder' ribbons on landing logo cloud, testimonials, About, and Legal pages — only visible on Lovable preview hosts, hidden on custom domains." },
       { type: "added", text: "Admin-only inline notice on the Contact page when contact_email is still the placeholder, linking straight to Site Settings." },
