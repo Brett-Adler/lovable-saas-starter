@@ -38,11 +38,11 @@ Ordered to match the feature grid on the landing page.
 
 Mirrors `/pricing` — keep the two in sync when you change either.
 
-| Tier  | Price (yearly) | Highlights                                              |
-| ----- | -------------- | ------------------------------------------------------- |
-| Free  | $0             | 3 projects, 1 seat, basic analytics                     |
-| Pro   | $15/mo         | Unlimited projects, 10 seats, custom domain, marketing emails |
-| Team  | $39/mo         | Unlimited seats, SSO/SAML, audit logs, 99.9% SLA        |
+| Tier  | Monthly | Yearly | Highlights                                                    |
+| ----- | ------- | ------ | ------------------------------------------------------------- |
+| Free  | $0      | $0     | 3 projects, 1 seat, basic analytics                           |
+| Pro   | $19/mo  | $15/mo | Unlimited projects, 10 seats, custom domain, marketing emails |
+| Team  | $49/mo  | $39/mo | Unlimited seats, SSO/SAML, audit logs, 99.9% SLA              |
 
 The 14-day trial is set in `supabase/functions/create-checkout/index.ts`.
 
@@ -56,10 +56,10 @@ There are three ways to get started. Pick the one that matches how you work:
 
 ### 1. Remix on Lovable
 
-1. Open the [live demo](https://lovable-saas-starter.lovable.app) or the
-   [Lovable project page](https://lovable.dev/projects/65731117-aac8-4723-ab30-aec22d01517c).
-2. Click **Remix** in the top bar — or use the direct link:
-   <https://lovable.dev/projects/65731117-aac8-4723-ab30-aec22d01517c?remix=1>
+1. Open this project in Lovable.
+2. Click **Remix** in the top bar.
+3. Sign in. Lovable copies the code and provisions a fresh Lovable Cloud
+   backend for you automatically.
 3. Sign in. Lovable copies the code and provisions a fresh Lovable Cloud
    backend for you automatically.
 4. Open your new project and start prompting — it's fully isolated from the
