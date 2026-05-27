@@ -1,88 +1,65 @@
-# Add Smoke + Regression Test Suite
+# Use-this-template guides
 
-Vitest is already wired up (`vitest.config.ts`, `src/test/setup.ts`) but only an example test exists. This plan adds a meaningful baseline so future edits break a test before they break the app.
+Two new marketing pages walking new users through adopting the template, with light cross-linking from existing pages. No content changes elsewhere beyond adding links.
 
-## Scope
+## New pages
 
-Two test layers:
+### `/use-template/lovable` — for Lovable users
+Step-by-step remix flow, no terminal required.
+1. Open the live demo / template project in Lovable
+2. Click **Remix** — Lovable forks the code and provisions a fresh Cloud backend
+3. First signup becomes admin automatically
+4. Rebrand in one prompt (link the ready-made prompts from README §2)
+5. Upload your logo at `/admin/brand`
+6. Edit site name / meta at `/admin/site-settings`
+7. Replace legal pages at `/privacy` and `/terms`
+8. Go-live checklist link → `/launch`
 
-1. **Frontend (Vitest + React Testing Library)** — fast smoke tests for routing, data sanity, and key page renders.
-2. **Edge function (Deno test)** — contract tests for the most user-facing functions so refactors don't silently break them.
+Includes copy-pasteable rebrand / pricing / pivot prompts (already in README §2), a "what you don't have to set up" callout (DB, auth, emails, sandbox Stripe all preconfigured), and a final CTA linking to `/launch`.
 
-No production code changes; only new test files and a couple of small test helpers/mocks.
+### `/use-template/github` — for GitHub users
+Developer flow, local-first.
+1. Remix on Lovable once (required — provisions Cloud backend)
+2. Settings → GitHub → connect; Lovable creates the repo and two-way syncs
+3. Local clone + `npm install` + `npm run dev` (port 8080)
+4. How the synced `.env` works (Cloud URL + anon key auto-managed)
+5. Where things live: `src/pages`, `supabase/functions`, `supabase/migrations`
+6. Two-way sync rules (push to branch ↔ Lovable prompts commit back)
+7. Go-live checklist link → `/launch`
 
-## 1. Frontend smoke tests
+Includes a "why you still need Lovable once" callout (Cloud provisioning), bash blocks for clone/install/dev, and pointers to architecture notes from the README.
 
-All under `src/**/*.test.{ts,tsx}`. Each uses a minimal wrapper (QueryClient + MemoryRouter + Helmet) and mocks `@/integrations/supabase/client` so tests run offline.
+## Shared page chrome
+- `MarketingLayout` + `PageSeo`
+- Top of each page: a small tab/segmented switcher linking to the other guide ("Prefer GitHub? →" / "Prefer Lovable? →") so users can flip without going back
+- Numbered step cards (reuse existing `Card` + numbered badge pattern from `Launch.tsx`)
+- Sidebar or footer callout linking to `/launch`, `/readme`, `/docs`
 
-New helper:
-- `src/test/utils.tsx` — `renderWithProviders(ui, { route })` wrapping with `QueryClientProvider`, `MemoryRouter`, `HelmetProvider`, `TooltipProvider`, mocked `AuthProvider`/`OrganizationProvider`.
-- `src/test/mocks/supabase.ts` — `vi.mock('@/integrations/supabase/client')` returning a chainable stub (`from().select().eq()...` resolves with `{ data: [], error: null }`, `auth.getSession` returns no session, `functions.invoke` returns `{ data: null, error: null }`, `channel().on().subscribe()` no-ops).
+## Minimal edits to existing pages (links only, no content rewrites)
 
-### Page render smoke tests
-One test per critical public route — asserts the page mounts without throwing and renders a recognizable heading/landmark:
-- `Index`, `Pricing`, `About`, `Contact`, `Newsletter`, `Demo`, `Waitlist`, `Roadmap`, `Status`, `Integrations`, `Security`, `Compare`, `Customers`, `Blog`, `Changelog`, `Readme`, `Docs`, `Launch`, `Sitemap`, `Accessibility`, `Legal` (privacy/terms/cookies), `NotFound`.
-- Auth pages: `Auth` (login + signup mode), `ForgotPassword`, `ResetPassword`.
-- One combined file `src/test/smoke/public-pages.test.tsx` table-driven over route → component to keep this compact.
+- `src/components/marketing/MarketingFooter.tsx` — add two links under an existing column (likely "Resources"): "Use on Lovable" → `/use-template/lovable`, "Use on GitHub" → `/use-template/github`
+- `src/pages/Readme.tsx` — add a single banner/callout near the top: "New here? Start with the [Lovable guide] or [GitHub guide]." No other content changed
+- `src/pages/Launch.tsx` — add one line at the top: "Just remixed? See the [Lovable setup guide] first." No other content changed
 
-### Routing test
-`src/test/smoke/routing.test.tsx` — mounts `<App />` at a handful of routes via `MemoryRouter` (need to refactor `App.tsx` minimally to export a routerless `<AppRoutes>` OR test by mounting `<BrowserRouter>` with `window.history.pushState`). Decision: introduce `src/AppRoutes.tsx` that contains the `<Routes>` block; `App.tsx` re-exports/uses it. Test imports `AppRoutes` and wraps with `MemoryRouter`. Asserts: `/` → marketing heading, `/pricing` → pricing heading, `/blog` → blog list, `/unknown` → NotFound 404 text, `/dashboard` (unauthenticated) → redirect to `/login`.
+These are the only edits to existing pages. If you'd like links added in additional places (landing hero CTA, docs page, /about), say so and I'll add them — otherwise I'll keep the footprint minimal as you asked.
 
-### Data-layer regression tests
-Catch accidental edits to single-source-of-truth arrays:
-- `src/data/featureStatus.test.ts` — every entry has `status ∈ {shipped, setup, soon}` and required fields; specific keys (`chat`, `blog`, `status-page`) are `shipped`; `live-chat` legacy key (if present) does not regress.
-- `src/data/roadmap.test.ts` — same status enum check; counts per bucket > 0.
-- `src/data/changelog.test.ts` — entries sorted desc by date, valid ISO dates, latest entry mentions chat/blog/status release.
-- `src/data/seo.test.ts` (if it exists) — each route has unique `title < 60` and `description < 160`.
+## Routing
+Add to `src/App.tsx` in the marketing block:
+```tsx
+<Route path="/use-template/lovable" element={<UseTemplateLovable />} />
+<Route path="/use-template/github" element={<UseTemplateGithub />} />
+```
 
-### Component regression tests
-- `src/components/marketing/SupportChatWidget.test.tsx` — opens on button click, sends a message (mocked `functions.invoke` for `support-chat`), renders assistant response, persists to `localStorage`, disables input when rate-limit error returned.
-- `src/components/marketing/StatusBadge.test.tsx` (or wherever it lives) — renders correct label/variant for `shipped` vs `setup` vs `soon`, shows tooltip text when provided.
-- `src/components/admin/AdminShell.test.tsx` — renders Content nav links (Blog, Status) for admin role; hides them otherwise.
-- `src/pages/Contact.test.tsx` — admin-mode notice appears when `contact_email` site setting is missing; form submits to `leads` with `kind=contact`.
+## SEO
+- Lovable page title: "Use this template on Lovable — remix in one click"
+- GitHub page title: "Use this template on GitHub — clone and sync"
+- Both added to `public/sitemap.xml` via the existing generator script
 
-### Lead-capture regression
-`src/test/regression/lead-forms.test.tsx` — for Newsletter, Demo, Waitlist, Contact: fill + submit, assert `supabase.from('leads').insert` called with the right `kind` and `source`.
+## Content source
+All copy derives from `README.md` §"Use this starter" — no new claims, just reformatted as a guided flow with screenshots-less step cards. Pricing, features, and architecture statements are unchanged.
 
-## 2. Edge function tests (Deno)
-
-Add `*_test.ts` next to each function, run via `supabase--test_edge_functions`. Use `Deno.env` + `dotenv/load` per the testing guide. These are contract/smoke tests — happy path + one auth/validation failure each.
-
-- `supabase/functions/support-chat/index_test.ts` — POST a message, expect 200 + streamed/text reply; POST without body → 400; verify rate-limit row inserted (mock or hit a test IP).
-- `supabase/functions/subscribe-newsletter/index_test.ts` — valid email → 200; invalid → 400.
-- `supabase/functions/confirm-newsletter-subscription/index_test.ts` — invalid token → 400.
-- `supabase/functions/notify-user/index_test.ts` — missing auth → 401.
-- `supabase/functions/send-transactional-email/index_test.ts` — schema validation: missing `to` → 400.
-- `supabase/functions/preview-transactional-email/index_test.ts` — returns rendered HTML for known template key.
-- `supabase/functions/admin-analytics-overview/index_test.ts` — non-admin → 403.
-- `supabase/functions/admin-list-users/index_test.ts` — non-admin → 403.
-- `supabase/functions/create-checkout/index_test.ts` — missing price → 400.
-- `supabase/functions/payments-webhook/index_test.ts` — invalid Stripe signature → 400.
-
-Tests that need an admin call a `service_role`-keyed setup helper to seed; cleanup is best-effort.
-
-## 3. CI ergonomics
-
-- Keep `bun run test` green as the single command for frontend.
-- Document a one-liner in `README` / `src/test/README.md`: "Run `bun run test` for the frontend suite. Edge function tests run via the Lovable test tool / `deno test` locally."
-- No GitHub Actions changes (project doesn't manage CI here).
-
-## Out of scope
-
-- E2E browser tests (Playwright) — would add dependency weight; can be a follow-up.
-- Visual regression / screenshot diffs.
-- Coverage thresholds (can be enabled later via `vitest --coverage`).
-
-## Technical notes
-
-- `App.tsx` will be split: extract `<Routes>` into `src/AppRoutes.tsx`. `App.tsx` still owns providers and `BrowserRouter`. Tests import `AppRoutes` wrapped in `MemoryRouter`.
-- All Supabase calls in components go through `@/integrations/supabase/client`, so a single `vi.mock` covers the whole tree.
-- `useAuth`/`useOrganization` get mocked via `vi.mock('@/hooks/useAuth', ...)` returning configurable session + role. Helper exposes `renderWithProviders(ui, { user, role })`.
-- Edge tests use `VITE_SUPABASE_URL` + `VITE_SUPABASE_PUBLISHABLE_KEY` from `.env` per the testing guide; admin paths use `SUPABASE_SERVICE_ROLE_KEY` if available, otherwise the admin assertion is skipped with a `console.warn`.
-
-## Deliverables
-
-- ~25 new test files (frontend) + ~10 (edge functions)
-- 2 small helpers (`src/test/utils.tsx`, `src/test/mocks/supabase.ts`)
-- `src/AppRoutes.tsx` extraction
-- Short `src/test/README.md`
+## Out of scope (will confirm before doing)
+- Rewriting the landing hero or About page
+- Changing the README content itself
+- Adding screenshots/illustrations (can add later if you want)
+- Removing the existing `/readme` or `/docs` pages
