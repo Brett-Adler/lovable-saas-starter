@@ -1,20 +1,18 @@
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Search, Shield, ShieldOff } from "lucide-react";
+import { Loader2, Search, Shield, ShieldOff } from "lucide-react";
 import { format } from "date-fns";
-import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useAuth } from "@/hooks/useAuth";
 import { useUserRoles } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 type AuthUser = {
   id: string;
@@ -42,8 +40,7 @@ type Row = Profile & {
 };
 
 const Users = () => {
-  const { isAdmin, loading: rolesLoading } = useUserRoles();
-  const { signOut } = useAuth();
+  const { isAdmin } = useUserRoles();
   const qc = useQueryClient();
   const [q, setQ] = useState("");
   const [selected, setSelected] = useState<Row | null>(null);
