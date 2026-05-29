@@ -256,7 +256,7 @@ export async function generateAll(
     description: "Wide logo for header / footer / emails",
   });
 
-  // Preserve original SVG when provided
+  // Preserve original SVG when provided + reuse as Safari pinned-tab mask
   if (svgSource) {
     results.push({
       filename: "logo.svg",
@@ -266,6 +266,15 @@ export async function generateAll(
       contentType: "image/svg+xml",
       category: "logo",
       description: "Original vector logo (scales perfectly)",
+    });
+    results.push({
+      filename: "safari-pinned-tab.svg",
+      blob: new Blob([svgSource], { type: "image/svg+xml" }),
+      width: source.naturalWidth || 0,
+      height: source.naturalHeight || 0,
+      contentType: "image/svg+xml",
+      category: "favicon",
+      description: "Safari pinned-tab mask icon",
     });
   }
 
