@@ -73,10 +73,16 @@ export function PageSeo({ path, title, description, ogImage, noindex, jsonLd }: 
       {/* Brand-kit overrides (when an admin has published a kit). Override links so
           Helmet replaces, rather than appends to, the defaults in index.html. */}
       {themeColor ? <meta name="theme-color" content={themeColor} /> : null}
+      {themeColor ? <meta name="msapplication-TileColor" content={themeColor} /> : null}
       {brand["favicon.ico"] ? <link rel="icon" type="image/x-icon" href={brand["favicon.ico"]} /> : null}
+      {brand["logo.svg"] ? <link rel="icon" type="image/svg+xml" href={brand["logo.svg"]} /> : null}
       {brand["favicon-32x32.png"] ? <link rel="icon" type="image/png" sizes="32x32" href={brand["favicon-32x32.png"]} /> : null}
       {brand["favicon-16x16.png"] ? <link rel="icon" type="image/png" sizes="16x16" href={brand["favicon-16x16.png"]} /> : null}
       {brand["apple-touch-icon.png"] ? <link rel="apple-touch-icon" sizes="180x180" href={brand["apple-touch-icon.png"]} /> : null}
+      {brand["android-chrome-192x192.png"] ? <link rel="icon" type="image/png" sizes="192x192" href={brand["android-chrome-192x192.png"]} /> : null}
+      {brand["android-chrome-512x512.png"] ? <link rel="icon" type="image/png" sizes="512x512" href={brand["android-chrome-512x512.png"]} /> : null}
+      {brand["safari-pinned-tab.svg"] ? <link rel="mask-icon" href={brand["safari-pinned-tab.svg"]} color={themeColor ?? "#000000"} /> : null}
+      {brand["browserconfig.xml"] ? <link rel="msapplication-config" href={brand["browserconfig.xml"]} /> : null}
       {brand["site.webmanifest"] ? <link rel="manifest" href={brand["site.webmanifest"]} /> : null}
 
       {/* Open Graph */}
