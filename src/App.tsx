@@ -60,6 +60,7 @@ import BlogPost from "./pages/BlogPost";
 import AdminBlog from "./pages/admin/Blog";
 import AdminBlogEditor from "./pages/admin/BlogEditor";
 import AdminStatus from "./pages/admin/Status";
+import AdminAbout from "./pages/admin/About";
 import DashboardSecurity from "./pages/dashboard/settings/Security";
 import DashboardApiKeys from "./pages/dashboard/settings/ApiKeys";
 import DashboardWebhooks from "./pages/dashboard/settings/Webhooks";
@@ -301,6 +302,9 @@ const App = () => (
               <Route path="/admin/blog/new" element={<ProtectedRoute><AdminBlogEditor /></ProtectedRoute>} />
               <Route path="/admin/blog/:id" element={<ProtectedRoute><AdminBlogEditor /></ProtectedRoute>} />
               <Route path="/admin/status" element={<ProtectedRoute><AdminStatus /></ProtectedRoute>} />
+              <Route path="/admin/about" element={<ProtectedRoute><AdminAbout /></ProtectedRoute>} />
+
+
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
