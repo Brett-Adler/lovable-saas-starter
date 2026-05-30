@@ -1,75 +1,75 @@
-## Goal
+## Audit summary — `/docs`
 
-Make template/preview-only notices (test-mode banner, "free template" alert, placeholder ribbons) visually stand out, and make every one of them dismissible — with the dismissal **remembered across reloads** by default, plus a one-time "just for now" option.
+Reviewed `src/pages/Docs.tsx` and `src/components/docs/ReadmeContent.tsx`. The page is content-rich but currently fails on readability, heading semantics, and skim-ability. Findings:
 
-## Approach
+### Critical (semantics / SR)
+1. **Broken heading hierarchy.** Page has an `<h1>Docs</h1>`, then `ReadmeContent` adds a second giant heading "Setup & Customization Guide" as an `<h2>`, fine — but the "First-run checklist" card *also* uses `<h2>` (visually it's a small card title — should be `<h3>`). Inside `<Section>` children, sub-items use `<h3>`. Net: a screen-reader user gets an inconsistent outline that doesn't match the visual hierarchy.
+2. **Decorative emoji inside heading text.** `<h2>⚠️ Privacy Policy …</h2>` and ✅/⏳ at the start of every roadmap bullet are read aloud literally ("warning sign", "check mark button"). Should be `aria-hidden` and paired with a real text status badge.
+3. **No heading anchors.** None of the `h2`/`h3`s have `id`s, so deep-links and "on this page" navigation aren't possible.
+4. **Plain `<a>` links to external generators / docs** rely on color only and have no focus-visible ring or "opens in new tab" cue for AT.
 
-Introduce one shared building block and route the existing notices through it. Single source of truth = consistent look, consistent dismissal behavior, no duplicated localStorage code.
+### Warning (readability / contrast)
+5. **Body copy is wrapped in `text-muted-foreground`** at the `<Section>` level (line 14). Every paragraph in the doc renders in muted gray — fine for captions, fatiguing for long-form reading. Body should be `text-foreground/85` (or just `text-foreground`), with muted reserved for secondary/eyebrow lines.
+6. **`list-decimal list-inside` quickstart/clone steps** indent wrapped lines under the marker, hurting scannability. Switch to `list-outside` with proper left padding.
+7. **`<pre>` code blocks use `whitespace-pre-wrap`** so shell commands wrap mid-token. Replace with `overflow-x-auto`, monospace, tabIndex=0, `aria-label`, and a copy button for the longer snippets (`git clone …`, the prompt templates).
+8. **Hard-coded `amber-500` palette** on the "Coming-soon screens" card breaks the design-token rule and ships a different yellow in dark mode than the rest of the warning system. Switch to the existing `warning` token (or the new `preview` token added earlier).
+9. **Heavy walls of text** in "Customize with one prompt" and the Privacy/Terms section — long paragraphs without breaks. Break to short paragraphs + bullets, and tighten verbose copy.
+10. **Cards in "What's included"** lump 8+ routes into one list — split into route groups (Marketing / Product / Legal / Meta) so users can scan.
 
-### 1. New component: `src/components/marketing/DismissibleNotice.tsx`
+### Info
+11. **No "On this page" ToC.** Page is ~400 lines tall; users have to scroll-hunt.
+12. **`<Code>` chips** lack `font-medium` weight and break-words rule; long ones (`/dashboard/settings/api-keys`) overflow on mobile.
+13. **`Section` icon chip** is purely decorative — add `aria-hidden="true"`.
+14. **`<a>` `rel="noreferrer"`** is missing `noopener` on the legal-generator links.
 
-Props:
-- `id: string` — required, used as the `localStorage` key (`notice-dismissed:{id}`).
-- `tone?: "info" | "warning" | "preview"` — controls color + icon. Default `preview`.
-- `title?: string`, `children: ReactNode` — body content; title bold, body smaller.
-- `previewOnly?: boolean` — when true, only renders on `localhost`, `*.lovable.app`, or `*.lovableproject.com` (matches today's `TemplatePlaceholderRibbon` behavior).
-- `persistDismissal?: boolean` (default `true`) — when true, remembers dismissal forever; when false, only hides for the current tab session (`sessionStorage`).
-- `actions?: ReactNode` — optional inline links/buttons (e.g., "Read more").
-- `className?: string`.
+---
 
-Visual standout (vs. today's quiet warning ribbon):
-- Pill-shaped left accent bar in the tone color, soft tone-tinted background, 1px tone border, `shadow-sm`, slight `ring-1 ring-tone/20`.
-- Tone icon in a rounded square chip (`bg-tone/15`), aligned to top.
-- Title in `font-semibold`, body in `text-sm text-foreground/80`.
-- Right side: a compact action cluster:
-  - `actions` slot (renders inline links).
-  - A `…` overflow menu (shadcn `DropdownMenu`) with two items:
-    1. **Dismiss** — hides until the page is reloaded (or forever if `persistDismissal=true`, which is the default).
-    2. **Don't show again** — always writes the persistent flag. Shown only when `persistDismissal` is true (the default).
-  - A close (X) button — uses the default dismissal behavior of the notice.
-- Smooth fade/slide-out (`animate-fade-out`) on dismiss.
-- Full-bleed `variant="banner"` mode for top-of-page banners (test mode): no border-radius, sits flush, still dismissible.
+## Plan
 
-Behavior:
-- On mount: check `previewOnly` host gate → check `localStorage["notice-dismissed:{id}"]` (and `sessionStorage` if not persisted) → set visible.
-- On dismiss: write the appropriate storage key, animate out, unmount.
-- Accessible: `role="status"` for info, `role="alert"` for warning, `aria-live="polite"`, close button has `aria-label`.
+### 1. Rework `src/components/docs/ReadmeContent.tsx`
 
-### 2. Replace existing notices
+- `Section` component:
+  - Render heading as `<h2 id={slug}>` with a scroll-margin offset; accept an `id` prop derived from title.
+  - Mark the icon chip `aria-hidden="true"`.
+  - Drop the wrapper `text-muted-foreground`; default body to `text-foreground/85 leading-relaxed`. Apply `text-muted-foreground` only on intentionally-secondary lines.
+- Heading levels:
+  - "First-run checklist" / "Coming-soon screens" cards → `<h3>` (not `<h2>` / `<h3>` mismatch).
+  - All sub-headings inside Sections stay `<h3>`.
+  - Strip emoji from "Privacy Policy & Terms of Service — placeholders" title; rename to plain text and use the `ShieldAlert` icon chip already in place. Roadmap bullets: emoji wrapped in `<span aria-hidden="true">` and paired with a `Badge` ("Shipped" / "In progress").
+- Lists:
+  - `list-decimal pl-5 marker:text-muted-foreground` (outside markers) for ordered lists; same for the "Privacy generators" UL with `list-disc pl-5`.
+  - Cards' route lists: split "Public routes" into Marketing / Product / Legal / Meta sub-groups using small `<h4>`s.
+- Code blocks:
+  - Replace `<pre className="whitespace-pre-wrap …">` with a small `CodeBlock` helper: `<pre tabIndex={0} aria-label={label} className="overflow-x-auto rounded-md bg-muted/60 p-4 text-sm font-mono">`. Long prompts get a copy button (uses existing `navigator.clipboard` pattern) so users don't have to select text.
+  - `<Code>` chip gains `font-medium break-all`.
+- Cards: swap `amber-500` for `bg-warning/5 border-warning/30`; same for the Privacy/Terms card so colors come from tokens.
+- External links: helper `<ExternalDocLink>` that adds `target="_blank"`, `rel="noopener noreferrer external"`, a trailing `ExternalLink` icon, focus ring `focus-visible:ring-2 focus-visible:ring-primary`, and screen-reader text `"(opens in new tab)"`.
 
-| Today | After |
-|---|---|
-| `PaymentTestModeBanner` (`bg-orange-100` hard-coded, not dismissible) | Rewritten to render `DismissibleNotice` with `variant="banner"`, `tone="warning"`, `id="payments-test-mode"`, `previewOnly=false` (it depends on the publishable key, not the host). |
-| Pricing page `Alert` "This is a free template" | Replaced with `DismissibleNotice` `tone="info"`, `id="pricing-free-template"`, includes the "Read more" link as an action. |
-| `TemplatePlaceholderRibbon` (used on Index, Legal, Compare) | Kept as a thin wrapper that delegates to `DismissibleNotice` with `previewOnly=true`, `tone="preview"`. No call sites need to change. |
+### 2. Add an "On this page" sidebar in `src/pages/Docs.tsx`
 
-### 3. Tokens
+- New `DocsToc` component (`src/components/docs/DocsToc.tsx`): static list of section ids/titles, renders as a sticky `<nav aria-label="On this page">` visible on `lg:block` only, scrolls smoothly with `scroll-margin-top` set on each `h2`.
+- Layout swap: wrap `ReadmeContent` and `DocsToc` in a `lg:grid lg:grid-cols-[1fr_220px] lg:gap-12` so the ToC sits to the right without changing the existing intro/quick-links block.
+- The intro `<h1>` becomes the sole page H1; the small "Powered by" label downgrades from `<h2 className="text-sm">` to a plain `<p className="text-xs uppercase">` (it's a label, not a heading).
+- Add `scroll-pt-24` to the page so anchor jumps clear the sticky nav.
 
-Add `--preview` HSL token + `bg-preview`, `text-preview`, `border-preview` utilities in `index.css` / `tailwind.config.ts` (warm amber, distinct from `warning` so a real warning still feels heavier). `tone="warning"` keeps using existing `--warning` token; `tone="info"` uses `--primary`.
+### 3. Copy tightening (no scope change)
 
-### 4. Out of scope
+- Trim 3-line paragraphs in "Customize with one prompt", "Promoting more admins", and the Privacy/Terms intro to 1–2 lines each.
+- Convert the long Privacy/Terms second paragraph into a small bullet list of duties ("Disclose all processors", "Match your actual practices", "Re-review on changes").
 
-- No global "reset all dismissed notices" UI (could add later via `/dashboard/settings`).
-- No server-side persistence — local-only is enough for these notices.
-
-## Files
+### Files
 
 ```text
-src/components/marketing/
-  DismissibleNotice.tsx         new
-  TemplatePlaceholderRibbon.tsx edited — delegates to DismissibleNotice (API unchanged)
-src/components/
-  PaymentTestModeBanner.tsx     edited — uses DismissibleNotice banner variant
-src/pages/Pricing.tsx           edited — swap Alert for DismissibleNotice
-src/index.css                   edited — add --preview HSL token
-tailwind.config.ts              edited — register `preview` color
-src/data/changelog.ts           appended
+src/pages/Docs.tsx                     edited (layout + ToC slot, eyebrow downgrade)
+src/components/docs/ReadmeContent.tsx  edited (Section, headings, lists, code blocks, tokens, links)
+src/components/docs/DocsToc.tsx        new (sticky on-this-page nav)
+src/components/docs/CodeBlock.tsx      new (scrollable, copy button, aria)
+src/data/changelog.ts                  appended
 ```
 
-## Open question
+### Out of scope
 
-Default dismissal behavior — happy to flip either way:
-- **A. Persistent by default** (X = remembered forever, dropdown offers "Just dismiss for now"). My recommendation.
-- **B. Session by default** (X = back next reload, dropdown offers "Don't show again").
+- No new content, no backend changes, no full design refresh — purely a11y + readability tightening on `/docs`.
+- README/marketing copy elsewhere untouched.
 
-Defaulting to **A** unless you say otherwise.
+Used the **Accessibility Review** skill.
