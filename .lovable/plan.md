@@ -1,65 +1,54 @@
-# Use-this-template guides
+## Goal
 
-Two new marketing pages walking new users through adopting the template, with light cross-linking from existing pages. No content changes elsewhere beyond adding links.
+Replace the thin placeholder /about page with a full About page (mission, vision, founding story, values, milestones, team/leadership/board/investors/advisors/pets, press, contact) — and make every section editable from a new **Admin → About** screen so non-devs can update it.
 
-## New pages
+## What the user sees
 
-### `/use-template/lovable` — for Lovable users
-Step-by-step remix flow, no terminal required.
-1. Open the live demo / template project in Lovable
-2. Click **Remix** — Lovable forks the code and provisions a fresh Cloud backend
-3. First signup becomes admin automatically
-4. Rebrand in one prompt (link the ready-made prompts from README §2)
-5. Upload your logo at `/admin/brand`
-6. Edit site name / meta at `/admin/site-settings`
-7. Replace legal pages at `/privacy` and `/terms`
-8. Go-live checklist link → `/launch`
+**Public `/about`** — single page, anchored sections:
+1. **Hero** — eyebrow, headline, subhead, two CTAs.
+2. **Mission & Vision** — two side-by-side cards.
+3. **Founding story** — long-form rich text + optional image.
+4. **Values** — repeatable cards (icon name + title + description).
+5. **By the numbers** — repeatable stat tiles (label + value).
+6. **Timeline / Milestones** — chronological list (year + title + body).
+7. **Team** — grouped people grid. Each person: name, role, photo, bio, group (Leadership / Team / Board / Investors / Advisors / Pets / custom), socials (LinkedIn, X, GitHub, website), sort order. "Pets" group renders the same card with a paw icon.
+8. **Press / "As seen in"** — logo strip with links.
+9. **Careers / Contact CTA** — final band with two buttons.
 
-Includes copy-pasteable rebrand / pricing / pivot prompts (already in README §2), a "what you don't have to set up" callout (DB, auth, emails, sandbox Stripe all preconfigured), and a final CTA linking to `/launch`.
+A small "Edit this page" link appears for admins only (links to `/admin/about`).
 
-### `/use-template/github` — for GitHub users
-Developer flow, local-first.
-1. Remix on Lovable once (required — provisions Cloud backend)
-2. Settings → GitHub → connect; Lovable creates the repo and two-way syncs
-3. Local clone + `npm install` + `npm run dev` (port 8080)
-4. How the synced `.env` works (Cloud URL + anon key auto-managed)
-5. Where things live: `src/pages`, `supabase/functions`, `supabase/migrations`
-6. Two-way sync rules (push to branch ↔ Lovable prompts commit back)
-7. Go-live checklist link → `/launch`
+**Admin `/admin/about`** — tabbed editor matching the sections above:
+- **Page** tab: hero copy, mission, vision, founding story (textarea, markdown), CTA labels/links, section visibility toggles.
+- **Values / Stats / Milestones / Press** tabs: simple repeatable list editors (add/remove/reorder, inline fields).
+- **People** tab: list with filters by group; add/edit drawer with photo upload (reuses existing `brand-assets` bucket under `about/people/`), group dropdown (Leadership, Team, Board, Investors, Advisors, Pets, Other), socials, sort order, "published" toggle.
+- Single "Save" button per tab; toast on save; optimistic refetch.
 
-Includes a "why you still need Lovable once" callout (Cloud provisioning), bash blocks for clone/install/dev, and pointers to architecture notes from the README.
+## Backend (new tables)
 
-## Shared page chrome
-- `MarketingLayout` + `PageSeo`
-- Top of each page: a small tab/segmented switcher linking to the other guide ("Prefer GitHub? →" / "Prefer Lovable? →") so users can flip without going back
-- Numbered step cards (reuse existing `Card` + numbered badge pattern from `Launch.tsx`)
-- Sidebar or footer callout linking to `/launch`, `/readme`, `/docs`
+All in `public`, admin-write / public-read, with GRANTs.
 
-## Minimal edits to existing pages (links only, no content rewrites)
+1. `about_page` — singleton (`id smallint default 1`) holding all scalar/markdown copy and JSON for hero CTAs + section visibility flags. RLS: public SELECT, admin ALL.
+2. `about_sections` — generic ordered list of structured items used for **values**, **stats**, **milestones**, **press**. Columns: `id`, `kind` (enum: `value` | `stat` | `milestone` | `press`), `title`, `subtitle`, `body`, `icon`, `image_url`, `link_url`, `meta jsonb`, `position int`, `published bool`. One table keeps the editor and queries simple. RLS: public SELECT (published only via policy), admin ALL.
+3. `about_people` — `id`, `name`, `role`, `group_key` (text, free-form so admin can add "Pets" etc., with seeded defaults), `bio`, `photo_url`, `links jsonb` (linkedin/x/github/website), `position int`, `published bool`, timestamps. RLS: public SELECT where `published = true`, admin ALL.
 
-- `src/components/marketing/MarketingFooter.tsx` — add two links under an existing column (likely "Resources"): "Use on Lovable" → `/use-template/lovable`, "Use on GitHub" → `/use-template/github`
-- `src/pages/Readme.tsx` — add a single banner/callout near the top: "New here? Start with the [Lovable guide] or [GitHub guide]." No other content changed
-- `src/pages/Launch.tsx` — add one line at the top: "Just remixed? See the [Lovable setup guide] first." No other content changed
+No FKs to `auth.users` — these are CMS content, not user accounts. `updated_at` triggers via existing `public.update_updated_at_column()`.
 
-These are the only edits to existing pages. If you'd like links added in additional places (landing hero CTA, docs page, /about), say so and I'll add them — otherwise I'll keep the footprint minimal as you asked.
+## Frontend changes
 
-## Routing
-Add to `src/App.tsx` in the marketing block:
-```tsx
-<Route path="/use-template/lovable" element={<UseTemplateLovable />} />
-<Route path="/use-template/github" element={<UseTemplateGithub />} />
-```
+- `src/pages/About.tsx` — rebuilt to fetch from the three tables via a single `useAboutContent()` hook (parallel queries, cached with React Query if available, else `useEffect`). Render sections conditionally on visibility flags. Keep `MarketingLayout` + `PageSeo`.
+- New components under `src/components/about/`:
+  - `AboutHero.tsx`, `AboutMissionVision.tsx`, `AboutStory.tsx`, `AboutValues.tsx`, `AboutStats.tsx`, `AboutTimeline.tsx`, `AboutTeam.tsx` (groups people by `group_key`), `AboutPress.tsx`, `AboutCta.tsx`.
+- New `src/pages/admin/About.tsx` with tabs (`Page`, `Values`, `Stats`, `Milestones`, `Press`, `People`). Reuse shadcn `Tabs`, `Card`, `Input`, `Textarea`, `Switch`, `Dialog`, `Button`. Photo upload reuses the existing helper pattern from `src/pages/admin/Brand.tsx`.
+- Wire `/admin/about` route in `src/App.tsx` (ProtectedRoute) and add a **Content → About page** nav item in `src/components/admin/AdminShell.tsx`.
+- Remove the `TemplatePlaceholderRibbon` from About once the DB has real content (keep a fallback message if the singleton row is empty).
+- Append an entry to `src/data/changelog.ts` per the project's changelog policy.
 
-## SEO
-- Lovable page title: "Use this template on Lovable — remix in one click"
-- GitHub page title: "Use this template on GitHub — clone and sync"
-- Both added to `public/sitemap.xml` via the existing generator script
+## Seed data
 
-## Content source
-All copy derives from `README.md` §"Use this starter" — no new claims, just reformatted as a guided flow with screenshots-less step cards. Pricing, features, and architecture statements are unchanged.
+The migration inserts the singleton `about_page` row plus a small set of sensible defaults (3 values, 3 stats, 3 milestones, 4 people incl. one "Pets" example, 2 press logos) so the page never looks empty on first load. Admins overwrite from `/admin/about`.
 
-## Out of scope (will confirm before doing)
-- Rewriting the landing hero or About page
-- Changing the README content itself
-- Adding screenshots/illustrations (can add later if you want)
-- Removing the existing `/readme` or `/docs` pages
+## Out of scope
+
+- Job listings / careers ATS (CTA only, links to `/contact`).
+- Per-locale translations.
+- Public-facing "follow author" features.
