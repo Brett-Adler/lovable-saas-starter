@@ -14,6 +14,213 @@ export type Database = {
   }
   public: {
     Tables: {
+      about_page: {
+        Row: {
+          cta_body: string | null
+          cta_primary_href: string | null
+          cta_primary_label: string | null
+          cta_secondary_href: string | null
+          cta_secondary_label: string | null
+          cta_title: string | null
+          eyebrow: string | null
+          headline: string | null
+          id: number
+          milestones_title: string | null
+          mission_body: string | null
+          mission_title: string | null
+          press_title: string | null
+          primary_cta_href: string | null
+          primary_cta_label: string | null
+          secondary_cta_href: string | null
+          secondary_cta_label: string | null
+          show_cta: boolean
+          show_milestones: boolean
+          show_mission: boolean
+          show_press: boolean
+          show_stats: boolean
+          show_story: boolean
+          show_team: boolean
+          show_values: boolean
+          stats_title: string | null
+          story_body: string | null
+          story_image_url: string | null
+          story_title: string | null
+          subhead: string | null
+          team_subtitle: string | null
+          team_title: string | null
+          updated_at: string
+          values_title: string | null
+          vision_body: string | null
+          vision_title: string | null
+        }
+        Insert: {
+          cta_body?: string | null
+          cta_primary_href?: string | null
+          cta_primary_label?: string | null
+          cta_secondary_href?: string | null
+          cta_secondary_label?: string | null
+          cta_title?: string | null
+          eyebrow?: string | null
+          headline?: string | null
+          id?: number
+          milestones_title?: string | null
+          mission_body?: string | null
+          mission_title?: string | null
+          press_title?: string | null
+          primary_cta_href?: string | null
+          primary_cta_label?: string | null
+          secondary_cta_href?: string | null
+          secondary_cta_label?: string | null
+          show_cta?: boolean
+          show_milestones?: boolean
+          show_mission?: boolean
+          show_press?: boolean
+          show_stats?: boolean
+          show_story?: boolean
+          show_team?: boolean
+          show_values?: boolean
+          stats_title?: string | null
+          story_body?: string | null
+          story_image_url?: string | null
+          story_title?: string | null
+          subhead?: string | null
+          team_subtitle?: string | null
+          team_title?: string | null
+          updated_at?: string
+          values_title?: string | null
+          vision_body?: string | null
+          vision_title?: string | null
+        }
+        Update: {
+          cta_body?: string | null
+          cta_primary_href?: string | null
+          cta_primary_label?: string | null
+          cta_secondary_href?: string | null
+          cta_secondary_label?: string | null
+          cta_title?: string | null
+          eyebrow?: string | null
+          headline?: string | null
+          id?: number
+          milestones_title?: string | null
+          mission_body?: string | null
+          mission_title?: string | null
+          press_title?: string | null
+          primary_cta_href?: string | null
+          primary_cta_label?: string | null
+          secondary_cta_href?: string | null
+          secondary_cta_label?: string | null
+          show_cta?: boolean
+          show_milestones?: boolean
+          show_mission?: boolean
+          show_press?: boolean
+          show_stats?: boolean
+          show_story?: boolean
+          show_team?: boolean
+          show_values?: boolean
+          stats_title?: string | null
+          story_body?: string | null
+          story_image_url?: string | null
+          story_title?: string | null
+          subhead?: string | null
+          team_subtitle?: string | null
+          team_title?: string | null
+          updated_at?: string
+          values_title?: string | null
+          vision_body?: string | null
+          vision_title?: string | null
+        }
+        Relationships: []
+      }
+      about_people: {
+        Row: {
+          bio: string | null
+          created_at: string
+          group_key: string
+          id: string
+          links: Json
+          name: string
+          photo_url: string | null
+          position: number
+          published: boolean
+          role: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          group_key?: string
+          id?: string
+          links?: Json
+          name: string
+          photo_url?: string | null
+          position?: number
+          published?: boolean
+          role?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          group_key?: string
+          id?: string
+          links?: Json
+          name?: string
+          photo_url?: string | null
+          position?: number
+          published?: boolean
+          role?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      about_sections: {
+        Row: {
+          body: string | null
+          created_at: string
+          icon: string | null
+          id: string
+          image_url: string | null
+          kind: Database["public"]["Enums"]["about_section_kind"]
+          link_url: string | null
+          meta: Json
+          position: number
+          published: boolean
+          subtitle: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          image_url?: string | null
+          kind: Database["public"]["Enums"]["about_section_kind"]
+          link_url?: string | null
+          meta?: Json
+          position?: number
+          published?: boolean
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          image_url?: string | null
+          kind?: Database["public"]["Enums"]["about_section_kind"]
+          link_url?: string | null
+          meta?: Json
+          position?: number
+          published?: boolean
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           anonymous_id: string | null
@@ -1293,6 +1500,7 @@ export type Database = {
       }
     }
     Enums: {
+      about_section_kind: "value" | "stat" | "milestone" | "press"
       app_role: "admin" | "moderator" | "user"
       campaign_status: "draft" | "scheduled" | "sending" | "sent" | "failed"
       lead_kind: "contact" | "demo" | "waitlist" | "newsletter" | "other"
@@ -1441,6 +1649,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      about_section_kind: ["value", "stat", "milestone", "press"],
       app_role: ["admin", "moderator", "user"],
       campaign_status: ["draft", "scheduled", "sending", "sent", "failed"],
       lead_kind: ["contact", "demo", "waitlist", "newsletter", "other"],
