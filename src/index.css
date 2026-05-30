@@ -113,6 +113,8 @@
     --info-foreground: 0 0% 100%;
     --destructive: 0 75% 60%;
     --destructive-foreground: 240 20% 12%;
+    --preview: 28 90% 65%;
+    --preview-foreground: 240 20% 12%;
 
     --muted: 240 15% 16%;
     --muted-foreground: 240 10% 65%;
