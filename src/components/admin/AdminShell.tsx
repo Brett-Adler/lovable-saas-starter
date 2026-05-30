@@ -64,6 +64,7 @@ const GROUPS: NavGroup[] = [
     label: "Content",
     items: [
       { to: "/admin/blog", label: "Blog", icon: FileText },
+      { to: "/admin/about", label: "About page", icon: FileText },
       { to: "/admin/status", label: "Status page", icon: Activity },
     ],
   },
