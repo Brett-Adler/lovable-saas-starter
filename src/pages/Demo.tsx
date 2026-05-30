@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
+import { BrowserMockup } from "@/components/marketing/BrowserMockup";
+import { AppMockup } from "@/components/marketing/AppMockup";
 import { supabase } from "@/integrations/supabase/client";
 
 const schema = z.object({
@@ -61,6 +63,14 @@ const Demo = () => {
             <h1 className="text-4xl md:text-5xl font-bold">See it in action</h1>
             <p className="mt-4 text-lg text-muted-foreground">
               30-minute walkthrough tailored to your team. No sales pressure.
+            </p>
+          </div>
+          <div className="mb-10">
+            <BrowserMockup url="app.yourdomain.com/dashboard">
+              <AppMockup variant="dashboard" />
+            </BrowserMockup>
+            <p className="mt-3 text-center text-xs text-muted-foreground">
+              A peek at the admin dashboard — illustrative placeholder, not a real product screen.
             </p>
           </div>
           <Card className="p-8 border-border/60">
