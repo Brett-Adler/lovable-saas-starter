@@ -1,78 +1,75 @@
 ## Goal
 
-Make the marketing site feel more visual by adding (a) generic app mockup screenshots in hero and feature areas, and (b) real partner/tech logos with links on integrations, roadmap, and docs — without using any real third-party product UI.
+Make template/preview-only notices (test-mode banner, "free template" alert, placeholder ribbons) visually stand out, and make every one of them dismissible — with the dismissal **remembered across reloads** by default, plus a one-time "just for now" option.
 
-## What gets added
+## Approach
 
-### 1. Reusable building blocks (`src/components/marketing/`)
+Introduce one shared building block and route the existing notices through it. Single source of truth = consistent look, consistent dismissal behavior, no duplicated localStorage code.
 
-- **`BrowserMockup.tsx`** — fake browser/macOS window chrome (traffic lights + URL bar) wrapping any children. Used to frame dashboard mockups.
-- **`AppMockup.tsx`** — pure-Tailwind/SVG fake dashboard built from divs (sidebar, fake metric cards, chart bars, table rows, avatar circles). Several variants via prop: `dashboard`, `analytics`, `inbox`, `billing`, `team`. No real screenshots, no real product UI — visibly stylized so it reads as a placeholder mockup, not a real screen.
-- **`BrandIcon.tsx`** — renders a known brand glyph by `slug` using [simple-icons](https://simpleicons.org/) SVG paths (already MIT-licensed brand marks). Falls back to a monogram tile if the slug is unknown. Slugs we will support out of the gate: `stripe`, `supabase`, `lovable`, `resend`, `twilio`, `slack`, `zapier`, `google`, `apple`, `github`, `okta`, `azure`, `vercel`, `postgres`, `react`, `typescript`, `tailwindcss`, `nodejs`.
-- **`LogoCloud.tsx`** — horizontal row of `BrandIcon`s with optional labels and external links (`rel="noopener noreferrer external" target="_blank"`).
+### 1. New component: `src/components/marketing/DismissibleNotice.tsx`
 
-We will NOT bring in the `simple-icons` npm package; instead we'll inline only the ~18 SVG paths we use into `src/lib/brand/icons.ts` to keep bundle size small. Attribution comment added in that file.
+Props:
+- `id: string` — required, used as the `localStorage` key (`notice-dismissed:{id}`).
+- `tone?: "info" | "warning" | "preview"` — controls color + icon. Default `preview`.
+- `title?: string`, `children: ReactNode` — body content; title bold, body smaller.
+- `previewOnly?: boolean` — when true, only renders on `localhost`, `*.lovable.app`, or `*.lovableproject.com` (matches today's `TemplatePlaceholderRibbon` behavior).
+- `persistDismissal?: boolean` (default `true`) — when true, remembers dismissal forever; when false, only hides for the current tab session (`sessionStorage`).
+- `actions?: ReactNode` — optional inline links/buttons (e.g., "Read more").
+- `className?: string`.
 
-### 2. Page-level changes
+Visual standout (vs. today's quiet warning ribbon):
+- Pill-shaped left accent bar in the tone color, soft tone-tinted background, 1px tone border, `shadow-sm`, slight `ring-1 ring-tone/20`.
+- Tone icon in a rounded square chip (`bg-tone/15`), aligned to top.
+- Title in `font-semibold`, body in `text-sm text-foreground/80`.
+- Right side: a compact action cluster:
+  - `actions` slot (renders inline links).
+  - A `…` overflow menu (shadcn `DropdownMenu`) with two items:
+    1. **Dismiss** — hides until the page is reloaded (or forever if `persistDismissal=true`, which is the default).
+    2. **Don't show again** — always writes the persistent flag. Shown only when `persistDismissal` is true (the default).
+  - A close (X) button — uses the default dismissal behavior of the notice.
+- Smooth fade/slide-out (`animate-fade-out`) on dismiss.
+- Full-bleed `variant="banner"` mode for top-of-page banners (test mode): no border-radius, sits flush, still dismissible.
 
-- **`src/pages/Index.tsx`**
-  - Hero: add an `AppMockup variant="dashboard"` inside a `BrowserMockup`, placed below the CTA buttons with a soft glow/parallax. On mobile it stacks; on desktop it sits beneath the hero copy at full width.
-  - New "Built on" `LogoCloud` strip just under the hero (Lovable, Supabase, Stripe, Resend, React, Tailwind, TypeScript) — each logo links to its official site.
-  - Features section: add a small inline `AppMockup` variant next to 2–3 of the feature cards (analytics, teams, billing) so the section isn't text-only.
+Behavior:
+- On mount: check `previewOnly` host gate → check `localStorage["notice-dismissed:{id}"]` (and `sessionStorage` if not persisted) → set visible.
+- On dismiss: write the appropriate storage key, animate out, unmount.
+- Accessible: `role="status"` for info, `role="alert"` for warning, `aria-live="polite"`, close button has `aria-label`.
 
-- **`src/pages/Integrations.tsx`**
-  - Each integration card gets a `BrandIcon` (Stripe, Google, Apple, Resend, Twilio, Slack, Zapier, etc.). Cards with an official site get an external "Learn more" link in addition to the existing internal "Open" link (e.g., Stripe → stripe.com, Resend → resend.com, Twilio → twilio.com, Slack → slack.com, Zapier → zapier.com, Okta → okta.com).
-  - Add a top `LogoCloud` summarizing the ecosystem.
+### 2. Replace existing notices
 
-- **`src/pages/Roadmap.tsx`** / **`src/components/marketing/RoadmapList.tsx`**
-  - Where a roadmap item maps to a known vendor (Slack, Zapier, Twilio, SAML providers, etc.), render its `BrandIcon` next to the title.
-  - Add a `BrowserMockup` containing an `AppMockup variant="roadmap"` at the top — a generic placeholder of what a shipped feature looks like in-app.
+| Today | After |
+|---|---|
+| `PaymentTestModeBanner` (`bg-orange-100` hard-coded, not dismissible) | Rewritten to render `DismissibleNotice` with `variant="banner"`, `tone="warning"`, `id="payments-test-mode"`, `previewOnly=false` (it depends on the publishable key, not the host). |
+| Pricing page `Alert` "This is a free template" | Replaced with `DismissibleNotice` `tone="info"`, `id="pricing-free-template"`, includes the "Read more" link as an action. |
+| `TemplatePlaceholderRibbon` (used on Index, Legal, Compare) | Kept as a thin wrapper that delegates to `DismissibleNotice` with `previewOnly=true`, `tone="preview"`. No call sites need to change. |
 
-- **`src/pages/Docs.tsx`**
-  - Add a "Powered by" `LogoCloud` (Lovable, Supabase, Stripe, Resend, React, Tailwind) with external links to their docs: Lovable docs (docs.lovable.dev), Supabase docs, Stripe docs, Resend docs, React docs, Tailwind docs.
-  - Where doc cards reference an external service, add the `BrandIcon` and an external link.
+### 3. Tokens
 
-- **`src/pages/Demo.tsx`** (small touch)
-  - Add a `BrowserMockup` + `AppMockup variant="analytics"` at the top so the page isn't empty above the CTA.
-
-### 3. Accessibility & SEO
-
-- All mockups are decorative: wrapped with `aria-hidden="true"` and no `alt` text needed.
-- Brand icons get `aria-label="<Brand> logo"` and `<title>` inside the SVG.
-- External links use `rel="noopener noreferrer external"` and `target="_blank"` with a visually-hidden " (opens in new tab)".
+Add `--preview` HSL token + `bg-preview`, `text-preview`, `border-preview` utilities in `index.css` / `tailwind.config.ts` (warm amber, distinct from `warning` so a real warning still feels heavier). `tone="warning"` keeps using existing `--warning` token; `tone="info"` uses `--primary`.
 
 ### 4. Out of scope
 
-- No real product screenshots, no scraped UI, no real customer logos.
-- No backend/admin changes — content lives in code constants for now.
-- No new dependencies.
+- No global "reset all dismissed notices" UI (could add later via `/dashboard/settings`).
+- No server-side persistence — local-only is enough for these notices.
 
-## Technical notes
+## Files
 
 ```text
-src/
-  components/marketing/
-    BrowserMockup.tsx        new
-    AppMockup.tsx            new (variants: dashboard|analytics|inbox|billing|team|roadmap)
-    BrandIcon.tsx            new (reads from src/lib/brand/icons.ts)
-    LogoCloud.tsx            new
-    RoadmapList.tsx          edited (BrandIcon per item where applicable)
-  lib/brand/
-    icons.ts                 new — inlined simple-icons SVG paths + attribution
-  pages/
-    Index.tsx                edited (hero mockup + logo cloud + inline feature mockups)
-    Integrations.tsx         edited (BrandIcon per card + external links + top LogoCloud)
-    Roadmap.tsx              edited (top mockup)
-    Docs.tsx                 edited (LogoCloud + external doc links)
-    Demo.tsx                 edited (top mockup)
+src/components/marketing/
+  DismissibleNotice.tsx         new
+  TemplatePlaceholderRibbon.tsx edited — delegates to DismissibleNotice (API unchanged)
+src/components/
+  PaymentTestModeBanner.tsx     edited — uses DismissibleNotice banner variant
+src/pages/Pricing.tsx           edited — swap Alert for DismissibleNotice
+src/index.css                   edited — add --preview HSL token
+tailwind.config.ts              edited — register `preview` color
+src/data/changelog.ts           appended
 ```
-
-Changelog entry appended to `src/data/changelog.ts` per project policy.
 
 ## Open question
 
-Two acceptable looks for the mockups — happy to pick one or do both:
-1. **Light/neutral** mockups matching the current theme (clean, subtle).
-2. **Gradient-backed** mockups using the existing `gradient-mesh` token for extra visual punch in the hero.
+Default dismissal behavior — happy to flip either way:
+- **A. Persistent by default** (X = remembered forever, dropdown offers "Just dismiss for now"). My recommendation.
+- **B. Session by default** (X = back next reload, dropdown offers "Don't show again").
 
-Defaulting to **#2 in the hero**, **#1 elsewhere** unless you say otherwise.
+Defaulting to **A** unless you say otherwise.
