@@ -48,14 +48,29 @@ export const SupportChatWidget = () => {
     },
   });
 
-  // Persist to localStorage on every update
+  // Hydrate from localStorage once on mount (useChat doesn't always pick up the initial messages prop)
+  const hydrated = useRef(false);
   useEffect(() => {
+    if (hydrated.current) return;
+    hydrated.current = true;
+    if (initialMessages.length > 0 && messages.length === 0) {
+      setMessages(initialMessages);
+    }
+  }, [initialMessages, messages.length, setMessages]);
+
+  // Persist to localStorage on every update (skip while streaming to avoid partial writes churn)
+  useEffect(() => {
+    if (status === "streaming" || status === "submitted") return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+      if (messages.length === 0) {
+        localStorage.removeItem(STORAGE_KEY);
+      } else {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+      }
     } catch {
       // ignore quota
     }
-  }, [messages]);
+  }, [messages, status]);
 
   // Autoscroll
   useEffect(() => {
