@@ -31,7 +31,7 @@ const Sidebar = () => (
           i === 0 ? "bg-primary/15 text-primary font-medium" : "text-muted-foreground",
         )}
       >
-        <span className="h-2 w-2 rounded-sm bg-current/50 mr-2 opacity-60" />
+        <span className="h-2 w-2 rounded-sm bg-current mr-2 opacity-50" />
         {l}
       </div>
     ))}
