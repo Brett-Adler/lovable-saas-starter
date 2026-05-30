@@ -220,11 +220,16 @@ export const SupportChatWidget = () => {
               <Textarea
                 ref={inputRef}
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  const el = e.currentTarget;
+                  el.style.height = "auto";
+                  el.style.height = `${Math.min(el.scrollHeight, 240)}px`;
+                }}
                 onKeyDown={onKey}
                 placeholder="Ask anything…"
                 rows={1}
-                className="resize-none min-h-[44px] max-h-32 pr-11 text-sm"
+                className="resize-none min-h-[44px] max-h-60 pr-11 text-sm overflow-y-auto"
                 disabled={busy}
               />
               <Button
