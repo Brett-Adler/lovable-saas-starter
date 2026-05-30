@@ -73,6 +73,7 @@ export const SupportChatWidget = () => {
     const trimmed = text.trim();
     if (!trimmed || busy) return;
     setInput("");
+    if (inputRef.current) inputRef.current.style.height = "auto";
     void sendMessage({ text: trimmed });
   };
 
