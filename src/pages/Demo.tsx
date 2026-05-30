@@ -65,6 +65,14 @@ const Demo = () => {
               30-minute walkthrough tailored to your team. No sales pressure.
             </p>
           </div>
+          <div className="mb-10">
+            <BrowserMockup url="app.yourdomain.com/dashboard">
+              <AppMockup variant="dashboard" />
+            </BrowserMockup>
+            <p className="mt-3 text-center text-xs text-muted-foreground">
+              A peek at the admin dashboard — illustrative placeholder, not a real product screen.
+            </p>
+          </div>
           <Card className="p-8 border-border/60">
             {done ? (
               <div className="text-center py-8">
