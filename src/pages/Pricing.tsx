@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Check, X, Info } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
+import { DismissibleNotice } from "@/components/marketing/DismissibleNotice";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
@@ -103,13 +103,14 @@ const Pricing = () => {
       <PageSeo path="/pricing" title="Pricing" description="Simple, transparent pricing. Start free, upgrade when you grow. Cancel anytime." jsonLd={productSchemas} />
       <PaymentTestModeBanner />
       <div className="container pt-8">
-        <Alert className="max-w-3xl mx-auto">
-          <Info className="h-4 w-4" />
-          <AlertTitle>This is a free template</AlertTitle>
-          <AlertDescription>
-            SaaS Starter Suite is an open Lovable template. The pricing below is example content to demonstrate a subscription flow — you are not being charged to use the template. Remix it and replace these tiers with your own.
-          </AlertDescription>
-        </Alert>
+        <DismissibleNotice
+          id="pricing-free-template"
+          tone="info"
+          title="This is a free template"
+          className="max-w-3xl mx-auto"
+        >
+          SaaS Starter Suite is an open Lovable template. The pricing below is example content to demonstrate a subscription flow — you are not being charged to use the template. Remix it and replace these tiers with your own.
+        </DismissibleNotice>
       </div>
       <section className="container py-20 md:py-28">
         <div className="max-w-2xl mx-auto text-center">

@@ -27,6 +27,14 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-30",
+    title: "Dismissible notices",
+    changes: [
+      { type: "added", text: "Unified dismissible notice component — preview/template ribbons and the payments test-mode banner now stand out more and can be closed." },
+      { type: "added", text: "Each notice remembers your choice: a close button hides it for good, with an overflow menu offering 'Dismiss for now' (returns next visit) or 'Don't show again'." },
+    ],
+  },
+  {
+    date: "2026-05-30",
     title: "More visuals across the marketing site",
     changes: [
       { type: "added", text: "Placeholder app mockups in browser-style frames on the homepage features, Roadmap, and Demo pages." },
