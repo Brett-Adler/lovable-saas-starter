@@ -26,6 +26,14 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-05-30",
+    title: "About page CMS",
+    changes: [
+      { type: "added", text: "Rebuilt /about with mission, vision, founding story, values, stats, milestones, team, press, and a closing CTA." },
+      { type: "added", text: "New Admin → About editor lets admins manage every section, including people grouped by leadership, team, board, investors, advisors, and pets." },
+    ],
+  },
+  {
     date: "2026-05-27",
     title: "SEO and accessibility cleanup",
     changes: [
