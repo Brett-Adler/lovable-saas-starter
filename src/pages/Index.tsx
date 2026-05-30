@@ -14,6 +14,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { publicNavGroups } from "@/lib/public-routes";
 import { StatusBadge, type FeatureStatus } from "@/components/marketing/StatusBadge";
 import { TemplatePlaceholderRibbon } from "@/components/marketing/TemplatePlaceholderRibbon";
+import { LogoCloud } from "@/components/marketing/LogoCloud";
+import { BrowserMockup } from "@/components/marketing/BrowserMockup";
+import { AppMockup } from "@/components/marketing/AppMockup";
 
 type Feature = {
   icon: typeof Lock;
@@ -161,23 +164,16 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Logo cloud */}
+      {/* Logo cloud — tech stack & integrations */}
       <section className="border-y border-border/40 bg-muted/20">
-        <div className="container py-10">
-          <TemplatePlaceholderRibbon
-            id="index-logo-cloud"
-            className="max-w-md mx-auto mb-6"
-            message="Placeholder logos — replace in src/pages/Index.tsx"
-            hint="Visible only on Lovable preview hosts — never shown on your custom domain."
+        <div className="container py-12">
+          <LogoCloud
+            caption="Built on tools you already trust"
+            items={[
+              { slug: "lovable" }, { slug: "supabase" }, { slug: "stripe" }, { slug: "resend" },
+              { slug: "react" }, { slug: "tailwindcss" }, { slug: "typescript" },
+            ]}
           />
-          <p className="text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-6">
-            Trusted by teams shipping faster
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4 opacity-60">
-            {["Acme", "Globex", "Initech", "Umbrella", "Hooli", "Pied Piper"].map((name) => (
-              <span key={name} className="font-display font-bold text-lg text-muted-foreground">{name}</span>
-            ))}
-          </div>
         </div>
       </section>
 
