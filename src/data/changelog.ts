@@ -27,6 +27,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-30",
+    title: "Readable, skim-friendly docs",
+    changes: [
+      { type: "changed", text: "Reworked /docs for readability: stronger body contrast, anchored section headings, and a sticky 'On this page' nav on large screens." },
+      { type: "added", text: "Copy buttons on every prompt and shell snippet in the docs, with proper horizontal scrolling for long commands." },
+      { type: "changed", text: "Roadmap rows now use Shipped / In progress badges instead of relying on emoji alone, and warning callouts use semantic tokens for consistent dark-mode contrast." },
+    ],
+  },
+  {
+    date: "2026-05-30",
     title: "Dismissible notices",
     changes: [
       { type: "added", text: "Unified dismissible notice component — preview/template ribbons and the payments test-mode banner now stand out more and can be closed." },
