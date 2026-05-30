@@ -1,54 +1,78 @@
 ## Goal
 
-Replace the thin placeholder /about page with a full About page (mission, vision, founding story, values, milestones, team/leadership/board/investors/advisors/pets, press, contact) — and make every section editable from a new **Admin → About** screen so non-devs can update it.
+Make the marketing site feel more visual by adding (a) generic app mockup screenshots in hero and feature areas, and (b) real partner/tech logos with links on integrations, roadmap, and docs — without using any real third-party product UI.
 
-## What the user sees
+## What gets added
 
-**Public `/about`** — single page, anchored sections:
-1. **Hero** — eyebrow, headline, subhead, two CTAs.
-2. **Mission & Vision** — two side-by-side cards.
-3. **Founding story** — long-form rich text + optional image.
-4. **Values** — repeatable cards (icon name + title + description).
-5. **By the numbers** — repeatable stat tiles (label + value).
-6. **Timeline / Milestones** — chronological list (year + title + body).
-7. **Team** — grouped people grid. Each person: name, role, photo, bio, group (Leadership / Team / Board / Investors / Advisors / Pets / custom), socials (LinkedIn, X, GitHub, website), sort order. "Pets" group renders the same card with a paw icon.
-8. **Press / "As seen in"** — logo strip with links.
-9. **Careers / Contact CTA** — final band with two buttons.
+### 1. Reusable building blocks (`src/components/marketing/`)
 
-A small "Edit this page" link appears for admins only (links to `/admin/about`).
+- **`BrowserMockup.tsx`** — fake browser/macOS window chrome (traffic lights + URL bar) wrapping any children. Used to frame dashboard mockups.
+- **`AppMockup.tsx`** — pure-Tailwind/SVG fake dashboard built from divs (sidebar, fake metric cards, chart bars, table rows, avatar circles). Several variants via prop: `dashboard`, `analytics`, `inbox`, `billing`, `team`. No real screenshots, no real product UI — visibly stylized so it reads as a placeholder mockup, not a real screen.
+- **`BrandIcon.tsx`** — renders a known brand glyph by `slug` using [simple-icons](https://simpleicons.org/) SVG paths (already MIT-licensed brand marks). Falls back to a monogram tile if the slug is unknown. Slugs we will support out of the gate: `stripe`, `supabase`, `lovable`, `resend`, `twilio`, `slack`, `zapier`, `google`, `apple`, `github`, `okta`, `azure`, `vercel`, `postgres`, `react`, `typescript`, `tailwindcss`, `nodejs`.
+- **`LogoCloud.tsx`** — horizontal row of `BrandIcon`s with optional labels and external links (`rel="noopener noreferrer external" target="_blank"`).
 
-**Admin `/admin/about`** — tabbed editor matching the sections above:
-- **Page** tab: hero copy, mission, vision, founding story (textarea, markdown), CTA labels/links, section visibility toggles.
-- **Values / Stats / Milestones / Press** tabs: simple repeatable list editors (add/remove/reorder, inline fields).
-- **People** tab: list with filters by group; add/edit drawer with photo upload (reuses existing `brand-assets` bucket under `about/people/`), group dropdown (Leadership, Team, Board, Investors, Advisors, Pets, Other), socials, sort order, "published" toggle.
-- Single "Save" button per tab; toast on save; optimistic refetch.
+We will NOT bring in the `simple-icons` npm package; instead we'll inline only the ~18 SVG paths we use into `src/lib/brand/icons.ts` to keep bundle size small. Attribution comment added in that file.
 
-## Backend (new tables)
+### 2. Page-level changes
 
-All in `public`, admin-write / public-read, with GRANTs.
+- **`src/pages/Index.tsx`**
+  - Hero: add an `AppMockup variant="dashboard"` inside a `BrowserMockup`, placed below the CTA buttons with a soft glow/parallax. On mobile it stacks; on desktop it sits beneath the hero copy at full width.
+  - New "Built on" `LogoCloud` strip just under the hero (Lovable, Supabase, Stripe, Resend, React, Tailwind, TypeScript) — each logo links to its official site.
+  - Features section: add a small inline `AppMockup` variant next to 2–3 of the feature cards (analytics, teams, billing) so the section isn't text-only.
 
-1. `about_page` — singleton (`id smallint default 1`) holding all scalar/markdown copy and JSON for hero CTAs + section visibility flags. RLS: public SELECT, admin ALL.
-2. `about_sections` — generic ordered list of structured items used for **values**, **stats**, **milestones**, **press**. Columns: `id`, `kind` (enum: `value` | `stat` | `milestone` | `press`), `title`, `subtitle`, `body`, `icon`, `image_url`, `link_url`, `meta jsonb`, `position int`, `published bool`. One table keeps the editor and queries simple. RLS: public SELECT (published only via policy), admin ALL.
-3. `about_people` — `id`, `name`, `role`, `group_key` (text, free-form so admin can add "Pets" etc., with seeded defaults), `bio`, `photo_url`, `links jsonb` (linkedin/x/github/website), `position int`, `published bool`, timestamps. RLS: public SELECT where `published = true`, admin ALL.
+- **`src/pages/Integrations.tsx`**
+  - Each integration card gets a `BrandIcon` (Stripe, Google, Apple, Resend, Twilio, Slack, Zapier, etc.). Cards with an official site get an external "Learn more" link in addition to the existing internal "Open" link (e.g., Stripe → stripe.com, Resend → resend.com, Twilio → twilio.com, Slack → slack.com, Zapier → zapier.com, Okta → okta.com).
+  - Add a top `LogoCloud` summarizing the ecosystem.
 
-No FKs to `auth.users` — these are CMS content, not user accounts. `updated_at` triggers via existing `public.update_updated_at_column()`.
+- **`src/pages/Roadmap.tsx`** / **`src/components/marketing/RoadmapList.tsx`**
+  - Where a roadmap item maps to a known vendor (Slack, Zapier, Twilio, SAML providers, etc.), render its `BrandIcon` next to the title.
+  - Add a `BrowserMockup` containing an `AppMockup variant="roadmap"` at the top — a generic placeholder of what a shipped feature looks like in-app.
 
-## Frontend changes
+- **`src/pages/Docs.tsx`**
+  - Add a "Powered by" `LogoCloud` (Lovable, Supabase, Stripe, Resend, React, Tailwind) with external links to their docs: Lovable docs (docs.lovable.dev), Supabase docs, Stripe docs, Resend docs, React docs, Tailwind docs.
+  - Where doc cards reference an external service, add the `BrandIcon` and an external link.
 
-- `src/pages/About.tsx` — rebuilt to fetch from the three tables via a single `useAboutContent()` hook (parallel queries, cached with React Query if available, else `useEffect`). Render sections conditionally on visibility flags. Keep `MarketingLayout` + `PageSeo`.
-- New components under `src/components/about/`:
-  - `AboutHero.tsx`, `AboutMissionVision.tsx`, `AboutStory.tsx`, `AboutValues.tsx`, `AboutStats.tsx`, `AboutTimeline.tsx`, `AboutTeam.tsx` (groups people by `group_key`), `AboutPress.tsx`, `AboutCta.tsx`.
-- New `src/pages/admin/About.tsx` with tabs (`Page`, `Values`, `Stats`, `Milestones`, `Press`, `People`). Reuse shadcn `Tabs`, `Card`, `Input`, `Textarea`, `Switch`, `Dialog`, `Button`. Photo upload reuses the existing helper pattern from `src/pages/admin/Brand.tsx`.
-- Wire `/admin/about` route in `src/App.tsx` (ProtectedRoute) and add a **Content → About page** nav item in `src/components/admin/AdminShell.tsx`.
-- Remove the `TemplatePlaceholderRibbon` from About once the DB has real content (keep a fallback message if the singleton row is empty).
-- Append an entry to `src/data/changelog.ts` per the project's changelog policy.
+- **`src/pages/Demo.tsx`** (small touch)
+  - Add a `BrowserMockup` + `AppMockup variant="analytics"` at the top so the page isn't empty above the CTA.
 
-## Seed data
+### 3. Accessibility & SEO
 
-The migration inserts the singleton `about_page` row plus a small set of sensible defaults (3 values, 3 stats, 3 milestones, 4 people incl. one "Pets" example, 2 press logos) so the page never looks empty on first load. Admins overwrite from `/admin/about`.
+- All mockups are decorative: wrapped with `aria-hidden="true"` and no `alt` text needed.
+- Brand icons get `aria-label="<Brand> logo"` and `<title>` inside the SVG.
+- External links use `rel="noopener noreferrer external"` and `target="_blank"` with a visually-hidden " (opens in new tab)".
 
-## Out of scope
+### 4. Out of scope
 
-- Job listings / careers ATS (CTA only, links to `/contact`).
-- Per-locale translations.
-- Public-facing "follow author" features.
+- No real product screenshots, no scraped UI, no real customer logos.
+- No backend/admin changes — content lives in code constants for now.
+- No new dependencies.
+
+## Technical notes
+
+```text
+src/
+  components/marketing/
+    BrowserMockup.tsx        new
+    AppMockup.tsx            new (variants: dashboard|analytics|inbox|billing|team|roadmap)
+    BrandIcon.tsx            new (reads from src/lib/brand/icons.ts)
+    LogoCloud.tsx            new
+    RoadmapList.tsx          edited (BrandIcon per item where applicable)
+  lib/brand/
+    icons.ts                 new — inlined simple-icons SVG paths + attribution
+  pages/
+    Index.tsx                edited (hero mockup + logo cloud + inline feature mockups)
+    Integrations.tsx         edited (BrandIcon per card + external links + top LogoCloud)
+    Roadmap.tsx              edited (top mockup)
+    Docs.tsx                 edited (LogoCloud + external doc links)
+    Demo.tsx                 edited (top mockup)
+```
+
+Changelog entry appended to `src/data/changelog.ts` per project policy.
+
+## Open question
+
+Two acceptable looks for the mockups — happy to pick one or do both:
+1. **Light/neutral** mockups matching the current theme (clean, subtle).
+2. **Gradient-backed** mockups using the existing `gradient-mesh` token for extra visual punch in the hero.
+
+Defaulting to **#2 in the hero**, **#1 elsewhere** unless you say otherwise.
