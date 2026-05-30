@@ -57,6 +57,41 @@ const Docs = () => (
           ))}
         </div>
 
+        <div className="mt-12">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">Powered by</h2>
+          <LogoCloud
+            items={[
+              { slug: "lovable" }, { slug: "supabase" }, { slug: "stripe" }, { slug: "resend" },
+              { slug: "react" }, { slug: "tailwindcss" }, { slug: "typescript" },
+            ]}
+            className="mb-8"
+          />
+          <div className="grid gap-3 sm:grid-cols-2">
+            {externalDocs.map((d) => (
+              <Card key={d.href} className="p-4 hover:border-primary/40 transition-colors">
+                <a
+                  href={d.href}
+                  target="_blank"
+                  rel="noopener noreferrer external"
+                  className="flex items-start gap-3"
+                  aria-label={`${d.label} — opens in new tab`}
+                >
+                  <div className="h-9 w-9 rounded-lg bg-muted text-muted-foreground flex items-center justify-center shrink-0">
+                    <BrandIcon slug={d.slug} size={18} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-foreground inline-flex items-center gap-1.5">
+                      {d.label} <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+                    </p>
+                    <p className="text-sm text-muted-foreground">{d.desc}</p>
+                  </div>
+                </a>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+
         <div className="mt-10 flex items-center gap-2 text-sm text-muted-foreground">
           <BookOpen className="h-4 w-4" />
           <span>Setup &amp; customization guide</span>
