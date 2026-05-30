@@ -27,6 +27,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-30",
+    title: "More visuals across the marketing site",
+    changes: [
+      { type: "added", text: "Placeholder app mockups in browser-style frames on the homepage features, Roadmap, and Demo pages." },
+      { type: "added", text: "Brand logos with external links on Integrations, Roadmap items, and Docs (Lovable, Supabase, Stripe, Resend, Twilio, Slack, Zapier, Okta, React, Tailwind, TypeScript)." },
+      { type: "changed", text: "Replaced the placeholder homepage logo cloud with the real tech-stack lineup." },
+    ],
+  },
+  {
+    date: "2026-05-30",
     title: "About page CMS",
     changes: [
       { type: "added", text: "Rebuilt /about with mission, vision, founding story, values, stats, milestones, team, press, and a closing CTA." },
