@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
+import { BrowserMockup } from "@/components/marketing/BrowserMockup";
+import { AppMockup } from "@/components/marketing/AppMockup";
 import { supabase } from "@/integrations/supabase/client";
 
 const schema = z.object({

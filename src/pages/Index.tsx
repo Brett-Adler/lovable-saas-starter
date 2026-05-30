@@ -200,7 +200,27 @@ const Index = () => {
             </Card>
           ))}
         </div>
+
+        {/* Visual previews */}
+        <div className="mt-16 grid gap-6 lg:grid-cols-2 max-w-6xl mx-auto">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Built-in analytics</p>
+            <BrowserMockup url="app.yourdomain.com/admin/analytics">
+              <AppMockup variant="analytics" />
+            </BrowserMockup>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Stripe billing, wired</p>
+            <BrowserMockup url="app.yourdomain.com/admin/billing">
+              <AppMockup variant="billing" />
+            </BrowserMockup>
+          </div>
+        </div>
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          Illustrative placeholders — not real product screens.
+        </p>
       </section>
+
 
       {/* How it works */}
       <section className="bg-muted/30 border-y border-border/40">
