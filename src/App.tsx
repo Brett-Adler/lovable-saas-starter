@@ -21,6 +21,7 @@ import Docs from "./pages/Docs";
 import Launch from "./pages/Launch";
 import Changelog from "./pages/Changelog";
 import CheckoutReturn from "./pages/CheckoutReturn";
+import Checkout from "./pages/Checkout";
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
