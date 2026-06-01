@@ -91,7 +91,7 @@ const Checkout = () => {
 
   return (
     <div className="min-h-screen bg-muted/30 flex flex-col">
-      <PageSeo path="/checkout" title="Secure checkout" description="Complete your subscription securely." noIndex />
+      <PageSeo path="/checkout" title="Secure checkout" description="Complete your subscription securely." noindex />
       <PaymentTestModeBanner />
 
       {/* Minimal top bar */}
