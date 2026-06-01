@@ -26,6 +26,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-06-01",
+    title: "Full brand asset kit",
+    changes: [
+      { type: "added", text: "Cohesive SaaS Starter brand identity: pink→magenta gradient mark with hand-authored SVG logo variants (light, dark, mark-only, horizontal with tagline)." },
+      { type: "added", text: "Complete favicon, Apple touch icon, Android/PWA, maskable, Windows tile, and Safari pinned-tab icons, all generated from a single SVG source via scripts/generate-brand-icons.py." },
+      { type: "added", text: "Open Graph (1200×630), Twitter/X (1200×600), and square (1200×1200) social share cards for Facebook, LinkedIn, Slack, X, WhatsApp, and Discord." },
+      { type: "added", text: "Email header banner and light/dark PWA splash images." },
+      { type: "added", text: "public/BRAND-ASSETS.md usage guide documenting colors, file purposes, dimensions, and how to regenerate." },
+      { type: "changed", text: "Updated theme-color, manifest, and Windows tile color to the new brand magenta (#C026D3)." },
+    ],
+  },
+  {
     date: "2026-05-30",
     title: "Readable, skim-friendly docs",
     changes: [
