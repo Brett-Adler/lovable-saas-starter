@@ -27,6 +27,16 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-06-01",
+    title: "Documentation restructured by audience",
+    changes: [
+      { type: "added", text: "/docs is now a help center split into three audiences — Users, Admins & owners, and Builders — with per-article routes (/docs/:audience/:slug), breadcrumbs, prev/next navigation, and a sidebar." },
+      { type: "added", text: "Client-side docs search across every article (title, description, category, and audience), available on the docs landing page and inside every article." },
+      { type: "added", text: "40+ new articles covering signup, password reset, profile, theme, workspaces, invites, notifications, roles, billing, SSO, audit log, compliance, architecture, auth providers, Stripe wiring, email pipeline, RLS, deploy, and more." },
+      { type: "changed", text: "The previous single-page docs body moved out of the way; the deep end-to-end setup walkthrough still lives at /readme and is linked from the new Builder docs." },
+    ],
+  },
+  {
+    date: "2026-06-01",
     title: "Real product screenshots on home and new Features page",
     changes: [
       { type: "added", text: "Dedicated /features page with six in-depth sections (dashboard, analytics, billing, teams, user admin, audit log), each paired with a real product screenshot framed in a macOS-style window." },
