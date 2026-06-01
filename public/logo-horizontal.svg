@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="96" viewBox="0 0 480 96" fill="none">
+  <defs>
+    <linearGradient id="g" x1="8" y1="8" x2="88" y2="88" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF4FA3"/>
+      <stop offset="1" stop-color="#C026D3"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="80" height="80" rx="20" fill="url(#g)"/>
+  <circle cx="48" cy="27" r="4" fill="#fff"/>
+  <path d="M27 64 L48 38 L69 64" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M37 72.5 L48 59 L59 72.5" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.55"/>
+  <text x="108" y="58" font-family="Sora, Inter, system-ui, -apple-system, sans-serif" font-weight="700" font-size="38" fill="#1F1B2E" letter-spacing="-1">SaaS Starter</text>
+  <text x="110" y="80" font-family="Inter, system-ui, sans-serif" font-weight="500" font-size="14" fill="#6B6478" letter-spacing="0.2">Launch your SaaS in days, not months</text>
+</svg>
