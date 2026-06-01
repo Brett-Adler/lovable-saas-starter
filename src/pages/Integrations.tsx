@@ -30,7 +30,7 @@ const integrations: Integration[] = [
   { name: "AI support chat", brand: "lovable", description: "First-party AI assistant powered by Lovable AI.", status: "shipped", external: brandIcons.lovable.url },
   { name: "Slack", brand: "slack", description: "Pipe events into a channel.", status: "soon", external: brandIcons.slack.url },
   { name: "Zapier", brand: "zapier", description: "Triggers and actions across 6,000+ apps.", status: "soon", external: brandIcons.zapier.url },
-  { name: "Outbound webhooks", brand: "github", description: "Subscribe to events with retries and signing.", status: "soon" },
+  { name: "Outbound webhooks", description: "Subscribe to events with retries and signing.", status: "soon" },
 ];
 
 const Integrations = () => (
@@ -52,6 +52,7 @@ const Integrations = () => (
       <LogoCloud
         className="mb-14 max-w-3xl mx-auto"
         caption="Works with the tools you already use"
+        colored
         items={[
           { slug: "stripe" }, { slug: "supabase" }, { slug: "google" }, { slug: "apple" },
           { slug: "resend" }, { slug: "twilio" }, { slug: "slack" }, { slug: "zapier" },
@@ -63,8 +64,8 @@ const Integrations = () => (
           <Card key={i.name} className="p-5 flex flex-col gap-3">
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-3 min-w-0">
-                <span className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
-                  {i.brand ? <BrandIcon slug={i.brand} size={20} /> : <span className="text-xs font-semibold">{i.name.slice(0, 2)}</span>}
+                <span className="h-10 w-10 rounded-lg bg-white border border-border flex items-center justify-center text-foreground shrink-0 shadow-sm">
+                  {i.brand ? <BrandIcon slug={i.brand} size={22} colored /> : <span className="text-xs font-semibold text-muted-foreground">{i.name.slice(0, 2)}</span>}
                 </span>
                 <h3 className="font-semibold truncate">{i.name}</h3>
               </div>
