@@ -1,75 +1,75 @@
-## Audit summary — `/docs`
+## SaaS Starter — Brand Asset Kit
 
-Reviewed `src/pages/Docs.tsx` and `src/components/docs/ReadmeContent.tsx`. The page is content-rich but currently fails on readability, heading semantics, and skim-ability. Findings:
+Generate a complete, cohesive set of brand and app imagery for **SaaS Starter** using **Lovable's pink/magenta gradient** identity and an **iconic symbol** logo mark (a stylized rocket/spark — representing "starter / launch"). Vector logos and favicons are hand-authored SVG/PNG (crisp at every size); Open Graph, Twitter, and email hero cards are AI-generated for richer composition.
 
-### Critical (semantics / SR)
-1. **Broken heading hierarchy.** Page has an `<h1>Docs</h1>`, then `ReadmeContent` adds a second giant heading "Setup & Customization Guide" as an `<h2>`, fine — but the "First-run checklist" card *also* uses `<h2>` (visually it's a small card title — should be `<h3>`). Inside `<Section>` children, sub-items use `<h3>`. Net: a screen-reader user gets an inconsistent outline that doesn't match the visual hierarchy.
-2. **Decorative emoji inside heading text.** `<h2>⚠️ Privacy Policy …</h2>` and ✅/⏳ at the start of every roadmap bullet are read aloud literally ("warning sign", "check mark button"). Should be `aria-hidden` and paired with a real text status badge.
-3. **No heading anchors.** None of the `h2`/`h3`s have `id`s, so deep-links and "on this page" navigation aren't possible.
-4. **Plain `<a>` links to external generators / docs** rely on color only and have no focus-visible ring or "opens in new tab" cue for AT.
+### 1. Logo mark concept
 
-### Warning (readability / contrast)
-5. **Body copy is wrapped in `text-muted-foreground`** at the `<Section>` level (line 14). Every paragraph in the doc renders in muted gray — fine for captions, fatiguing for long-form reading. Body should be `text-foreground/85` (or just `text-foreground`), with muted reserved for secondary/eyebrow lines.
-6. **`list-decimal list-inside` quickstart/clone steps** indent wrapped lines under the marker, hurting scannability. Switch to `list-outside` with proper left padding.
-7. **`<pre>` code blocks use `whitespace-pre-wrap`** so shell commands wrap mid-token. Replace with `overflow-x-auto`, monospace, tabIndex=0, `aria-label`, and a copy button for the longer snippets (`git clone …`, the prompt templates).
-8. **Hard-coded `amber-500` palette** on the "Coming-soon screens" card breaks the design-token rule and ships a different yellow in dark mode than the rest of the warning system. Switch to the existing `warning` token (or the new `preview` token added earlier).
-9. **Heavy walls of text** in "Customize with one prompt" and the Privacy/Terms section — long paragraphs without breaks. Break to short paragraphs + bullets, and tighten verbose copy.
-10. **Cards in "What's included"** lump 8+ routes into one list — split into route groups (Marketing / Product / Legal / Meta) so users can scan.
+A geometric **rocket-spark** mark inside a rounded-square container:
+- Container: 12px-radius rounded square filled with Lovable's pink→magenta gradient (`#FF4FA3` → `#C026D3`).
+- Mark: a clean upward chevron + dot ("ignition spark") in white, optically centered.
+- Used across favicons, app icons, splash, and the existing `<Logo>` component (which already auto-loads from `/public`).
 
-### Info
-11. **No "On this page" ToC.** Page is ~400 lines tall; users have to scroll-hunt.
-12. **`<Code>` chips** lack `font-medium` weight and break-words rule; long ones (`/dashboard/settings/api-keys`) overflow on mobile.
-13. **`Section` icon chip** is purely decorative — add `aria-hidden="true"`.
-14. **`<a>` `rel="noreferrer"`** is missing `noopener` on the legal-generator links.
+### 2. Files to create / replace in `public/`
 
----
+Logos (SVG, hand-authored):
+- `logo.svg` — wordmark "SaaS Starter" + mark, dark text (light backgrounds)
+- `logo-dark.svg` — wordmark + mark, white text (dark backgrounds)
+- `logo-mark.svg` — square mark only
+- `logo-horizontal.svg` — extra-wide variant for email headers / footers
 
-## Plan
+Favicons & app icons (SVG + PNG, generated via a one-off Node script using `sharp`):
+- `favicon.svg`, `favicon.ico` (multi-size 16/32/48)
+- `favicon-16x16.png`, `favicon-32x32.png`
+- `apple-touch-icon.png` (180×180, opaque background per iOS)
+- `android-chrome-192x192.png`, `android-chrome-512x512.png`
+- `maskable-icon-512x512.png` (with safe-area padding)
+- `mstile-150x150.png`
+- `safari-pinned-tab.svg` (monochrome mask)
 
-### 1. Rework `src/components/docs/ReadmeContent.tsx`
+Social / share cards (AI-generated PNG, then optimized):
+- `og-image.png` (1200×630) — primary Open Graph, used by Facebook/LinkedIn/Slack/iMessage
+- `twitter-image.png` (1200×600) — X/Twitter summary_large_image
+- `og-square.png` (1200×1200) — WhatsApp/Discord square preview
 
-- `Section` component:
-  - Render heading as `<h2 id={slug}>` with a scroll-margin offset; accept an `id` prop derived from title.
-  - Mark the icon chip `aria-hidden="true"`.
-  - Drop the wrapper `text-muted-foreground`; default body to `text-foreground/85 leading-relaxed`. Apply `text-muted-foreground` only on intentionally-secondary lines.
-- Heading levels:
-  - "First-run checklist" / "Coming-soon screens" cards → `<h3>` (not `<h2>` / `<h3>` mismatch).
-  - All sub-headings inside Sections stay `<h3>`.
-  - Strip emoji from "Privacy Policy & Terms of Service — placeholders" title; rename to plain text and use the `ShieldAlert` icon chip already in place. Roadmap bullets: emoji wrapped in `<span aria-hidden="true">` and paired with a `Badge` ("Shipped" / "In progress").
-- Lists:
-  - `list-decimal pl-5 marker:text-muted-foreground` (outside markers) for ordered lists; same for the "Privacy generators" UL with `list-disc pl-5`.
-  - Cards' route lists: split "Public routes" into Marketing / Product / Legal / Meta sub-groups using small `<h4>`s.
-- Code blocks:
-  - Replace `<pre className="whitespace-pre-wrap …">` with a small `CodeBlock` helper: `<pre tabIndex={0} aria-label={label} className="overflow-x-auto rounded-md bg-muted/60 p-4 text-sm font-mono">`. Long prompts get a copy button (uses existing `navigator.clipboard` pattern) so users don't have to select text.
-  - `<Code>` chip gains `font-medium break-all`.
-- Cards: swap `amber-500` for `bg-warning/5 border-warning/30`; same for the Privacy/Terms card so colors come from tokens.
-- External links: helper `<ExternalDocLink>` that adds `target="_blank"`, `rel="noopener noreferrer external"`, a trailing `ExternalLink` icon, focus ring `focus-visible:ring-2 focus-visible:ring-primary`, and screen-reader text `"(opens in new tab)"`.
+Email & splash:
+- `email-header.png` (600×200) — for transactional email templates
+- `splash-light-1024.png`, `splash-dark-1024.png` (1024×1024) — PWA splash
 
-### 2. Add an "On this page" sidebar in `src/pages/Docs.tsx`
+Manifest / config refresh:
+- Update `site.webmanifest` — set `name: "SaaS Starter"`, `short_name: "SaaS Starter"`, `description`, `theme_color: "#C026D3"`, add maskable icon entry
+- Update `browserconfig.xml` TileColor → `#C026D3`
+- Update `index.html` `theme-color` meta → `#C026D3`
 
-- New `DocsToc` component (`src/components/docs/DocsToc.tsx`): static list of section ids/titles, renders as a sticky `<nav aria-label="On this page">` visible on `lg:block` only, scrolls smoothly with `scroll-margin-top` set on each `h2`.
-- Layout swap: wrap `ReadmeContent` and `DocsToc` in a `lg:grid lg:grid-cols-[1fr_220px] lg:gap-12` so the ToC sits to the right without changing the existing intro/quick-links block.
-- The intro `<h1>` becomes the sole page H1; the small "Powered by" label downgrades from `<h2 className="text-sm">` to a plain `<p className="text-xs uppercase">` (it's a label, not a heading).
-- Add `scroll-pt-24` to the page so anchor jumps clear the sticky nav.
+### 3. Asset guide
 
-### 3. Copy tightening (no scope change)
+Create **`public/BRAND-ASSETS.md`** (replaces / extends the existing `BRANDING.md` reference):
+- Color tokens (hex + HSL) for primary, gradient stops, neutrals
+- Logo variants table — which to use on which background, min sizes, clear-space rule
+- Favicon/app-icon table — file, dimensions, where it's referenced
+- Social card table — platform, dimensions, when to regenerate
+- Email & splash — usage
+- "How to regenerate" — single command to re-run the icon script
 
-- Trim 3-line paragraphs in "Customize with one prompt", "Promoting more admins", and the Privacy/Terms intro to 1–2 lines each.
-- Convert the long Privacy/Terms second paragraph into a small bullet list of duties ("Disclose all processors", "Match your actual practices", "Re-review on changes").
+### 4. Technical approach
 
-### Files
+1. **Author SVGs by hand** for `logo.svg`, `logo-dark.svg`, `logo-mark.svg`, `logo-horizontal.svg`, `favicon.svg`, `safari-pinned-tab.svg`. These are the source of truth.
+2. **Write one Node script** `scripts/generate-brand-icons.mjs` using `sharp` (already a common dep; add if missing) that takes `public/logo-mark.svg` and renders every PNG/ICO size into `public/`. Run it once to populate; it stays in repo for future re-runs.
+3. **Generate AI social cards** via the agent's `imagegen` tool — one prompt per card with consistent palette/typography. Save as PNGs in `public/`, hand-checked, then optimized.
+4. **Update meta**: `index.html` `theme-color`, `site.webmanifest`, `browserconfig.xml`. No changes to `<Logo>` component or any TS — it already reads `/logo.svg` etc.
+5. **Changelog entry** appended to `src/data/changelog.ts` per project policy.
 
-```text
-src/pages/Docs.tsx                     edited (layout + ToC slot, eyebrow downgrade)
-src/components/docs/ReadmeContent.tsx  edited (Section, headings, lists, code blocks, tokens, links)
-src/components/docs/DocsToc.tsx        new (sticky on-this-page nav)
-src/components/docs/CodeBlock.tsx      new (scrollable, copy button, aria)
-src/data/changelog.ts                  appended
-```
+### 5. Out of scope
 
-### Out of scope
+- No changes to design tokens in `index.css` / `tailwind.config.ts` (orange `#FF5C2A` is the *product* accent; the *brand mark* uses Lovable pink as requested — these can coexist). If you'd rather also retheme the app UI to pink, say so and I'll add that.
+- No changes to the in-app Brand Kit generator at `src/lib/brand/generate.ts`.
 
-- No new content, no backend changes, no full design refresh — purely a11y + readability tightening on `/docs`.
-- README/marketing copy elsewhere untouched.
+### 6. Deliverables checklist
 
-Used the **Accessibility Review** skill.
+- [ ] 4 logo SVGs
+- [ ] 11 favicon/app-icon files (SVG + PNG + ICO)
+- [ ] 3 social cards (OG, Twitter, square)
+- [ ] 2 splash images + 1 email header
+- [ ] Updated `site.webmanifest`, `browserconfig.xml`, `index.html` theme color
+- [ ] `public/BRAND-ASSETS.md` usage guide
+- [ ] `scripts/generate-brand-icons.mjs` for reproducibility
+- [ ] Changelog entry
