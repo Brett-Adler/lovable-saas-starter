@@ -8,7 +8,7 @@ import io
 import os
 from pathlib import Path
 
-import cairosvg
+import resvg_py
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -20,18 +20,22 @@ BG_PINK = (192, 38, 211, 255)  # #C026D3
 BG_WHITE = (255, 255, 255, 255)
 
 
+def _rasterize(svg_path: Path, w: int, h: int) -> Image.Image:
+    svg_str = svg_path.read_text()
+    png_bytes = bytes(resvg_py.svg_to_bytes(svg_string=svg_str, width=w, height=h))
+    return Image.open(io.BytesIO(png_bytes)).convert("RGBA")
+
+
 def render_svg(svg_path: Path, size: int, bg=None, safe_pct: float = 0.0) -> Image.Image:
     """Rasterize SVG to a square PIL image, optionally with opaque bg + inner safe area."""
     if safe_pct > 0:
         inner = int(size * (1 - safe_pct * 2))
-        png = cairosvg.svg2png(url=str(svg_path), output_width=inner, output_height=inner)
-        fg = Image.open(io.BytesIO(png)).convert("RGBA")
+        fg = _rasterize(svg_path, inner, inner)
         canvas = Image.new("RGBA", (size, size), bg or (0, 0, 0, 0))
         off = (size - inner) // 2
         canvas.alpha_composite(fg, (off, off))
         return canvas
-    png = cairosvg.svg2png(url=str(svg_path), output_width=size, output_height=size)
-    fg = Image.open(io.BytesIO(png)).convert("RGBA")
+    fg = _rasterize(svg_path, size, size)
     if bg is not None:
         canvas = Image.new("RGBA", (size, size), bg)
         canvas.alpha_composite(fg)
@@ -66,9 +70,7 @@ def main():
     save(render_svg(MARK, 1024, bg=(15, 12, 26, 255), safe_pct=0.30), "splash-dark-1024.png")
 
     # Email header (600×200, white bg, centered horizontal logo)
-    from cairosvg import svg2png
-    horiz_png = svg2png(url=str(PUB / "logo-horizontal.svg"), output_width=480, output_height=96)
-    horiz = Image.open(io.BytesIO(horiz_png)).convert("RGBA")
+    horiz = _rasterize(PUB / "logo-horizontal.svg", 480, 96)
     email = Image.new("RGBA", (600, 200), BG_WHITE)
     email.alpha_composite(horiz, ((600 - 480) // 2, (200 - 96) // 2))
     save(email, "email-header.png")
