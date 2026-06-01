@@ -1,10 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FF5C2A"/>
-      <stop offset="1" stop-color="#FF8A47"/>
+    <linearGradient id="g" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF4FA3"/>
+      <stop offset="1" stop-color="#C026D3"/>
     </linearGradient>
   </defs>
   <rect width="48" height="48" rx="12" fill="url(#g)"/>
-  <path d="M30.5 17.5c-.8-2.4-3.2-4-6.4-4-3.8 0-6.4 2-6.4 5 0 2.5 1.6 4 5 4.7l3 .7c1.5.3 2.2.9 2.2 1.9 0 1.2-1.2 2-3.1 2-2 0-3.4-.8-3.8-2.4l-3.7.9c.7 3 3.5 4.8 7.4 4.8 4.2 0 7-2 7-5.2 0-2.5-1.6-4-5-4.7l-3-.7c-1.5-.3-2.2-.9-2.2-1.8 0-1.1 1.1-1.9 2.8-1.9 1.7 0 2.8.7 3.3 2.1l3-.4z" fill="#fff"/>
+  <!-- Upward spark: chevron + ignition dot -->
+  <circle cx="24" cy="11.5" r="2.4" fill="#fff"/>
+  <path d="M11.5 33.5 L24 18 L36.5 33.5" stroke="#fff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M17.5 38.5 L24 30.5 L30.5 38.5" stroke="#fff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.55"/>
 </svg>
