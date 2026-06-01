@@ -15,7 +15,7 @@ import { publicNavGroups } from "@/lib/public-routes";
 import { StatusBadge, type FeatureStatus } from "@/components/marketing/StatusBadge";
 import { TemplatePlaceholderRibbon } from "@/components/marketing/TemplatePlaceholderRibbon";
 import { LogoCloud } from "@/components/marketing/LogoCloud";
-import { BrowserMockup } from "@/components/marketing/BrowserMockup";
+
 import analyticsShot from "@/assets/screenshots/analytics.png.asset.json";
 import billingShot from "@/assets/screenshots/billing.png.asset.json";
 
