@@ -1,75 +1,70 @@
-## SaaS Starter — Brand Asset Kit
+## Goal
 
-Generate a complete, cohesive set of brand and app imagery for **SaaS Starter** using **Lovable's pink/magenta gradient** identity and an **iconic symbol** logo mark (a stylized rocket/spark — representing "starter / launch"). Vector logos and favicons are hand-authored SVG/PNG (crisp at every size); Open Graph, Twitter, and email hero cards are AI-generated for richer composition.
+Make the "subscribe" experience clearer: when a user picks a plan they see a confirmation step that summarizes exactly what they're buying (plan, cadence, price, what's included, billing terms, trust signals) before they pay, and the actual payment surface feels more like a focused Stripe window than a cramped modal.
 
-### 1. Logo mark concept
+## Constraint: embedded vs. hosted Stripe
 
-A geometric **rocket-spark** mark inside a rounded-square container:
-- Container: 12px-radius rounded square filled with Lovable's pink→magenta gradient (`#FF4FA3` → `#C026D3`).
-- Mark: a clean upward chevron + dot ("ignition spark") in white, optically centered.
-- Used across favicons, app icons, splash, and the existing `<Logo>` component (which already auto-loads from `/public`).
+Lovable's managed Stripe integration only supports **embedded** Checkout — we cannot redirect to `checkout.stripe.com` or pop a new browser window. The closest equivalent to "open a Stripe window" is a **dedicated full-page route** (`/checkout`) where the embedded Stripe form is the only thing on screen, with the marketing chrome stripped away. That's what this plan builds.
 
-### 2. Files to create / replace in `public/`
+## What changes
 
-Logos (SVG, hand-authored):
-- `logo.svg` — wordmark "SaaS Starter" + mark, dark text (light backgrounds)
-- `logo-dark.svg` — wordmark + mark, white text (dark backgrounds)
-- `logo-mark.svg` — square mark only
-- `logo-horizontal.svg` — extra-wide variant for email headers / footers
+### 1. Replace the current modal with a richer two-step flow
 
-Favicons & app icons (SVG + PNG, generated via a one-off Node script using `sharp`):
-- `favicon.svg`, `favicon.ico` (multi-size 16/32/48)
-- `favicon-16x16.png`, `favicon-32x32.png`
-- `apple-touch-icon.png` (180×180, opaque background per iOS)
-- `android-chrome-192x192.png`, `android-chrome-512x512.png`
-- `maskable-icon-512x512.png` (with safe-area padding)
-- `mstile-150x150.png`
-- `safari-pinned-tab.svg` (monochrome mask)
+When a user clicks "Subscribe to Pro/Team" on `/pricing`:
 
-Social / share cards (AI-generated PNG, then optimized):
-- `og-image.png` (1200×630) — primary Open Graph, used by Facebook/LinkedIn/Slack/iMessage
-- `twitter-image.png` (1200×600) — X/Twitter summary_large_image
-- `og-square.png` (1200×1200) — WhatsApp/Discord square preview
+**Step A — Confirmation dialog** (new, replaces today's bare modal):
+A wider dialog with two columns:
+- **Left: Order summary**
+  - Plan name + "Most popular" badge if applicable
+  - Billing cadence pill (Monthly / Yearly)
+  - Big price line: `$15 /month` with `Billed $180 annually` underneath when yearly
+  - "You save $48/year" line when yearly is selected
+  - Itemized "What's included" list (reuses the tier's `features`)
+  - Account line: `Signing in as user@example.com`
+- **Right: Terms & trust panel**
+  - "What happens next" 3-step list: secure payment → instant access → manage anytime
+  - Bullets: cancel anytime, prorated upgrades/downgrades, secure payment by Stripe, 30-day refund policy (copy only — no functional change)
+  - Primary button: **Continue to payment →**
+  - Secondary: **Cancel**
+  - Small print: links to /legal terms and privacy
 
-Email & splash:
-- `email-header.png` (600×200) — for transactional email templates
-- `splash-light-1024.png`, `splash-dark-1024.png` (1024×1024) — PWA splash
+This step is purely presentational — no Stripe call yet, so it loads instantly and lets users back out before a session is created.
 
-Manifest / config refresh:
-- Update `site.webmanifest` — set `name: "SaaS Starter"`, `short_name: "SaaS Starter"`, `description`, `theme_color: "#C026D3"`, add maskable icon entry
-- Update `browserconfig.xml` TileColor → `#C026D3`
-- Update `index.html` `theme-color` meta → `#C026D3`
+**Step B — Full-page checkout** (new route):
+Clicking "Continue to payment" navigates to `/checkout?plan=pro&cadence=yearly`. This page:
+- Uses a stripped layout (logo top-left, "Secure checkout" + lock icon top-right, no marketing header/footer nav)
+- Two columns on desktop, stacked on mobile:
+  - Left (sticky): condensed order summary (plan, price, cadence, features, "Change plan" link back to /pricing)
+  - Right: the existing `<StripeEmbeddedCheckout />` mounted full-height
+- Reads plan/cadence from query params, validates against the tier list, and calls `openCheckout({...})` on mount
+- `return_url` stays `/checkout/return?session_id={CHECKOUT_SESSION_ID}` (unchanged)
+- Auth guard: if not signed in, redirects to `/signup?next=/checkout?...`
 
-### 3. Asset guide
+This gives the "feels like a dedicated Stripe window" experience without violating the embedded-only constraint.
 
-Create **`public/BRAND-ASSETS.md`** (replaces / extends the existing `BRANDING.md` reference):
-- Color tokens (hex + HSL) for primary, gradient stops, neutrals
-- Logo variants table — which to use on which background, min sizes, clear-space rule
-- Favicon/app-icon table — file, dimensions, where it's referenced
-- Social card table — platform, dimensions, when to regenerate
-- Email & splash — usage
-- "How to regenerate" — single command to re-run the icon script
+### 2. Files
 
-### 4. Technical approach
+**New:**
+- `src/components/pricing/PlanConfirmDialog.tsx` — the rich confirmation dialog (props: tier, yearly, userEmail, onConfirm, onCancel)
+- `src/pages/Checkout.tsx` — full-page checkout route with order summary + embedded Stripe
 
-1. **Author SVGs by hand** for `logo.svg`, `logo-dark.svg`, `logo-mark.svg`, `logo-horizontal.svg`, `favicon.svg`, `safari-pinned-tab.svg`. These are the source of truth.
-2. **Write one Node script** `scripts/generate-brand-icons.mjs` using `sharp` (already a common dep; add if missing) that takes `public/logo-mark.svg` and renders every PNG/ICO size into `public/`. Run it once to populate; it stays in repo for future re-runs.
-3. **Generate AI social cards** via the agent's `imagegen` tool — one prompt per card with consistent palette/typography. Save as PNGs in `public/`, hand-checked, then optimized.
-4. **Update meta**: `index.html` `theme-color`, `site.webmanifest`, `browserconfig.xml`. No changes to `<Logo>` component or any TS — it already reads `/logo.svg` etc.
-5. **Changelog entry** appended to `src/data/changelog.ts` per project policy.
+**Edited:**
+- `src/pages/Pricing.tsx` — replace existing `Dialog`+`useStripeCheckout` usage with the new `PlanConfirmDialog`; on confirm, `navigate(\`/checkout?plan=${tier}&cadence=${yearly ? 'yearly' : 'monthly'}\`)`. Remove the `useStripeCheckout` import here.
+- `src/App.tsx` — register `/checkout` route (public; auth handled inside the page so we can redirect with `next=`)
+- `src/lib/public-routes.ts` — add `/checkout` if needed for SEO/no-index behavior (likely `noindex`)
+- `src/data/changelog.ts` — append entry per changelog policy
 
-### 5. Out of scope
+**Unchanged:**
+- `useStripeCheckout`, `StripeEmbeddedCheckout`, `CheckoutReturn.tsx`, edge function `create-checkout` — the underlying Stripe flow is identical.
 
-- No changes to design tokens in `index.css` / `tailwind.config.ts` (orange `#FF5C2A` is the *product* accent; the *brand mark* uses Lovable pink as requested — these can coexist). If you'd rather also retheme the app UI to pink, say so and I'll add that.
-- No changes to the in-app Brand Kit generator at `src/lib/brand/generate.ts`.
+### 3. Design notes
 
-### 6. Deliverables checklist
+- Confirmation dialog: `max-w-3xl`, two-column on `md:`, single column on mobile. Uses existing semantic tokens (`bg-card`, `border-border`, `text-muted-foreground`, `gradient-primary` for the price highlight on the popular tier).
+- Full-page checkout: minimal top bar with `<Logo />` + small "Secure payment by Stripe" indicator. Background `bg-muted/30` to separate from the white card. Sticky summary on `lg:` viewports.
+- All copy stays factual to existing tier data — no invented features.
 
-- [ ] 4 logo SVGs
-- [ ] 11 favicon/app-icon files (SVG + PNG + ICO)
-- [ ] 3 social cards (OG, Twitter, square)
-- [ ] 2 splash images + 1 email header
-- [ ] Updated `site.webmanifest`, `browserconfig.xml`, `index.html` theme color
-- [ ] `public/BRAND-ASSETS.md` usage guide
-- [ ] `scripts/generate-brand-icons.mjs` for reproducibility
-- [ ] Changelog entry
+### 4. Out of scope
+
+- No backend changes, no edge function changes, no Stripe configuration changes.
+- Not switching to hosted Stripe Checkout (not supported by the managed integration).
+- Not changing the tier data, prices, or feature lists.

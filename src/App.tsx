@@ -21,6 +21,7 @@ import Docs from "./pages/Docs";
 import Launch from "./pages/Launch";
 import Changelog from "./pages/Changelog";
 import CheckoutReturn from "./pages/CheckoutReturn";
+import Checkout from "./pages/Checkout";
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -106,6 +107,7 @@ const App = () => (
               <Route path="/customers" element={<Customers />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/checkout" element={<Checkout />} />
               <Route path="/checkout/return" element={<CheckoutReturn />} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />

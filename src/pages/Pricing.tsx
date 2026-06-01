@@ -5,12 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { DismissibleNotice } from "@/components/marketing/DismissibleNotice";
-import { useStripeCheckout } from "@/hooks/useStripeCheckout";
+import { PlanConfirmDialog } from "@/components/pricing/PlanConfirmDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
@@ -66,7 +65,7 @@ const Pricing = () => {
   const [yearly, setYearly] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { openCheckout, closeCheckout, isOpen, checkoutElement } = useStripeCheckout();
+  const [confirmTier, setConfirmTier] = useState<Tier | null>(null);
 
   const handleSubscribe = (tier: Tier) => {
     const priceId = yearly ? tier.priceYearly : tier.priceMonthly;
@@ -75,14 +74,19 @@ const Pricing = () => {
       return;
     }
     if (!user) {
-      navigate(`/signup?next=${encodeURIComponent("/pricing")}`);
+      const next = `/checkout?plan=${tier.name.toLowerCase()}&cadence=${yearly ? "yearly" : "monthly"}`;
+      navigate(`/signup?next=${encodeURIComponent(next)}`);
       return;
     }
-    openCheckout({
-      priceId,
-      customerEmail: user.email ?? undefined,
-      userId: user.id,
-    });
+    setConfirmTier(tier);
+  };
+
+  const handleConfirm = () => {
+    if (!confirmTier) return;
+    const slug = confirmTier.name.toLowerCase();
+    const cadence = yearly ? "yearly" : "monthly";
+    setConfirmTier(null);
+    navigate(`/checkout?plan=${slug}&cadence=${cadence}`);
   };
 
   const productSchemas = tiers.map((t) => ({
@@ -190,14 +194,14 @@ const Pricing = () => {
         </p>
       </section>
 
-      <Dialog open={isOpen} onOpenChange={(v) => !v && closeCheckout()}>
-        <DialogContent className="max-w-2xl p-0 overflow-hidden">
-          <DialogHeader className="px-6 pt-6">
-            <DialogTitle>Complete your subscription</DialogTitle>
-          </DialogHeader>
-          <div className="max-h-[80vh] overflow-y-auto">{checkoutElement}</div>
-        </DialogContent>
-      </Dialog>
+      <PlanConfirmDialog
+        open={!!confirmTier}
+        onOpenChange={(v) => !v && setConfirmTier(null)}
+        tier={confirmTier}
+        yearly={yearly}
+        userEmail={user?.email}
+        onConfirm={handleConfirm}
+      />
     </MarketingLayout>
   );
 };
