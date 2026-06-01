@@ -27,6 +27,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-06-01",
+    title: "Real product screenshots on home and new Features page",
+    changes: [
+      { type: "added", text: "Dedicated /features page with six in-depth sections (dashboard, analytics, billing, teams, user admin, audit log), each paired with a real product screenshot framed in a macOS-style window." },
+      { type: "added", text: "\"Features\" entry in the main marketing nav linking directly to /features instead of the home anchor." },
+      { type: "changed", text: "Home page Features section now uses real screenshots of the analytics and billing pages instead of illustrative AppMockup placeholders, with a link through to /features." },
+    ],
+  },
+  {
+    date: "2026-06-01",
     title: "Clearer subscribe flow with dedicated checkout page",
     changes: [
       { type: "added", text: "Plan-review dialog on /pricing showing the selected plan, billing cadence, annual savings, included features, and trust signals before any payment session is created." },

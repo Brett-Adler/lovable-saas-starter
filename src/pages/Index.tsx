@@ -16,7 +16,8 @@ import { StatusBadge, type FeatureStatus } from "@/components/marketing/StatusBa
 import { TemplatePlaceholderRibbon } from "@/components/marketing/TemplatePlaceholderRibbon";
 import { LogoCloud } from "@/components/marketing/LogoCloud";
 import { BrowserMockup } from "@/components/marketing/BrowserMockup";
-import { AppMockup } from "@/components/marketing/AppMockup";
+import analyticsShot from "@/assets/screenshots/analytics.png.asset.json";
+import billingShot from "@/assets/screenshots/billing.png.asset.json";
 
 type Feature = {
   icon: typeof Lock;
@@ -201,24 +202,37 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Visual previews */}
+        {/* Visual previews — real product screenshots */}
         <div className="mt-16 grid gap-6 lg:grid-cols-2 max-w-6xl mx-auto">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Built-in analytics</p>
-            <BrowserMockup url="app.yourdomain.com/admin/analytics">
-              <AppMockup variant="analytics" />
-            </BrowserMockup>
+            <img
+              src={analyticsShot.url}
+              alt="Admin analytics page with MRR, signups, and churn metrics"
+              loading="lazy"
+              width={1696}
+              height={1060}
+              className="w-full h-auto rounded-xl"
+            />
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Stripe billing, wired</p>
-            <BrowserMockup url="app.yourdomain.com/admin/billing">
-              <AppMockup variant="billing" />
-            </BrowserMockup>
+            <img
+              src={billingShot.url}
+              alt="Per-organization billing page with current plan and upgrade CTA"
+              loading="lazy"
+              width={1696}
+              height={1060}
+              className="w-full h-auto rounded-xl"
+            />
           </div>
         </div>
-        <p className="mt-4 text-center text-xs text-muted-foreground">
-          Illustrative placeholders — not real product screens.
-        </p>
+        <div className="mt-8 text-center">
+          <Link to="/features" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+            See every feature in detail
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </section>
 
 

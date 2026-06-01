@@ -15,7 +15,7 @@ export const publicNavGroups: PublicGroup[] = [
   {
     title: "Product",
     links: [
-      { to: "/#features", label: "Features" },
+      { to: "/features", label: "Features" },
       { to: "/pricing", label: "Pricing" },
       { to: "/integrations", label: "Integrations" },
       { to: "/compare", label: "Compare" },
