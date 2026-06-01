@@ -52,6 +52,7 @@ const Integrations = () => (
       <LogoCloud
         className="mb-14 max-w-3xl mx-auto"
         caption="Works with the tools you already use"
+        colored
         items={[
           { slug: "stripe" }, { slug: "supabase" }, { slug: "google" }, { slug: "apple" },
           { slug: "resend" }, { slug: "twilio" }, { slug: "slack" }, { slug: "zapier" },

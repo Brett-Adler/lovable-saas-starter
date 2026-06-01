@@ -27,6 +27,14 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-06-01",
+    title: "Real brand colors on integrations & roadmap",
+    changes: [
+      { type: "changed", text: "Integrations and roadmap items now display each tool's logo in its official brand color on a clean white tile, instead of monochrome muted glyphs." },
+      { type: "fixed", text: "Removed misleading GitHub icon from generic 'Outbound webhooks' and 'API keys' items that don't actually mention GitHub; added the Lovable mark to the AI support chat row." },
+    ],
+  },
+  {
+    date: "2026-06-01",
     title: "Full brand asset kit",
     changes: [
       { type: "added", text: "Cohesive SaaS Starter brand identity: pink→magenta gradient mark with hand-authored SVG logo variants (light, dark, mark-only, horizontal with tagline)." },
