@@ -27,6 +27,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-06-01",
+    title: "Clearer subscribe flow with dedicated checkout page",
+    changes: [
+      { type: "added", text: "Plan-review dialog on /pricing showing the selected plan, billing cadence, annual savings, included features, and trust signals before any payment session is created." },
+      { type: "added", text: "Dedicated /checkout route with a focused, full-page secure payment experience — sticky order summary alongside the Stripe payment form, stripped of marketing chrome." },
+      { type: "changed", text: "Subscribing on /pricing now flows: pick plan → review summary → continue to /checkout, instead of cramming the payment form into a small modal." },
+    ],
+  },
+  {
+    date: "2026-06-01",
     title: "Real brand colors on integrations & roadmap",
     changes: [
       { type: "changed", text: "Integrations and roadmap items now display each tool's logo in its official brand color on a clean white tile, instead of monochrome muted glyphs." },
