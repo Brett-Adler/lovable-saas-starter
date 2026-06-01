@@ -194,14 +194,14 @@ const Pricing = () => {
         </p>
       </section>
 
-      <Dialog open={isOpen} onOpenChange={(v) => !v && closeCheckout()}>
-        <DialogContent className="max-w-2xl p-0 overflow-hidden">
-          <DialogHeader className="px-6 pt-6">
-            <DialogTitle>Complete your subscription</DialogTitle>
-          </DialogHeader>
-          <div className="max-h-[80vh] overflow-y-auto">{checkoutElement}</div>
-        </DialogContent>
-      </Dialog>
+      <PlanConfirmDialog
+        open={!!confirmTier}
+        onOpenChange={(v) => !v && setConfirmTier(null)}
+        tier={confirmTier}
+        yearly={yearly}
+        userEmail={user?.email}
+        onConfirm={handleConfirm}
+      />
     </MarketingLayout>
   );
 };
