@@ -36,6 +36,7 @@ export function PageSeo({ path, title, description, ogImage, noindex, jsonLd }: 
 
   const base = (siteSeo?.base_url || getDefaultBase()).replace(/\/$/, "");
   const isHome = path === "/";
+  const isArticle = path.startsWith("/blog/") && path !== "/blog";
 
   const rawTitle = pageOverride?.title ?? title ?? siteSeo?.default_title ?? "";
   const finalTitle = pageOverride?.title
