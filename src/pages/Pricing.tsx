@@ -65,7 +65,7 @@ const Pricing = () => {
   const [yearly, setYearly] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { openCheckout, closeCheckout, isOpen, checkoutElement } = useStripeCheckout();
+  const [confirmTier, setConfirmTier] = useState<Tier | null>(null);
 
   const handleSubscribe = (tier: Tier) => {
     const priceId = yearly ? tier.priceYearly : tier.priceMonthly;
@@ -74,14 +74,19 @@ const Pricing = () => {
       return;
     }
     if (!user) {
-      navigate(`/signup?next=${encodeURIComponent("/pricing")}`);
+      const next = `/checkout?plan=${tier.name.toLowerCase()}&cadence=${yearly ? "yearly" : "monthly"}`;
+      navigate(`/signup?next=${encodeURIComponent(next)}`);
       return;
     }
-    openCheckout({
-      priceId,
-      customerEmail: user.email ?? undefined,
-      userId: user.id,
-    });
+    setConfirmTier(tier);
+  };
+
+  const handleConfirm = () => {
+    if (!confirmTier) return;
+    const slug = confirmTier.name.toLowerCase();
+    const cadence = yearly ? "yearly" : "monthly";
+    setConfirmTier(null);
+    navigate(`/checkout?plan=${slug}&cadence=${cadence}`);
   };
 
   const productSchemas = tiers.map((t) => ({
