@@ -5,12 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { PageSeo } from "@/components/seo/PageSeo";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { DismissibleNotice } from "@/components/marketing/DismissibleNotice";
-import { useStripeCheckout } from "@/hooks/useStripeCheckout";
+import { PlanConfirmDialog } from "@/components/pricing/PlanConfirmDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
