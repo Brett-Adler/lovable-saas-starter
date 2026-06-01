@@ -6,6 +6,7 @@ import { renderWithProviders } from "../utils";
 
 import Index from "@/pages/Index";
 import Pricing from "@/pages/Pricing";
+import Features from "@/pages/Features";
 import NotFound from "@/pages/NotFound";
 import Status from "@/pages/Status";
 import Blog from "@/pages/Blog";
@@ -23,6 +24,7 @@ beforeEach(() => resetSupabaseResponses());
 const cases: Array<{ name: string; route: string; element: React.ReactElement; expect: RegExp }> = [
   { name: "Index", route: "/", element: <Index />, expect: /./ },
   { name: "Pricing", route: "/pricing", element: <Pricing />, expect: /pricing/i },
+  { name: "Features", route: "/features", element: <Features />, expect: /features/i },
   { name: "NotFound", route: "/nope", element: <NotFound />, expect: /404|can't find/i },
   { name: "Status", route: "/status", element: <Status />, expect: /system status/i },
   { name: "Blog", route: "/blog", element: <Blog />, expect: /blog/i },

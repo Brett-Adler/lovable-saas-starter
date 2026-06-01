@@ -1,70 +1,55 @@
 ## Goal
 
-Make the "subscribe" experience clearer: when a user picks a plan they see a confirmation step that summarizes exactly what they're buying (plan, cadence, price, what's included, billing terms, trust signals) before they pay, and the actual payment surface feels more like a focused Stripe window than a cramped modal.
+Replace the "illustrative placeholder" mockups with real screenshots of this app's pages, framed in a polished macOS-style window with a gradient backdrop. Surface them on the home page and a brand-new `/features` page.
 
-## Constraint: embedded vs. hosted Stripe
+## Screenshots to capture
 
-Lovable's managed Stripe integration only supports **embedded** Checkout — we cannot redirect to `checkout.stripe.com` or pop a new browser window. The closest equivalent to "open a Stripe window" is a **dedicated full-page route** (`/checkout`) where the embedded Stripe form is the only thing on screen, with the marketing chrome stripped away. That's what this plan builds.
+Using the browser tool against the preview (logged in as the current preview user), capture these routes at 1440x900:
 
-## What changes
+1. `/dashboard` — main dashboard
+2. `/admin/analytics` — analytics
+3. `/dashboard/billing` — billing
+4. `/dashboard/members` — team / members
+5. `/admin/users` — users admin
+6. `/admin/audit` — audit log
 
-### 1. Replace the current modal with a richer two-step flow
+If a route requires auth and the preview session isn't logged in, I'll pause and ask you to sign in once, then continue.
 
-When a user clicks "Subscribe to Pro/Team" on `/pricing`:
+Each PNG runs through the `product-shot` skill (different gradient presets per shot for variety: `sunset`, `aurora`, `ocean`, `lavender`, `arctic`, `midnight`) and is uploaded via `lovable-assets` so it lives on the CDN, not in the repo. Pointer files land in `src/assets/screenshots/`.
 
-**Step A — Confirmation dialog** (new, replaces today's bare modal):
-A wider dialog with two columns:
-- **Left: Order summary**
-  - Plan name + "Most popular" badge if applicable
-  - Billing cadence pill (Monthly / Yearly)
-  - Big price line: `$15 /month` with `Billed $180 annually` underneath when yearly
-  - "You save $48/year" line when yearly is selected
-  - Itemized "What's included" list (reuses the tier's `features`)
-  - Account line: `Signing in as user@example.com`
-- **Right: Terms & trust panel**
-  - "What happens next" 3-step list: secure payment → instant access → manage anytime
-  - Bullets: cancel anytime, prorated upgrades/downgrades, secure payment by Stripe, 30-day refund policy (copy only — no functional change)
-  - Primary button: **Continue to payment →**
-  - Secondary: **Cancel**
-  - Small print: links to /legal terms and privacy
+## Home page (`src/pages/Index.tsx`)
 
-This step is purely presentational — no Stripe call yet, so it loads instantly and lets users back out before a session is created.
+- Keep the existing hero explainer video.
+- In the Features section, **replace** the two `AppMockup` placeholders (analytics + billing) with the real framed screenshots of `/admin/analytics` and `/dashboard/billing`. Drop the "Illustrative placeholders — not real product screens." caption.
 
-**Step B — Full-page checkout** (new route):
-Clicking "Continue to payment" navigates to `/checkout?plan=pro&cadence=yearly`. This page:
-- Uses a stripped layout (logo top-left, "Secure checkout" + lock icon top-right, no marketing header/footer nav)
-- Two columns on desktop, stacked on mobile:
-  - Left (sticky): condensed order summary (plan, price, cadence, features, "Change plan" link back to /pricing)
-  - Right: the existing `<StripeEmbeddedCheckout />` mounted full-height
-- Reads plan/cadence from query params, validates against the tier list, and calls `openCheckout({...})` on mount
-- `return_url` stays `/checkout/return?session_id={CHECKOUT_SESSION_ID}` (unchanged)
-- Auth guard: if not signed in, redirects to `/signup?next=/checkout?...`
+## New `/features` page (`src/pages/Features.tsx`)
 
-This gives the "feels like a dedicated Stripe window" experience without violating the embedded-only constraint.
+A long-form page with one screenshot per major feature. Structure:
 
-### 2. Files
+- `PageSeo` (title "Features — SaaS Starter", proper description)
+- `MarketingHeader` + `MarketingFooter` (match other marketing pages)
+- Hero: badge "Features", H1 "Everything a SaaS needs, already built", short subhead, primary CTA → `/signup`, secondary → `/pricing`
+- 6 alternating zigzag feature blocks (image left/right swap each row), each with:
+  - Small eyebrow label, H2, 1-paragraph description, 3-item check bullet list, "Learn more" link
+  - Framed real screenshot on the other side
+  - Sections: Dashboard, Analytics, Billing & subscriptions, Teams & roles, User admin, Audit log
+- Closing CTA band reusing the home-page CTA style
 
-**New:**
-- `src/components/pricing/PlanConfirmDialog.tsx` — the rich confirmation dialog (props: tier, yearly, userEmail, onConfirm, onCancel)
-- `src/pages/Checkout.tsx` — full-page checkout route with order summary + embedded Stripe
+Register the route in `src/App.tsx` (public) and add a "Features" link to `MarketingHeader` nav between Home and Pricing. Add `/features` to `src/data/sitemap.ts` if it exists.
 
-**Edited:**
-- `src/pages/Pricing.tsx` — replace existing `Dialog`+`useStripeCheckout` usage with the new `PlanConfirmDialog`; on confirm, `navigate(\`/checkout?plan=${tier}&cadence=${yearly ? 'yearly' : 'monthly'}\`)`. Remove the `useStripeCheckout` import here.
-- `src/App.tsx` — register `/checkout` route (public; auth handled inside the page so we can redirect with `next=`)
-- `src/lib/public-routes.ts` — add `/checkout` if needed for SEO/no-index behavior (likely `noindex`)
-- `src/data/changelog.ts` — append entry per changelog policy
+## Technical details
 
-**Unchanged:**
-- `useStripeCheckout`, `StripeEmbeddedCheckout`, `CheckoutReturn.tsx`, edge function `create-checkout` — the underlying Stripe flow is identical.
+- Screenshots saved temporarily to `/tmp/shots/`, framed PNGs written to `/tmp/framed/`, then uploaded via `lovable-assets create --file ... --filename <name>.png > src/assets/screenshots/<name>.png.asset.json`. Originals deleted from `/tmp`.
+- Import pattern in components:
+  ```tsx
+  import analyticsShot from "@/assets/screenshots/analytics.png.asset.json";
+  <img src={analyticsShot.url} alt="Analytics dashboard" loading="lazy" width={1600} height={1000} />
+  ```
+- No new dependencies, no backend/data changes, no business logic touched.
+- Append a changelog entry in `src/data/changelog.ts` per the changelog policy.
 
-### 3. Design notes
+## Out of scope
 
-- Confirmation dialog: `max-w-3xl`, two-column on `md:`, single column on mobile. Uses existing semantic tokens (`bg-card`, `border-border`, `text-muted-foreground`, `gradient-primary` for the price highlight on the popular tier).
-- Full-page checkout: minimal top bar with `<Logo />` + small "Secure payment by Stripe" indicator. Background `bg-muted/30` to separate from the white card. Sticky summary on `lg:` viewports.
-- All copy stays factual to existing tier data — no invented features.
-
-### 4. Out of scope
-
-- No backend changes, no edge function changes, no Stripe configuration changes.
-- Not switching to hosted Stripe Checkout (not supported by the managed integration).
-- Not changing the tier data, prices, or feature lists.
+- Changing `AppMockup` itself (left in place — still used elsewhere).
+- Editing dashboard/admin pages to look prettier for the screenshot.
+- Redesigning the home Features grid or copy.

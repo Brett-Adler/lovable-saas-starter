@@ -10,6 +10,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 
 import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
+import Features from "./pages/Features";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Newsletter from "./pages/Newsletter";
@@ -85,6 +86,7 @@ const App = () => (
               {/* Marketing */}
               <Route path="/" element={<Index />} />
               <Route path="/pricing" element={<Pricing />} />
+              <Route path="/features" element={<Features />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/newsletter" element={<Newsletter />} />
