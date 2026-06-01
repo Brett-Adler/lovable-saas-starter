@@ -9,7 +9,7 @@ import { roadmap, categoryLabels, type RoadmapCategory, type RoadmapEntry } from
 
 const statusToBadge = (s: RoadmapEntry["status"]): FeatureStatus => (s === "planned" ? "soon" : s);
 
-// Map roadmap entries to a known brand glyph + external "Learn more" URL.
+// Map roadmap entries that explicitly mention a real product to its brand glyph.
 const entryBrand: Record<string, BrandSlug> = {
   "auth-google": "google",
   "auth-apple": "apple",
@@ -19,8 +19,7 @@ const entryBrand: Record<string, BrandSlug> = {
   saml: "okta",
   zapier: "zapier",
   slack: "slack",
-  webhooks: "github",
-  "api-keys": "github",
+  "live-chat": "lovable",
 };
 
 const Item = ({ entry }: { entry: RoadmapEntry }) => {
@@ -31,8 +30,8 @@ const Item = ({ entry }: { entry: RoadmapEntry }) => {
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
           {slug && (
-            <span className="h-8 w-8 rounded-md bg-muted flex items-center justify-center text-muted-foreground shrink-0">
-              <BrandIcon slug={slug} size={18} />
+            <span className="h-8 w-8 rounded-md bg-white border border-border flex items-center justify-center text-foreground shrink-0 shadow-sm">
+              <BrandIcon slug={slug} size={18} colored />
             </span>
           )}
           <h3 className="font-semibold leading-snug">{entry.label}</h3>
