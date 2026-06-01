@@ -65,7 +65,12 @@ const BlogPost = () => {
       <PageSeo
         path={`/blog/${slug}`}
         title={post?.title ?? "Blog post"}
-        description={post?.excerpt ?? "Read on the blog."}
+        description={
+          post?.excerpt ??
+          (post?.title
+            ? `Read "${post.title}" on our blog for product updates, engineering notes, and announcements.`
+            : "Read the latest product updates, engineering notes, and announcements from our team on the blog.")
+        }
         ogImage={post?.cover_image_url ?? undefined}
         jsonLd={articleSchema}
       />

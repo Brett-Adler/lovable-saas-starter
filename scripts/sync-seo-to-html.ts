@@ -137,20 +137,15 @@ function rewriteIndexHtml(seo: SiteSeo, base: string) {
     `<meta name="title" content="${escape(title)}" />`,
     `<meta name="description" content="${escape(description)}" />`,
     `<meta name="theme-color" content="${escape(themeColor)}" />`,
-    // Canonical is emitted per-route via react-helmet-async (see src/components/seo/PageSeo.tsx)
-    // to avoid duplicate <link rel="canonical"> tags when Helmet appends a route-specific one.
+    // Canonical + per-route og:title / og:description / og:url / twitter:* are emitted
+    // by react-helmet-async (see src/components/seo/PageSeo.tsx). Keeping only sitewide
+    // identity tags here so social crawlers don't see homepage metadata on every route.
     `<meta property="og:type" content="website" />`,
-    `<meta property="og:url" content="${base}/" />`,
-    `<meta property="og:title" content="${escape(title)}" />`,
-    `<meta property="og:description" content="${escape(description)}" />`,
     `<meta property="og:image" content="${escape(ogImage)}" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
     siteName ? `<meta property="og:site_name" content="${escape(siteName)}" />` : "",
     `<meta name="twitter:card" content="summary_large_image" />`,
-    `<meta name="twitter:url" content="${base}/" />`,
-    `<meta name="twitter:title" content="${escape(title)}" />`,
-    `<meta name="twitter:description" content="${escape(description)}" />`,
     `<meta name="twitter:image" content="${escape(ogImage)}" />`,
     twitter ? `<meta name="twitter:creator" content="${escape(twitter)}" />` : "",
     `<script type="application/ld+json">${JSON.stringify(orgLd)}</script>`,

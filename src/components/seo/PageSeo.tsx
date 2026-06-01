@@ -36,6 +36,7 @@ export function PageSeo({ path, title, description, ogImage, noindex, jsonLd }: 
 
   const base = (siteSeo?.base_url || getDefaultBase()).replace(/\/$/, "");
   const isHome = path === "/";
+  const isArticle = path.startsWith("/blog/") && path !== "/blog";
 
   const rawTitle = pageOverride?.title ?? title ?? siteSeo?.default_title ?? "";
   const finalTitle = pageOverride?.title
@@ -86,7 +87,7 @@ export function PageSeo({ path, title, description, ogImage, noindex, jsonLd }: 
       {brand["site.webmanifest"] ? <link rel="manifest" href={brand["site.webmanifest"]} /> : null}
 
       {/* Open Graph */}
-      <meta property="og:type" content={isHome ? "website" : "article"} />
+      <meta property="og:type" content={isArticle ? "article" : "website"} />
       <meta property="og:url" content={canonical} />
       {finalTitle ? <meta property="og:title" content={finalTitle} /> : null}
       {finalDescription ? <meta property="og:description" content={finalDescription} /> : null}
