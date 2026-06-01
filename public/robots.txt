@@ -5,5 +5,8 @@ Disallow: /admin
 Disallow: /dashboard
 Disallow: /checkout
 Disallow: /invite
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
 
 Sitemap: https://lovable-saas-starter.lovable.app/sitemap.xml
