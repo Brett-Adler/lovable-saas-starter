@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import "../mocks/supabase";
 import { resetSupabaseResponses } from "../mocks/supabase";
 import { screen } from "@testing-library/react";
+import { Route, Routes } from "react-router-dom";
 import { renderWithProviders } from "../utils";
 
 import Index from "@/pages/Index";
@@ -18,6 +19,9 @@ import Readme from "@/pages/Readme";
 import Launch from "@/pages/Launch";
 import Integrations from "@/pages/Integrations";
 import Security from "@/pages/Security";
+import Docs from "@/pages/Docs";
+import DocsAudience from "@/pages/DocsAudience";
+import DocsArticle from "@/pages/DocsArticle";
 
 beforeEach(() => resetSupabaseResponses());
 
@@ -36,6 +40,10 @@ const cases: Array<{ name: string; route: string; element: React.ReactElement; e
   { name: "Launch", route: "/launch", element: <Launch />, expect: /launch/i },
   { name: "Integrations", route: "/integrations", element: <Integrations />, expect: /integrations/i },
   { name: "Security", route: "/security", element: <Security />, expect: /security/i },
+  { name: "Docs", route: "/docs", element: <Docs />, expect: /documentation/i },
+  { name: "DocsAudience users", route: "/docs/users", element: <Routes><Route path="/docs/:audience" element={<DocsAudience />} /></Routes>, expect: /users/i },
+  { name: "DocsAudience builders", route: "/docs/builders", element: <Routes><Route path="/docs/:audience" element={<DocsAudience />} /></Routes>, expect: /builders/i },
+  { name: "DocsArticle", route: "/docs/users/create-account", element: <Routes><Route path="/docs/:audience/:slug" element={<DocsArticle />} /></Routes>, expect: /create your account/i },
 ];
 
 describe("page smoke renders", () => {
