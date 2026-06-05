@@ -1081,6 +1081,24 @@ export type Database = {
         }
         Relationships: []
       }
+      roadmap_feature_votes: {
+        Row: {
+          created_at: string
+          feature_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feature_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feature_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       seo_pages: {
         Row: {
           canonical_override: string | null
@@ -1438,6 +1456,13 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      get_roadmap_vote_counts: {
+        Args: never
+        Returns: {
+          feature_id: string
+          votes: number
+        }[]
       }
       has_active_subscription: {
         Args: { check_env?: string; user_uuid: string }
