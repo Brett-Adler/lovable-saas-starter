@@ -8,7 +8,9 @@ export type RoadmapCategory =
   | "developer"
   | "comms"
   | "compliance"
-  | "marketing";
+  | "marketing"
+  | "ops";
+
 
 export interface RoadmapEntry {
   id: string;
@@ -30,7 +32,9 @@ export const categoryLabels: Record<RoadmapCategory, string> = {
   comms: "Communications",
   compliance: "Security & compliance",
   marketing: "Marketing & growth",
+  ops: "Operations & reliability",
 };
+
 
 export const roadmap: RoadmapEntry[] = [
   // Shipped
