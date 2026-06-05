@@ -37,7 +37,7 @@ const Item = ({ entry, voteCount, voted, voteLoading, onToggleVote }: ItemProps)
   const brand = slug ? brandIcons[slug] : undefined;
   const isVotable = entry.status === "soon" || entry.status === "planned" || entry.status === "setup";
   return (
-    <Card className="p-5 flex flex-col gap-3">
+    <Card className="p-5 flex flex-col gap-3 h-full">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
           {slug && (
