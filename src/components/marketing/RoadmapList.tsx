@@ -113,7 +113,7 @@ export const RoadmapList = ({ filter }: { filter?: (e: RoadmapEntry) => boolean 
       {Array.from(byCat.entries()).map(([cat, items]) => (
         <div key={cat}>
           <h2 className="text-xl font-semibold mb-4">{categoryLabels[cat]}</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-stretch">
             {items.map((e) => (
               <div key={e.id} id={e.id}>
                 <Item
