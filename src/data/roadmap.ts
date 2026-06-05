@@ -8,7 +8,9 @@ export type RoadmapCategory =
   | "developer"
   | "comms"
   | "compliance"
-  | "marketing";
+  | "marketing"
+  | "ops";
+
 
 export interface RoadmapEntry {
   id: string;
@@ -30,7 +32,9 @@ export const categoryLabels: Record<RoadmapCategory, string> = {
   comms: "Communications",
   compliance: "Security & compliance",
   marketing: "Marketing & growth",
+  ops: "Operations & reliability",
 };
+
 
 export const roadmap: RoadmapEntry[] = [
   // Shipped
@@ -64,6 +68,25 @@ export const roadmap: RoadmapEntry[] = [
   // Planned
   { id: "soc2", label: "SOC 2 Type II", status: "planned", category: "compliance", notifySource: "coming_soon:soc2", summary: "Roadmapped once we have design partners on the Team plan." },
   { id: "usage-billing", label: "Usage-based billing", status: "planned", category: "billing", notifySource: "coming_soon:usage_billing", summary: "Meter and bill custom events through Stripe." },
+
+  // Day-one SaaS essentials — curated additions
+  { id: "magic-link", label: "Magic-link login", status: "planned", category: "auth", notifySource: "coming_soon:magic_link", summary: "Passwordless email links as a one-click alternative to passwords." },
+  { id: "passkeys", label: "Passkeys (WebAuthn)", status: "planned", category: "auth", notifySource: "coming_soon:passkeys", summary: "Phishing-resistant biometric login with device-bound credentials." },
+  { id: "session-management", label: "Active sessions UI", status: "planned", category: "auth", notifySource: "coming_soon:sessions", summary: "Let users see and revoke active devices and sign out everywhere." },
+  { id: "free-trial", label: "Free trials & paywall", status: "planned", category: "billing", notifySource: "coming_soon:free_trial", summary: "Time-boxed trials with automatic conversion and a soft paywall." },
+  { id: "coupons", label: "Coupons & promo codes", status: "planned", category: "billing", notifySource: "coming_soon:coupons", summary: "Stripe-backed discount codes redeemable at checkout." },
+  { id: "domain-autojoin", label: "Domain-based auto-join", status: "planned", category: "team", notifySource: "coming_soon:domain_autojoin", summary: "Verified email domains auto-join the matching organization." },
+  { id: "custom-roles", label: "Custom roles & permissions", status: "planned", category: "team", notifySource: "coming_soon:custom_roles", summary: "Define org-level roles with fine-grained permission scopes." },
+  { id: "public-api", label: "Public REST API + OpenAPI", status: "planned", category: "developer", notifySource: "coming_soon:public_api", summary: "Documented, versioned API with a generated OpenAPI spec." },
+  { id: "sandbox-mode", label: "Sandbox / test mode", status: "planned", category: "developer", notifySource: "coming_soon:sandbox", summary: "Per-org test environment that mirrors production safely." },
+  { id: "rate-limits", label: "Per-key rate limiting", status: "planned", category: "developer", notifySource: "coming_soon:rate_limits", summary: "Configurable quotas with 429s, headers, and overage alerts." },
+  { id: "in-app-inbox", label: "In-app notification inbox", status: "planned", category: "comms", notifySource: "coming_soon:inbox", summary: "Persistent bell with read state, grouping, and deep links." },
+  { id: "account-deletion", label: "Self-serve account deletion", status: "planned", category: "compliance", notifySource: "coming_soon:account_deletion", summary: "GDPR-compliant delete flow with grace period and audit trail." },
+  { id: "referrals", label: "Referral program", status: "planned", category: "marketing", notifySource: "coming_soon:referrals", summary: "Unique invite links with reward tracking and fraud guards." },
+  { id: "feature-flags", label: "Feature flags & A/B tests", status: "planned", category: "marketing", notifySource: "coming_soon:feature_flags", summary: "Server-evaluated flags with percentage rollouts and experiments." },
+  { id: "maintenance-mode", label: "Maintenance mode", status: "planned", category: "ops", notifySource: "coming_soon:maintenance_mode", summary: "Site-wide read-only switch with a branded maintenance page." },
+  { id: "background-jobs", label: "Background job queue", status: "planned", category: "ops", notifySource: "coming_soon:background_jobs", summary: "Durable jobs with retries, scheduling, and a runs dashboard." },
 ];
 
 export const roadmapById = (id: string) => roadmap.find((r) => r.id === id);
+

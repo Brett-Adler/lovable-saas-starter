@@ -26,6 +26,16 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-06-05",
+    title: "Roadmap voting and expanded SaaS essentials",
+    changes: [
+      { type: "added", text: "Signed-in users can upvote roadmap items they want most. Vote counts are public; who voted is private." },
+      { type: "added", text: "15 new planned roadmap items covering day-one SaaS essentials: magic-link login, passkeys, active sessions UI, free trials, coupons, domain auto-join, custom roles, public REST API, sandbox mode, rate limits, in-app inbox, self-serve account deletion, referrals, feature flags & A/B tests, maintenance mode, and a background job queue." },
+      { type: "added", text: "New \"Operations & reliability\" roadmap category." },
+    ],
+  },
+  {
+
     date: "2026-06-01",
     title: "Documentation restructured by audience",
     changes: [

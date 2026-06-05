@@ -14,10 +14,11 @@ const Roadmap = () => (
     <section className="container py-16 md:py-20">
       <div className="max-w-3xl mx-auto text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Roadmap</h1>
-        <p className="text-lg text-muted-foreground">
+        <p className="lg:text-lg text-muted-foreground">
           An honest view of what ships out of the box, what needs your keys, and what's
-          coming next. Click any "Notify me" item to get an email when it lands.
+          coming next. Vote on the items you want most — we prioritize by demand.
         </p>
+
       </div>
       <div className="max-w-4xl mx-auto mb-16">
         <BrowserMockup url="app.yourdomain.com/roadmap">

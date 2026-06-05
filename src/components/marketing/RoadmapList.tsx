@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge, type FeatureStatus } from "@/components/marketing/StatusBadge";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
+import { VoteButton } from "@/components/marketing/VoteButton";
+import { useRoadmapVotes } from "@/hooks/useRoadmapVotes";
 import { brandIcons, type BrandSlug } from "@/lib/brand/icons";
 import { roadmap, categoryLabels, type RoadmapCategory, type RoadmapEntry } from "@/data/roadmap";
 
@@ -22,9 +24,18 @@ const entryBrand: Record<string, BrandSlug> = {
   "live-chat": "lovable",
 };
 
-const Item = ({ entry }: { entry: RoadmapEntry }) => {
+interface ItemProps {
+  entry: RoadmapEntry;
+  voteCount: number;
+  voted: boolean;
+  voteLoading: boolean;
+  onToggleVote: ReturnType<typeof useRoadmapVotes>["toggleVote"];
+}
+
+const Item = ({ entry, voteCount, voted, voteLoading, onToggleVote }: ItemProps) => {
   const slug = entryBrand[entry.id];
   const brand = slug ? brandIcons[slug] : undefined;
+  const isVotable = entry.status === "soon" || entry.status === "planned" || entry.status === "setup";
   return (
     <Card className="p-5 flex flex-col gap-3">
       <div className="flex items-start justify-between gap-3">
@@ -36,7 +47,18 @@ const Item = ({ entry }: { entry: RoadmapEntry }) => {
           )}
           <h3 className="font-semibold leading-snug">{entry.label}</h3>
         </div>
-        <StatusBadge status={statusToBadge(entry.status)} label={entry.status === "planned" ? "Planned" : undefined} />
+        <div className="flex items-center gap-2 shrink-0">
+          {isVotable && (
+            <VoteButton
+              featureId={entry.id}
+              count={voteCount}
+              voted={voted}
+              loading={voteLoading}
+              onToggle={onToggleVote}
+            />
+          )}
+          <StatusBadge status={statusToBadge(entry.status)} label={entry.status === "planned" ? "Planned" : undefined} />
+        </div>
       </div>
       <p className="text-sm text-muted-foreground flex-1">{entry.summary}</p>
       <div className="flex flex-wrap items-center gap-2">
@@ -53,7 +75,7 @@ const Item = ({ entry }: { entry: RoadmapEntry }) => {
           </Button>
         )}
         {(entry.status === "soon" || entry.status === "planned") && entry.notifySource && (
-          <Button asChild variant="outline" size="sm">
+          <Button asChild variant="ghost" size="sm" className="-ml-3">
             <Link to={`/roadmap#${entry.id}`}>
               <Bell className="h-3.5 w-3.5 mr-1.5" /> Notify me
             </Link>
@@ -77,6 +99,8 @@ const Item = ({ entry }: { entry: RoadmapEntry }) => {
 
 export const RoadmapList = ({ filter }: { filter?: (e: RoadmapEntry) => boolean }) => {
   const entries = filter ? roadmap.filter(filter) : roadmap;
+  const { counts, myVotes, loading, toggleVote } = useRoadmapVotes();
+
   const byCat = new Map<RoadmapCategory, RoadmapEntry[]>();
   entries.forEach((e) => {
     const arr = byCat.get(e.category) ?? [];
@@ -92,7 +116,13 @@ export const RoadmapList = ({ filter }: { filter?: (e: RoadmapEntry) => boolean 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {items.map((e) => (
               <div key={e.id} id={e.id}>
-                <Item entry={e} />
+                <Item
+                  entry={e}
+                  voteCount={counts[e.id] ?? 0}
+                  voted={myVotes.has(e.id)}
+                  voteLoading={loading}
+                  onToggleVote={toggleVote}
+                />
               </div>
             ))}
           </div>
