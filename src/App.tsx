@@ -72,6 +72,15 @@ import DashboardData from "./pages/dashboard/settings/Data";
 import UseTemplateLovable from "./pages/UseTemplateLovable";
 import UseTemplateGithub from "./pages/UseTemplateGithub";
 import NotFound from "./pages/NotFound";
+import { TestShell } from "@/components/test/TestShell";
+import TestIndex from "./pages/test/TestIndex";
+import TestAccessibility from "./pages/test/TestAccessibility";
+import TestPerformance from "./pages/test/TestPerformance";
+import TestSeo from "./pages/test/TestSeo";
+import TestSecurity from "./pages/test/TestSecurity";
+import TestDesign from "./pages/test/TestDesign";
+import TestE2E from "./pages/test/TestE2E";
+import TestAnalytics from "./pages/test/TestAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -119,6 +128,18 @@ const App = () => (
               <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
               <Route path="/use-template/lovable" element={<UseTemplateLovable />} />
               <Route path="/use-template/github" element={<UseTemplateGithub />} />
+
+              {/* QA / Launch readiness — /test */}
+              <Route path="/test" element={<TestShell />}>
+                <Route index element={<TestIndex />} />
+                <Route path="accessibility" element={<TestAccessibility />} />
+                <Route path="performance" element={<TestPerformance />} />
+                <Route path="seo" element={<TestSeo />} />
+                <Route path="security" element={<TestSecurity />} />
+                <Route path="design" element={<TestDesign />} />
+                <Route path="e2e" element={<TestE2E />} />
+                <Route path="analytics" element={<TestAnalytics />} />
+              </Route>
 
               {/* Auth */}
               <Route path="/login" element={<Auth mode="login" />} />
