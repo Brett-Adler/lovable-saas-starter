@@ -70,6 +70,12 @@ export default function NewsletterConfirm() {
 
   return (
     <MarketingLayout>
+      <PageSeo
+        path="/newsletter/confirm"
+        title="Confirm your subscription"
+        description="Confirm your email address to finish subscribing to the newsletter."
+        noindex
+      />
       <main className="container max-w-lg py-24" aria-labelledby="confirm-heading">
         <Card className="p-8 text-center" role="status" aria-live="polite">
           {state.kind === "loading" && (
