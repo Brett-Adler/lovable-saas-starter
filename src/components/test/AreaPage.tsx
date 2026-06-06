@@ -26,7 +26,12 @@ export function AreaPage({ areaKey, title, description, prompt, children }: Prop
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 space-y-6">
-      <PageSeo title={`${title} — Test Coverage`} description={description} noindex />
+      <PageSeo
+        title={`${title} — Test Coverage`}
+        description={description}
+        path={`/test/${areaKey}`}
+        noindex
+      />
       <NoIndex />
 
       <header>
