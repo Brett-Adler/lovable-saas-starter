@@ -22,6 +22,12 @@ const NotFound = () => {
 
   return (
     <MarketingLayout>
+      <PageSeo
+        path={location.pathname}
+        title="Page not found"
+        description="The page you're looking for doesn't exist. Try the homepage, pricing, or contact us for help."
+        noindex
+      />
       <section className="relative overflow-hidden">
         {/* Decorative mesh background */}
         <div
