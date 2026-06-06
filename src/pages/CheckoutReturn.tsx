@@ -2,6 +2,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageSeo } from "@/components/seo/PageSeo";
 
 const CheckoutReturn = () => {
   const [searchParams] = useSearchParams();
@@ -9,6 +10,12 @@ const CheckoutReturn = () => {
 
   return (
     <div className="min-h-dvh flex items-center justify-center p-6 bg-background">
+      <PageSeo
+        path="/checkout/return"
+        title="Checkout complete"
+        description="Your checkout session has finished. Your subscription will activate momentarily."
+        noindex
+      />
       <Card className="max-w-md w-full">
         <CardHeader>
           {sessionId ? (
