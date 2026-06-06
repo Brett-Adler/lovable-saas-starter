@@ -11,7 +11,11 @@
 - [Demo](/demo): Book a demo.
 - [Waitlist](/waitlist): Join the waitlist.
 - [Newsletter](/newsletter): Subscribe to updates.
+- [Features](/features): Feature overview.
 - [Docs](/docs): Setup and customization guide.
+- [Docs for users](/docs/users): Help for everyday users.
+- [Docs for admins](/docs/admins): Workspace and billing admin guide.
+- [Docs for builders](/docs/builders): Developer reference for the starter.
 - [Readme](/readme): Project overview and roadmap.
 - [Launch checklist](/launch): Pre-launch credential checklist.
 - [Roadmap](/roadmap): Upcoming features.
