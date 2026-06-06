@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { ArrowLeft, Home, LifeBuoy, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 
 const helpfulLinks = [
   { to: "/", label: "Home", description: "Back to the landing page" },
@@ -21,6 +22,12 @@ const NotFound = () => {
 
   return (
     <MarketingLayout>
+      <PageSeo
+        path={location.pathname}
+        title="Page not found"
+        description="The page you're looking for doesn't exist. Try the homepage, pricing, or contact us for help."
+        noindex
+      />
       <section className="relative overflow-hidden">
         {/* Decorative mesh background */}
         <div

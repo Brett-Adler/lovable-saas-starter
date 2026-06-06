@@ -4,6 +4,7 @@ import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSeo } from "@/hooks/useSiteSeo";
 
@@ -67,6 +68,12 @@ export default function Unsubscribe() {
 
   return (
     <MarketingLayout>
+      <PageSeo
+        path="/unsubscribe"
+        title="Unsubscribe"
+        description="Manage your email preferences and unsubscribe from marketing messages."
+        noindex
+      />
       <div className="container max-w-lg py-24">
         <Card className="p-8 text-center">
           {state.kind === "loading" && (
