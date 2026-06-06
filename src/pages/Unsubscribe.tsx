@@ -68,6 +68,12 @@ export default function Unsubscribe() {
 
   return (
     <MarketingLayout>
+      <PageSeo
+        path="/unsubscribe"
+        title="Unsubscribe"
+        description="Manage your email preferences and unsubscribe from marketing messages."
+        noindex
+      />
       <div className="container max-w-lg py-24">
         <Card className="p-8 text-center">
           {state.kind === "loading" && (
