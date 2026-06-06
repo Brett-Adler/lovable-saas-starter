@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { ArrowLeft, Home, LifeBuoy, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { PageSeo } from "@/components/seo/PageSeo";
 
 const helpfulLinks = [
   { to: "/", label: "Home", description: "Back to the landing page" },
