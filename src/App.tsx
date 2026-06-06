@@ -129,6 +129,18 @@ const App = () => (
               <Route path="/use-template/lovable" element={<UseTemplateLovable />} />
               <Route path="/use-template/github" element={<UseTemplateGithub />} />
 
+              {/* QA / Launch readiness — /test */}
+              <Route path="/test" element={<TestShell />}>
+                <Route index element={<TestIndex />} />
+                <Route path="accessibility" element={<TestAccessibility />} />
+                <Route path="performance" element={<TestPerformance />} />
+                <Route path="seo" element={<TestSeo />} />
+                <Route path="security" element={<TestSecurity />} />
+                <Route path="design" element={<TestDesign />} />
+                <Route path="e2e" element={<TestE2E />} />
+                <Route path="analytics" element={<TestAnalytics />} />
+              </Route>
+
               {/* Auth */}
               <Route path="/login" element={<Auth mode="login" />} />
               <Route path="/signup" element={<Auth mode="signup" />} />
