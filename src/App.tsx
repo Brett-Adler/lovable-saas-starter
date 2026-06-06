@@ -72,6 +72,15 @@ import DashboardData from "./pages/dashboard/settings/Data";
 import UseTemplateLovable from "./pages/UseTemplateLovable";
 import UseTemplateGithub from "./pages/UseTemplateGithub";
 import NotFound from "./pages/NotFound";
+import { TestShell } from "@/components/test/TestShell";
+import TestIndex from "./pages/test/TestIndex";
+import TestAccessibility from "./pages/test/TestAccessibility";
+import TestPerformance from "./pages/test/TestPerformance";
+import TestSeo from "./pages/test/TestSeo";
+import TestSecurity from "./pages/test/TestSecurity";
+import TestDesign from "./pages/test/TestDesign";
+import TestE2E from "./pages/test/TestE2E";
+import TestAnalytics from "./pages/test/TestAnalytics";
 
 const queryClient = new QueryClient();
 
