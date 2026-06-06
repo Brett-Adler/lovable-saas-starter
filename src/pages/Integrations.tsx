@@ -83,7 +83,7 @@ const Integrations = () => (
               {i.external && (
                 <Button asChild variant="ghost" size="sm" className={i.href ? "" : "-ml-3"}>
                   <a href={i.external} target="_blank" rel="noopener noreferrer external" aria-label={`${i.name} website — opens in new tab`}>
-                    Learn more <ExternalLink className="h-3.5 w-3.5 ml-1" />
+                    Learn more about {i.name} <ExternalLink className="h-3.5 w-3.5 ml-1" />
                   </a>
                 </Button>
               )}
