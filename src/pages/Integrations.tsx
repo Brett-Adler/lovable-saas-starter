@@ -67,7 +67,7 @@ const Integrations = () => (
                 <span className="h-10 w-10 rounded-lg bg-white border border-border flex items-center justify-center text-foreground shrink-0 shadow-sm">
                   {i.brand ? <BrandIcon slug={i.brand} size={22} colored /> : <span className="text-xs font-semibold text-muted-foreground">{i.name.slice(0, 2)}</span>}
                 </span>
-                <h3 className="font-semibold truncate">{i.name}</h3>
+                <h2 className="font-semibold truncate text-base">{i.name}</h2>
               </div>
               <StatusBadge status={i.status} tooltip={i.note} />
             </div>
@@ -83,7 +83,7 @@ const Integrations = () => (
               {i.external && (
                 <Button asChild variant="ghost" size="sm" className={i.href ? "" : "-ml-3"}>
                   <a href={i.external} target="_blank" rel="noopener noreferrer external" aria-label={`${i.name} website — opens in new tab`}>
-                    Learn more <ExternalLink className="h-3.5 w-3.5 ml-1" />
+                    Learn more about {i.name} <ExternalLink className="h-3.5 w-3.5 ml-1" />
                   </a>
                 </Button>
               )}
