@@ -202,7 +202,33 @@ function writeSitemap(pages: SeoPage[], blogPosts: BlogPostSitemapRow[], base: s
     changefreq: "monthly" as const,
     priority: "0.6",
   }));
-  const entries = [...PUBLIC_ROUTES.filter((r) => !blocked.has(r.path)), ...blogEntries.filter((r) => !blocked.has(r.path))];
+
+  // Per-article docs routes. Parse src/data/docs.ts for { slug: "...", ... } to avoid
+  // importing the JSX content modules from this build-time script.
+  const docsArticles: Array<{ path: string; changefreq: "monthly"; priority: string }> = [];
+  try {
+    const docsSrc = readFileSync(resolve("src/data/docs.ts"), "utf8");
+    const audienceBlocks: Array<["users" | "admins" | "builders", RegExp]> = [
+      ["users", /const usersSeeds:[\s\S]*?\n\];/],
+      ["admins", /const adminsSeeds:[\s\S]*?\n\];/],
+      ["builders", /const buildersSeeds:[\s\S]*?\n\];/],
+    ];
+    for (const [audience, re] of audienceBlocks) {
+      const block = docsSrc.match(re)?.[0] ?? "";
+      const slugs = [...block.matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);
+      for (const slug of slugs) {
+        docsArticles.push({ path: `/docs/${audience}/${slug}`, changefreq: "monthly", priority: "0.5" });
+      }
+    }
+  } catch (e) {
+    console.warn("[sync-seo] could not parse docs articles:", (e as Error).message);
+  }
+
+  const entries = [
+    ...PUBLIC_ROUTES.filter((r) => !blocked.has(r.path)),
+    ...docsArticles.filter((r) => !blocked.has(r.path)),
+    ...blogEntries.filter((r) => !blocked.has(r.path)),
+  ];
 
   const urls = entries.map((e) => {
     const lastmod = "lastmod" in e ? e.lastmod : lastmodMap.get(e.path);
