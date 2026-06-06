@@ -17,7 +17,7 @@ export function PaymentTestModeBanner() {
           rel="noopener noreferrer"
           className="underline font-medium text-warning hover:text-warning/80"
         >
-          Read more
+          Read more about test mode
         </a>
       }
     >
