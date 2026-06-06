@@ -23,6 +23,7 @@ export default function TestIndex() {
       <PageSeo
         title="Test Coverage — Launch Readiness"
         description="Coverage dashboard, scan results, and prioritized launch checklist."
+        path="/test"
         noindex
       />
       <NoIndex />
