@@ -6,14 +6,15 @@ This is the complete brand asset kit. Every file in this directory is either a h
 
 | Token | Hex | Usage |
 |---|---|---|
-| Primary | `#C026D3` | Brand magenta — `theme_color`, accents, gradient end |
-| Gradient start | `#FF4FA3` | Brand pink — gradient start |
-| Gradient (CSS) | `linear-gradient(135deg, #FF4FA3, #C026D3)` | Logo container, marketing hero accents |
-| Ink | `#1F1B2E` | Wordmark on light backgrounds |
-| Surface dark | `#0F0820` | Splash dark, social card backgrounds |
+| Primary | `#FF7AA5` | Brand pink — `theme_color`, accents, gradient middle |
+| Gradient start | `#FF9A5A` | Warm orange — gradient start |
+| Gradient end | `#C47DD6` | Soft purple — gradient end |
+| Gradient (CSS) | `linear-gradient(135deg, #FF9A5A, #FF7AA5, #C47DD6)` | Logo container, marketing hero accents |
+| Ink | `#0F172A` | Wordmark on light backgrounds |
+| Surface dark | `#0F172A` | Splash dark, social card backgrounds |
 | Surface light | `#FFFFFF` | Splash light, email backgrounds |
 
-**Logo mark concept**: a rounded-square container in the pink→magenta gradient, with an upward chevron + "ignition" dot in white — a stylized spark/rocket implying *starter / launch*.
+**Logo mark concept**: a rounded-square tile in the Lovable family gradient (orange → coral → purple) with a bold white "S" letterform and a small 4-point sparkle in the upper-right — a stylized stand-in for *SaaS / Starter*, kept in the Lovable Skills / Prompts family.
 
 ## Logos
 

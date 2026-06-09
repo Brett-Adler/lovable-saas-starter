@@ -1,11 +1,11 @@
 {
-  "name": "SaaS Starter",
-  "short_name": "SaaS Starter",
+  "name": "Lovable SaaS",
+  "short_name": "Lovable SaaS",
   "description": "Launch your SaaS in days, not months — auth, billing, teams, emails, and admin out of the box.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0F0820",
-  "theme_color": "#C026D3",
+  "background_color": "#0F172A",
+  "theme_color": "#FF7AA5",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

@@ -26,6 +26,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-06-09",
+    title: "New Lovable SaaS brand identity",
+    changes: [
+      { type: "changed", text: "Rebranded as \"Lovable SaaS\" with a new S+sparkle mark on the Lovable family gradient (orange → coral → purple). Logo, favicons, Apple touch icon, Android/PWA icons, maskable, Windows tile, Safari pinned tab, social cards, email header, and splash screens all regenerated from the new SVG mark." },
+      { type: "changed", text: "Updated theme-color, manifest, and Windows tile color to the new brand pink (#FF7AA5); manifest name set to \"Lovable SaaS\"." },
+      { type: "removed", text: "Removed the home-page explainer video (used old branding); replaced with a static branded hero card." },
+    ],
+  },
+  {
     date: "2026-06-05",
     title: "Roadmap voting and expanded SaaS essentials",
     changes: [
