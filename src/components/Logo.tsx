@@ -22,13 +22,11 @@ export const Logo = ({ className, variant = "full", dark = false }: LogoProps) =
   const alt = siteSeo?.site_name || "SaaS Starter";
 
   return (
-    <Link to="/" className={cn("inline-flex items-center", className)} aria-label={`${alt} — Home`}>
+    <Link to="/" className={cn("inline-flex items-center shrink-0", className)} aria-label={`${alt} — Home`}>
       <img
         src={src}
         alt={alt}
-        height={variant === "mark" ? 32 : 36}
-        width={variant === "mark" ? 32 : 160}
-        className={variant === "mark" ? "h-8 w-8 object-contain" : "h-9 w-auto object-contain"}
+        className={variant === "mark" ? "h-8 w-8 object-contain" : "h-8 w-auto max-w-[180px] object-contain"}
       />
     </Link>
   );
