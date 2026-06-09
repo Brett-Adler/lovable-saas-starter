@@ -137,28 +137,22 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Explainer video */}
+          {/* Brand hero */}
           <div className="mt-16 max-w-5xl mx-auto animate-fade-in-up [animation-delay:200ms]">
             <Card className="overflow-hidden border-border/60 shadow-2xl">
-              {/* Faux window chrome */}
               <div className="flex items-center gap-1.5 px-4 py-3 border-b border-border/60 bg-muted/40">
                 <span className="h-3 w-3 rounded-full bg-destructive/70" />
                 <span className="h-3 w-3 rounded-full bg-warning/70" />
                 <span className="h-3 w-3 rounded-full bg-success/70" />
                 <div className="mx-auto text-xs text-muted-foreground font-mono">app.yourdomain.com/dashboard</div>
               </div>
-              <video
+              <img
                 className="w-full aspect-[16/9] object-cover bg-muted"
-                src="/explainer.mp4"
-                poster="/explainer-poster.jpg"
+                src="/og-image.png"
                 width={1280}
                 height={720}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-                aria-label="SaaS Starter explainer — build your SaaS in days, not months"
+                alt="Lovable SaaS — launch your SaaS in days, not months"
+                loading="eager"
               />
             </Card>
           </div>
